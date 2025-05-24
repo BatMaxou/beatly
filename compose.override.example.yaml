@@ -1,0 +1,15 @@
+services:
+  web:
+    ports:
+      - "8000:80"
+
+  front:
+    ports:
+      - "3000:5173"
+
+  db:
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: beatly
+    ports:
+      - "3307:3306"
