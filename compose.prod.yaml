@@ -1,17 +1,19 @@
 services:
   php:
+    image: ${REGISTRY}-php:latest
     build:
       dockerfile: ./.devops/php/Dockerfile
     volumes:
       - ./api:/srv
-      - /srv/vendor
-      - /srv/var
+      - ./api/vendor:/srv/vendor
+      - ./api/var:/srv/var
     networks:
       - beatly
 
   web:
     depends_on:
       - php
+    image: ${REGISTRY}-web:latest
     build:
       dockerfile: ./.devops/nginx/Dockerfile
     volumes:
@@ -20,9 +22,10 @@ services:
       - beatly
 
   front:
+    image: ${REGISTRY}-front:latest
     build:
       dockerfile: ./.devops/node/Dockerfile
-      target: dev
+      target: prod
     volumes:
       - ./front:/app
       - /app/node_modules 
@@ -41,3 +44,4 @@ volumes:
 
 networks:
   beatly:
+
