@@ -1,0 +1,214 @@
+<?php
+
+namespace App\Entity;
+
+use App\Entity\Reservation\SimpleReservation;
+use App\Entity\Trait\UuidTrait;
+use App\Enum\RoleEnum;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
+use Doctrine\ORM\Mapping\InheritanceType;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[InheritanceType('JOINED')]
+#[DiscriminatorColumn(name: 'discr', type: 'string')]
+#[DiscriminatorMap([
+    'user' => User::class,
+    'platform' => Platform::class,
+    'artist' => Artist::class
+])]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $avatar = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $wallpaper = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $email = null;
+
+    private ?string $plainPassword = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $password = null;
+
+    /**
+     * @var string[]
+     */
+    #[ORM\Column(type: Types::JSON)]
+    private array $roles = [];
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $resetToken = null;
+
+    public function __construct()
+    {
+        $this->addRole(RoleEnum::USER);
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): static
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getWallpaper(): ?string
+    {
+        return $this->wallpaper;
+    }
+
+    public function setWallpaper(?string $wallpaper): static
+    {
+        $this->wallpaper = $wallpaper;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainPassword): static
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password, bool $alreadyHashed = false): static
+    {
+        if ($alreadyHashed) {
+            $this->password = $password;
+        } else {
+            $this->plainPassword = $password;
+            $this->password = null;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function addRole(RoleEnum $role): static
+    {
+        if (!in_array($role->value, $this->roles, true)) {
+            $this->roles[] = $role->value;
+        }
+
+        return $this;
+    }
+
+    public function removeRole(RoleEnum $role): static
+    {
+        if (in_array($role->value, $this->roles, true)) {
+            $this->roles = array_diff($this->roles, [$role->value]);
+        }
+
+        return $this;
+    }
+
+    public function hasRole(RoleEnum $role): bool
+    {
+        return in_array($role->value, $this->roles, true);
+    }
+
+    public function isBanned(): bool
+    {
+        return $this->hasRole(RoleEnum::BANNED);
+    }
+
+    public function isPlatform(): bool
+    {
+        return $this->hasRole(RoleEnum::PLATFORM);
+    }
+
+    public function getUserIdentifier(): string
+    {
+        if (null === $this->email) {
+            throw new \LogicException('The User class must implement the UserInterface, but none of the required methods can be called.');
+        }
+
+        return $this->email;
+    }
+
+    public function eraseCredentials(): void
+    {
+        $this->plainPassword = null;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): static
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+}
+
