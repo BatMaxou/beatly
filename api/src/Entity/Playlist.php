@@ -33,7 +33,7 @@ class Playlist
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $wallpaper = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'playlists')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $creator = null;
 
