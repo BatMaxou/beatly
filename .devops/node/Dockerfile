@@ -6,8 +6,6 @@ COPY ./front/package*.json ./
 
 RUN npm install
 
-EXPOSE 5173
-
 FROM main as builder
 
 COPY ./front /app
@@ -17,6 +15,8 @@ RUN npm run build
 FROM main as dev
 
 COPY ./front /app
+
+EXPOSE 5173
 
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 
