@@ -36,8 +36,24 @@ services:
     networks:
       - beatly
 
+  embedder:
+    build:
+      dockerfile: ./.devops/python/Dockerfile
+    volumes:
+      - ./embedder:/app
+    networks:
+      - beatly
+
+  qdrant:
+    image: qdrant/qdrant
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - beatly
+
 volumes:
   db_data:
+  qdrant_data:
 
 networks:
   beatly:

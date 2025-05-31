@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Interface\EmbeddableEntityInterface;
 use App\Repository\MusicRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MusicRepository::class)]
 #[ApiResource]
-class Music
+class Music implements EmbeddableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -193,5 +194,20 @@ class Music
         $this->albums->removeElement($album);
 
         return $this;
+    }
+
+    public function prepareForEmbedding(): string
+    {
+        $categories = $this->categories->map(fn(Category $category) => $category->getName())->toArray();
+        $artists = $this->artists->map(fn(Artist $artist) => $artist->getName())->toArray();
+        $albums = $this->albums->map(fn(Album $album) => $album->getTitle())->toArray();
+
+        return sprintf(
+            '%s - %s - %s - %s',
+            $this->title,
+            implode(', ', $artists),
+            implode(', ', $categories),
+            implode(', ', $albums)
+        );
     }
 }
