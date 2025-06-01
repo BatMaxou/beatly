@@ -1,95 +1,159 @@
 <script setup>
-    import PlayPauseButton from '@/components/ui/buttons/PlayPauseButton.vue'
+  import AlbumMusicList from '@/components/lists/AlbumMusicList.vue'
+  import AlbumPlayable from '@/components/albums/AlbumPlayable.vue'
+  import ArtistProfile from '@/components/artists/ArtistProfile.vue'
+  import cover1 from '@/assets/music/cover1.jpg'
+  import artist1 from '@/assets/music/artist1.jpeg'
+
+  const albumMusicList = [
+    {
+      id: 1,
+      title: 'Pain',
+      duration: '142',
+      position: 1
+    },
+    {
+      id: 2,
+      title: 'Hardware',
+      duration: '153',
+      position: 2
+    },
+    {
+      id: 3,
+      title: 'Processor',
+      duration: '130',
+      position: 3
+    },
+    {
+      id: 4,
+      title: 'Digital Dreams',
+      duration: '175',
+      position: 4
+    },
+    {
+      id: 5,
+      title: 'Neon Nights',
+      duration: '168',
+      position: 5
+    },
+    {
+      id: 6,
+      title: 'Binary Beat',
+      duration: '147',
+      position: 6
+    },
+    {
+      id: 7,
+      title: 'Silicon Soul',
+      duration: '195',
+      position: 7
+    },
+    {
+      id: 8,
+      title: 'Electric Echo',
+      duration: '162',
+      position: 8
+    },
+    {
+      id: 9,
+      title: 'Memory Lane',
+      duration: '183',
+      position: 9
+    },
+    {
+      id: 10,
+      title: 'Quantum Quirk',
+      duration: '159',
+      position: 10
+    }
+  ]
+    
+  const customListStyles = {
+    musicList: {
+      maxWidth: '650px',
+      marginTop: "2rem",
+      borderRadius: '8px',
+      overflow: 'hidden'
+    },
+    musicElement: {
+      borderBottom: '1px solid rgba(200, 200, 200, 0.2)',
+      transition: 'background 0.2s ease'
+    },
+    musicHeader: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    positionContainer: {
+      minWidth: '2rem',
+      display: 'flex',
+      justifyContent: 'center'
+    },
+    positionNumber: {
+      color: '#888',
+      fontWeight: '500'
+    },
+    dividerSpan: {
+      color: '#aaa',
+      margin: '0 8px'
+    },
+    titleSpan: {
+      fontWeight: '500'
+    },
+    musicDuration: {
+      color: '#888',
+      fontWeight: '400'
+    },
+    durationText: {
+      margin: 0,
+      fontSize: '0.9rem'
+    }
+  }
 </script>
 
 <template>
-    <div class="ui-albums-showcase">
-        <h2>Musique</h2>
+    <h2>Cover</h2>
+    <div class="ui-music-showcase">
     
-        <!-- A externaliser en composant -->
         <div class="form-section">
             <h3>Pochette d'album</h3>
-            <div class="album-row">
-                <div class="album-container">
-                    <img src="@/assets/music/cover1.jpg" alt="Album Name" class="album-cover">
-                    <div class="album-overlay">
-                        <PlayPauseButton />
-                    </div>
-                  </div>
-                  <div class="album-informations">
-                      <h4>Pain</h4>
-                      <p>Ryan Jones &middot; 2022</p>
-                  </div>
-            </div>
+            <AlbumPlayable 
+                :albumCover="cover1"
+                albumName="Pain"
+                artistName="Ryan Jones"
+                releaseYear="2022"
+            />
         </div>
 
-        <!-- A externaliser en composant -->
         <!-- Rendre cliquable -->
         <div class="form-section">
             <h3>Pochette d'artiste</h3>
-            <div class="artist-row">
-                <div class="artist-container">
-                    <img src="@/assets/music/artist1.jpeg" alt="artist Name" class="artist-cover">
-                  </div>
-                  <div class="artist-informations">
-                      <h4>Ryan Jones</h4>
-                  </div>
-            </div>
+            <ArtistProfile 
+                :artistCover="artist1"
+                artistName="Ryan Jones"
+            />
         </div>
     </div>
+
+    <h2>Musique</h2>
+    <div class="ui-music-list">
+        <div class="musics-section">
+            <h3>Liste ( Album )</h3>
+            <AlbumMusicList 
+                :musicList="albumMusicList"
+                :customStyles="customListStyles"
+            />
+        </div>
+      </div>
 </template>
 
 <style scoped>
-.ui-albums-showcase {
-  padding: 1rem;
-}
-
-.album-section {
-  margin-bottom: 2rem;
-}
-
-.album-row, .artist-row {
-  display: flex;
+.ui-music-showcase {
+  display: flex; 
+  flex-direction: row;
   flex-wrap: wrap;
-  gap: .5rem;
-  margin: 1rem 0;
-  max-width: 160px;
-}
-
-.album-container, .artist-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
-
-.album-cover, .artist-cover {
-  width: 100%;
-  display: block;
-  transition: transform 0.3s ease;
-}
-
-.album-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.play-icon {
-  width: 30px;
-  height: 30px;
-  padding: 4rem;
-  box-sizing: content-box;
-}
-
-.album-container:hover .album-overlay {
-  opacity: 1;
+  justify-content: flex-start;
+  gap: 5rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
 }
 </style>
