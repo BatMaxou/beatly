@@ -24,3 +24,7 @@ services:
     App\Service\Client\QdrantClient:
         arguments:
             $baseUrl: '%env(string:QDRANT_URL)%'
+
+    App\Service\Client\OllamaClient:
+        arguments:
+            $baseUrl: '%env(string:OLLAMA_URL)%'

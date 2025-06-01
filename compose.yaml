@@ -51,9 +51,18 @@ services:
     networks:
       - beatly
 
+  ollama:
+    build:
+      dockerfile: ./.devops/ollama/Dockerfile
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - beatly
+
 volumes:
   db_data:
   qdrant_data:
+  ollama_data:
 
 networks:
   beatly:
