@@ -15,6 +15,7 @@ services:
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
+            - '../src/DataFixtures/Sample/'
             - '../src/Kernel.php'
 
     App\Service\Client\EmbedderClient:
@@ -28,3 +29,7 @@ services:
     App\Service\Client\OllamaClient:
         arguments:
             $baseUrl: '%env(string:OLLAMA_URL)%'
+
+when@dev:
+    services:
+        App\DataFixtures\Sample\SampleLoader: ~

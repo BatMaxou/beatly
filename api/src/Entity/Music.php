@@ -54,6 +54,7 @@ class Music implements EmbeddableEntityInterface
 
     public function __construct()
     {
+        $this->listeningsNumber = 0;
         $this->categories = new ArrayCollection();
         $this->artists = new ArrayCollection();
         $this->albums = new ArrayCollection();
@@ -202,12 +203,13 @@ class Music implements EmbeddableEntityInterface
         $artists = $this->artists->map(fn(Artist $artist) => $artist->getName())->toArray();
         $albums = $this->albums->map(fn(Album $album) => $album->getTitle())->toArray();
 
+        // Utiliser un hash pour avoir la même longueur de caractère pour les artistes et les albums
         return sprintf(
             '%s - %s - %s - %s',
             $this->title,
-            implode(', ', $artists),
-            implode(', ', $categories),
-            implode(', ', $albums)
+            implode(' ', $artists),
+            implode(' ', $categories),
+            implode(' ', $albums),
         );
     }
 }

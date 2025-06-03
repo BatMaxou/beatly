@@ -90,7 +90,7 @@ class QdrantClient
             throw new \RuntimeException('Failed to search: ' . $response->getContent(false));
         }
 
-        return $response->toArray();
+        return $response->toArray()['result']['points'] ?? [];
     }
 
     public function getMusicCollectionInfo(): array
