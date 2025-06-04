@@ -4,8 +4,6 @@ services:
       dockerfile: ./.devops/php/Dockerfile
     volumes:
       - ./api:/srv
-      - /srv/vendor
-      - /srv/var
     networks:
       - beatly
 
@@ -25,7 +23,6 @@ services:
       target: dev
     volumes:
       - ./front:/app
-      - /app/node_modules 
     networks:
       - beatly
 
@@ -36,8 +33,33 @@ services:
     networks:
       - beatly
 
+  embedder:
+    build:
+      dockerfile: ./.devops/python/Dockerfile
+    volumes:
+      - ./embedder:/app
+    networks:
+      - beatly
+
+  qdrant:
+    image: qdrant/qdrant
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - beatly
+
+  ollama:
+    build:
+      dockerfile: ./.devops/ollama/Dockerfile
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - beatly
+
 volumes:
   db_data:
+  qdrant_data:
+  ollama_data:
 
 networks:
   beatly:

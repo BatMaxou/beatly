@@ -65,6 +65,8 @@ push-prod-all:
 	@$(MAKE) push-prod-php
 	@$(MAKE) push-prod-web
 	@$(MAKE) push-prod-front
+	@$(MAKE) push-prod-embedder
+	@$(MAKE) push-prod-ollama
 .PHONY: push-prod-all
 
 # --- PROD DEPLOYMENT COMMANDS ---
