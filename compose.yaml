@@ -4,8 +4,6 @@ services:
       dockerfile: ./.devops/php/Dockerfile
     volumes:
       - ./api:/srv
-      - /srv/vendor
-      - /srv/var
     networks:
       - beatly
 
@@ -25,7 +23,6 @@ services:
       target: dev
     volumes:
       - ./front:/app
-      - /app/node_modules 
     networks:
       - beatly
 
