@@ -8,6 +8,7 @@ use App\Service\Client\EmbedderClient;
 use App\Service\Client\QdrantClient;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsEntityListener(event: Events::postPersist, method: 'upsert', entity: Music::class)]
 #[AsEntityListener(event: Events::postUpdate, method: 'upsert', entity: Music::class)]
@@ -23,7 +24,13 @@ class StoreMusicSubscriber
     public function upsert(Music $music): void
     {
         $embedding = $this->embedderClient->embed($music->prepareForEmbedding());
-        $this->qdrantClient->upsertMusic($music->getId(), $embedding, ['title' => $music->getTitle()]);
+
+        $firstArtist = $music->getArtists()->first();
+
+        $this->qdrantClient->upsertMusic($music->getId(), $embedding, [
+            'title' => $music->getTitle(),
+            ...($firstArtist ? ['artist' => $firstArtist->getName()] : []),
+        ]);
     }
 
     public function remove(Music $music): void

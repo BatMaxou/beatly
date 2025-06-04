@@ -1,0 +1,13 @@
+App\Entity\Music:
+  attributes:
+    id:
+      groups: ['music:read']
+    title:
+      groups: ['music:read']
+    artists:
+      groups: ['music:read']
+    albums:
+      groups: ['music:read']
+    categories:
+      groups: ['music:read']
+

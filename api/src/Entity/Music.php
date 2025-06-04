@@ -199,17 +199,16 @@ class Music implements EmbeddableEntityInterface
 
     public function prepareForEmbedding(): string
     {
-        $categories = $this->categories->map(fn(Category $category) => $category->getName())->toArray();
-        $artists = $this->artists->map(fn(Artist $artist) => $artist->getName())->toArray();
-        $albums = $this->albums->map(fn(Album $album) => $album->getTitle())->toArray();
+        $categories = $this->categories->map(fn(Category $category) => md5($category->getName()))->toArray();
+        $artists = $this->artists->map(fn(Artist $artist) => md5($artist->getName()))->toArray();
+        $albums = $this->albums->map(fn(Album $album) => md5($album->getTitle()))->toArray();
 
-        // Utiliser un hash pour avoir la même longueur de caractère pour les artistes et les albums
         return sprintf(
             '%s - %s - %s - %s',
-            $this->title,
-            implode(' ', $artists),
+            md5($this->title),
             implode(' ', $categories),
-            implode(' ', $albums),
+            implode(' ', $artists),
+            implode(' ', $albums)
         );
     }
 }
