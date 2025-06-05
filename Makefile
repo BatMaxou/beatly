@@ -11,27 +11,8 @@ REGISTRY_PROJECT = beatly
 REGISTRY = $(REGISTRY_HOST):$(REGISTRY_PORT)/$(REGISTRY_PROJECT)
 
 # --- DEV COMMANDS ---
-sync-vendor:
-	@docker cp $(shell docker compose ps -q php):/srv/vendor ./api
-.PHONY: sync-vendor
-
-sync-var:
-	@docker cp $(shell docker compose ps -q php):/srv/var ./api
-.PHONY: sync-var
-
-sync-node-modules:
-	@docker cp $(shell docker compose ps -q front):/app/node_modules ./front
-.PHONY: sync-node-modules
-
 install: rebuild up
-	@${MAKE} sync-vendor
-	@${MAKE} sync-var
-	@${MAKE} sync-node-modules
 .PHONY: install
-
-rebuild:
-	@docker compose build --no-cache
-.PHONY: rebuild
 
 up:
 	@docker compose up -d
@@ -41,19 +22,9 @@ down:
 	@docker compose down
 .PHONY: down
 
-composer-%:
-	@docker compose exec php composer $* $(ARGS)
-	@$(MAKE) sync-vendor
-.PHONY: composer
-
-npm-%:
-	@docker compose exec front npm $* $(ARGS)
-	@$(MAKE) sync-node-modules
-.PHONY: npm
-
 # --- PROD REGISTRY COMMANDS ---
 build-prod:
-	@REGISTRY=$(REGISTRY) docker compose -f compose.prod.yaml build
+	@REGISTRY=$(REGISTRY) docker compose -f compose.prod.yaml build $(ARGS)
 .PHONY: build-prod
 
 push-prod-%:
