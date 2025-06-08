@@ -1,9 +1,10 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, provide } from 'vue'
 import Home from './pages/Home.vue'
 import Layout from './components/layout/Layout.vue'
 import Ui from './pages/Ui.vue'
 import NotFound from './pages/NotFound.vue'
+import { SearchProvider } from './providers'
 
 const routes = {
   '/': Home, // Condition a placer sur l'état de connexion de l'utilisateur / Affichage Landing ou Home
@@ -39,5 +40,7 @@ const currentView = computed(() => {
 </script>
 
 <template>
-  <Layout :current-view="currentView" />
+  <SearchProvider>
+    <Layout :current-view="currentView" class="text-white" />
+  </SearchProvider>
 </template>

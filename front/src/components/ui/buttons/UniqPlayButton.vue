@@ -1,12 +1,12 @@
 <script setup>
-import { ref } from 'vue';
-import playLight from '@/assets/icons/play-light.svg';
+import { ref } from "vue";
+import playLight from "@/assets/icons/play-light.svg";
 
 const isRotating = ref(false);
 
 const handleClick = () => {
   isRotating.value = true;
-  
+
   // fetch (à implémenter plus tard)
   // fetch('/api/play', { method: 'POST' })
   //   .then(response => response.json())
@@ -16,7 +16,7 @@ const handleClick = () => {
   //   .catch(error => {
   //     console.error('Error:', error);
   //   });
-  
+
   setTimeout(() => {
     isRotating.value = false;
   }, 1000);
@@ -24,42 +24,27 @@ const handleClick = () => {
 </script>
 
 <template>
-  <div class="play-button-container" @click="handleClick">
-    <img 
-      :src="playLight" 
-      alt="Play" 
-      class="play-icon"
-      :class="{ 'rotating': isRotating }"
-    >
+  <div class="flex justify-center items-center cursor-pointer" @click="handleClick">
+    <img
+      :src="playLight"
+      alt="Play"
+      class="w-20 h-20 box-content transition-transform duration-1000 ease-in-out"
+      :class="{ 'animate-spin-once': isRotating }"
+    />
   </div>
 </template>
 
 <style scoped>
-.play-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-.play-icon {
-  width: 80px;
-  height: 80px;
-  padding: 4rem;
-  box-sizing: content-box;
-  transition: transform 1s ease;
-}
-
-.rotating {
-  animation: rotate 1s ease;
-}
-
-@keyframes rotate {
+@keyframes spin-once {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
   }
+}
+
+.animate-spin-once {
+  animation: spin-once 1s ease;
 }
 </style>
