@@ -1,47 +1,46 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+<script setup>
+import { ref, computed, onMounted, provide } from 'vue'
+import Home from './pages/Home.vue'
+import Layout from './components/layout/Layout.vue'
+import Ui from './pages/Ui.vue'
+import NotFound from './pages/NotFound.vue'
+import { SearchProvider } from './providers'
+
+const routes = {
+  '/': Home, // Condition a placer sur l'état de connexion de l'utilisateur / Affichage Landing ou Home
+  '/ui': Ui
+}
+
+const currentPath = ref(window.location.pathname)
+
+window.addEventListener('popstate', () => {
+  currentPath.value = window.location.pathname
+})
+
+const navigateTo = (path) => {
+  window.history.pushState({}, '', path)
+  currentPath.value = path
+}
+
+onMounted(() => {
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a')
+    if (link && link.href.startsWith(window.location.origin) && !link.dataset.external) {
+      e.preventDefault()
+      const url = new URL(link.href)
+      navigateTo(url.pathname)
+    }
+  })
+})
+
+const currentView = computed(() => {
+  console.log('Current path:', currentPath.value)
+  return routes[currentPath.value || '/'] || NotFound
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <SearchProvider>
+    <Layout :current-view="currentView" class="text-white" />
+  </SearchProvider>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
