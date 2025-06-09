@@ -230,7 +230,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->playlists->contains($playlist)) {
             $this->playlists->add($playlist);
-            $playlist->setUser($this);
+            $playlist->setCreator($this);
         }
 
         return $this;
@@ -240,8 +240,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->playlists->removeElement($playlist)) {
             // set the owning side to null (unless already changed)
-            if ($playlist->getUser() === $this) {
-                $playlist->setUser(null);
+            if ($playlist->getCreator() === $this) {
+                $playlist->setCreator(null);
             }
         }
 
