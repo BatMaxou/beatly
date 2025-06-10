@@ -31,6 +31,7 @@ const navItems = ref([
   { id: "music", label: "Musique" },
   { id: "search", label: "Recherche" },
   { id: "buttons", label: "Boutons" },
+  { id: "menus", label: "Menus" },
   { id: "forms", label: "Formulaires" },
   { id: "cards", label: "Cartes" },
   { id: "modals", label: "Modales" },
