@@ -14,7 +14,7 @@
       </div>
       <div class="mb-6">
         <h3 class="text-lg font-semibold mb-2">Menu album</h3>
-        <div class="flex flex-row gap-4"></div>
+        <AlbumMenu />
       </div>
     </div>
   </div>
@@ -23,4 +23,5 @@
 <script setup>
 import PlaylistTitleMenu from "../../menus/PlaylistTitleMenu.vue";
 import PlaylistMenu from "../../menus/PlaylistMenu.vue";
+import AlbumMenu from "../../menus/AlbumMenu.vue";
 </script>
