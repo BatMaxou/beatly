@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from "vue";
-import addToFavActive from "@/assets/icons/add-to-fav-active.svg";
-import addToFavInactive from "@/assets/icons/add-to-fav-inactive.svg";
+import addToFavActive from "@/assets/icons/add-to-fav-active-dark.svg";
+import addToFavInactive from "@/assets/icons/add-to-fav-inactive-dark.svg";
 
 const props = defineProps({
   isFavorite: {

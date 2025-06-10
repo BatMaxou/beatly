@@ -54,13 +54,6 @@ const buttonClasses = computed(() => {
 const heartClasses = computed(() => {
   const baseClasses = "transition-all duration-300 w-8 h-8";
 
-  // Classes de taille
-  const sizeClasses = {
-    small: "w-4 h-4",
-    default: "w-5 h-5",
-    large: "w-6 h-6",
-  };
-
   // Classes d'état
   let stateClasses = "";
 
@@ -72,7 +65,7 @@ const heartClasses = computed(() => {
     stateClasses = "invert-0";
   }
 
-  return `${baseClasses} ${sizeClasses[props.size]} ${stateClasses}`;
+  return `${baseClasses} ${stateClasses}`;
 });
 </script>
 

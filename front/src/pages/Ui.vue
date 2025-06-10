@@ -32,13 +32,14 @@ import UiNavigation from "../components/ui/UiNavigation.vue";
 import UiButtons from "../components/ui/buttons/UiButtons.vue";
 import UiForms from "../components/ui/forms/UiForms.vue";
 import UiMusic from "../components/ui/music/UiMusic.vue";
+import UiMenu from "../components/ui/menu/UiMenu.vue";
 import UiSearch from "../components/ui/search/UiSearch.vue";
 
 provide("isSearchProvided", true);
 
 // Définition des statuts d'onglets
-const activeComponent = ref("buttons");
-const activeComponentTitle = ref("Boutons");
+const activeComponent = ref("music");
+const activeComponentTitle = ref("Musique");
 const isEmptyComponent = ref(false);
 
 // Changement d'onglets
@@ -61,6 +62,9 @@ const currentComponent = computed(() => {
     case "forms":
       activeComponentTitle.value = "Formulaires";
       return UiForms;
+    case "menus":
+      activeComponentTitle.value = "Menus";
+      return UiMenu;
     case "music":
       activeComponentTitle.value = "Musique";
       return UiMusic;
