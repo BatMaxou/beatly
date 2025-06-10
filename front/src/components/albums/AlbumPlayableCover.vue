@@ -1,6 +1,6 @@
 <script setup>
 import { defineProps } from "vue";
-import PlayPauseButton from "@/components/ui/buttons/UniqPlayButton.vue";
+import UniqPlayPauseButton from "../buttons/UniqPlayButton.vue";
 
 const props = defineProps({
   albumCover: {
@@ -24,7 +24,7 @@ const props = defineProps({
     <div
       class="absolute inset-0 bg-black/50 flex justify-center items-center opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
     >
-      <PlayPauseButton />
+      <UniqPlayPauseButton />
     </div>
   </div>
 </template>
