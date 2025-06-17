@@ -1,0 +1,7 @@
+App\Entity\Album:
+  attributes:
+    id:
+      groups: ['music:read']
+    title:
+      groups: ['music:read']
+
