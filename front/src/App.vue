@@ -4,6 +4,8 @@ import Home from "./pages/Home.vue";
 import Layout from "./components/layout/Layout.vue";
 import Ui from "./pages/Ui.vue";
 import Auth from "./pages/Auth.vue";
+import Register from "./pages/Register.vue";
+import Login from "./pages/Login.vue";
 import NotFound from "./pages/NotFound.vue";
 import { SearchProvider } from "./providers";
 
@@ -11,6 +13,8 @@ const routes = {
   "/": Home, // Condition a placer sur l'état de connexion de l'utilisateur / Affichage Landing ou Home
   "/ui": Ui,
   "/auth": Auth,
+  "/register": Register,
+  "/login": Login,
 };
 
 const currentPath = ref(window.location.pathname);

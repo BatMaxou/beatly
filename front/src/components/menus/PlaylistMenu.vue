@@ -8,6 +8,7 @@ import lockLight from "@/assets/icons/lock-light.svg";
 import unlockLight from "@/assets/icons/unlock-light.svg";
 import addLight from "@/assets/icons/add-light.svg";
 
+// Faire passer l'id de l'élément dans les props pour pouvoir l'utiliser dans le menu
 const props = defineProps({
   showMenu: {
     type: Boolean,
@@ -63,7 +64,7 @@ onMounted(() => {
   document.addEventListener("click", handleClickOutside);
 });
 
-onUnmounted(() => {
+onBeforeUnmounted(() => {
   document.removeEventListener("click", handleClickOutside);
 });
 </script>

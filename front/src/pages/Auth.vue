@@ -11,8 +11,9 @@
     <div class="relative z-20 flex flex-col items-center mt-12 shadow-lg w-full">
       <img :src="logo" alt="Logo Beatly" class="h-24 mb-4" />
 
-      <h2 class="text-lg uppercase text-center mt-12 mb-28">
-        Écoutez votre musique favorite en un seul clic
+      <h2 class="text-2xl uppercase text-center mt-12 mb-28">
+        Écoutez votre musique favorite<br />
+        en un seul clic
       </h2>
 
       <div class="flex flex-row gap-32 mb-28">
@@ -38,7 +39,7 @@
 
       <p class="text-white text-xl text-center max-w-[600px]">
         Explorez tout un monde de musique sans publicité, hors connexion et même avec l’écran
-        verrouillé. Disponible sur mobile et ordinateur. Ziq&mu propose des albums officiels, des
+        verrouillé. Disponible sur mobile et ordinateur. Beatly propose des albums officiels, des
         playlists, des singles et plus encore.
       </p>
     </div>
@@ -49,10 +50,10 @@
 import imageVinyl from "@/assets/images/vinyl-black-and-white-landing.jpg";
 import logo from "@/assets/beatly-logo-white.png";
 function goToLogin() {
-  //Redirection vers la page de connexion
+  window.location = "/login";
 }
 
 function goToRegister() {
-  //Redirection vers la page d'inscription
+  window.location = "/register";
 }
 </script>

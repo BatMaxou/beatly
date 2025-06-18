@@ -8,6 +8,7 @@ import playListLight from "@/assets/icons/play-list-light.svg";
 import micLight from "@/assets/icons/mic-light.svg";
 import discLight from "@/assets/icons/disc-light.svg";
 
+// Faire passer l'id de l'élément dans les props pour pouvoir l'utiliser dans le menu
 const props = defineProps({
   showMenu: {
     type: Boolean,
@@ -59,7 +60,7 @@ onMounted(() => {
   document.addEventListener("click", handleClickOutside);
 });
 
-onUnmounted(() => {
+onBeforeUnmounted(() => {
   document.removeEventListener("click", handleClickOutside);
 });
 </script>
