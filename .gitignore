@@ -1,4 +1,4 @@
-###> symfony/framework-bundle ###
+###> symfony ###
 /api/.env.local
 /api/.env.local.php
 /api/.env.*.local
@@ -6,7 +6,8 @@
 /api/public/bundles/
 /api/var/
 /api/vendor/
-###< symfony/framework-bundle ###
+/api/config/jwt/*.pem
+###< symfony ###
 
 ###> vue ###
 /front/logs
