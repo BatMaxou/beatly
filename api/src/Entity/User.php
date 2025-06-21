@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use App\Api\Provider\MeProvider;
+use App\Domain\Command\RegisterCommand;
 use App\Entity\Reservation\SimpleReservation;
-use App\Entity\Trait\UuidTrait;
 use App\Enum\RoleEnum;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,6 +19,7 @@ use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
@@ -26,6 +28,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
             provider: MeProvider::class,
             name: 'api_me',
             normalizationContext: ['groups' => ['me:read']]
+        ),
+        new Post(
+            uriTemplate: '/register',
+            name: 'api_register',
+            messenger: 'input',
+            input: RegisterCommand::class,
         )
     ],
 )]
@@ -44,6 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -53,6 +62,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $wallpaper = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Email]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
