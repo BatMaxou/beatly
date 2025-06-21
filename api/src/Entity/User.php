@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use App\Api\Provider\MeProvider;
 use App\Entity\Reservation\SimpleReservation;
 use App\Entity\Trait\UuidTrait;
 use App\Enum\RoleEnum;
@@ -16,6 +19,16 @@ use Doctrine\ORM\Mapping\InheritanceType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/me',
+            provider: MeProvider::class,
+            name: 'api_me',
+            normalizationContext: ['groups' => ['me:read']]
+        )
+    ],
+)]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[InheritanceType('JOINED')]
 #[DiscriminatorColumn(name: 'discr', type: 'string')]

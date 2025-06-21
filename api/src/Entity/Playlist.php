@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PlaylistRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
@@ -36,6 +38,17 @@ class Playlist
     #[ORM\ManyToOne(inversedBy: 'playlists')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $creator = null;
+
+    /**
+     * @var Collection<int, Music>
+     */
+    #[ORM\ManyToMany(targetEntity: Music::class, inversedBy: 'playlists')]
+    private Collection $musics;
+
+    public function __construct()
+    {
+        $this->musics = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +99,30 @@ class Playlist
     public function setCreator(?User $creator): static
     {
         $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Music>
+     */
+    public function getMusics(): Collection
+    {
+        return $this->musics;
+    }
+
+    public function addMusic(Music $music): static
+    {
+        if (!$this->musics->contains($music)) {
+            $this->musics->add($music);
+        }
+
+        return $this;
+    }
+
+    public function removeMusic(Music $music): static
+    {
+        $this->musics->removeElement($music);
 
         return $this;
     }
