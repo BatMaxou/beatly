@@ -6,7 +6,9 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Api\Provider\MeProvider;
+use App\Domain\Command\ForgotPasswordCommand;
 use App\Domain\Command\RegisterCommand;
+use App\Domain\Command\ResetPasswordCommand;
 use App\Entity\Reservation\SimpleReservation;
 use App\Enum\RoleEnum;
 use App\Repository\UserRepository;
@@ -34,7 +36,19 @@ use Symfony\Component\Validator\Constraints as Assert;
             name: 'api_register',
             messenger: 'input',
             input: RegisterCommand::class,
-        )
+        ),
+        new Post(
+            uriTemplate: '/forgot-password',
+            name: 'api_forgot_password',
+            messenger: 'input',
+            input: ForgotPasswordCommand::class,
+        ),
+        new Post(
+            uriTemplate: '/reset-password',
+            name: 'api_reset_password',
+            messenger: 'input',
+            input: ResetPasswordCommand::class,
+        ),
     ],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
