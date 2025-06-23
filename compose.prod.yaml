@@ -64,6 +64,11 @@ services:
     networks:
       - beatly
 
+  mailbox:
+    image: mailhog/mailhog
+    networks:
+      - beatly
+
 volumes:
   vendor:
   var:

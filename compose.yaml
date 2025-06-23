@@ -56,6 +56,11 @@ services:
     networks:
       - beatly
 
+  mailbox:
+    image: mailhog/mailhog
+    networks:
+      - beatly
+
 volumes:
   db_data:
   qdrant_data:

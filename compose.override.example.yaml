@@ -13,3 +13,19 @@ services:
       MYSQL_DATABASE: beatly
     ports:
       - "3307:3306"
+
+  embedder:
+    ports:
+      - "5000:5000"
+
+  qdrant:
+    ports:
+      - "6333:6333"
+
+  ollama:
+    ports:
+      - "11434:11434"
+
+  mailbox:
+    ports:
+      - "8025:8025"
