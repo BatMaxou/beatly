@@ -15,6 +15,19 @@ class Mailer
     ) {
     }
 
+    public function sendForgotPasswordEmail(User $user, string $resetUrl): void
+    {
+        $this->send(
+            $user,
+            'Réinitialisation de mot de passe',
+            EmailTypeEnum::FORGOT_PASSWORD,
+            [
+                'name' => $user->getName(),
+                'resetUrl' => $resetUrl,
+            ]
+        );
+    }
+
     /**
      * @param array<string, mixed> $context
      */
