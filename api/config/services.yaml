@@ -34,6 +34,10 @@ services:
         arguments:
             $basePath: '%kernel.project_dir%/prompt'
 
+    App\Domain\Command\Email\SendForgotPasswordEmailHandler:
+        arguments:
+            $frontResetUrl: '%env(string:FRONT_RESET_URL)%'
+
 when@dev:
     services:
         App\DataFixtures\Sample\SampleLoader: ~

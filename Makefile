@@ -11,7 +11,7 @@ REGISTRY_PROJECT = beatly
 REGISTRY = $(REGISTRY_HOST):$(REGISTRY_PORT)/$(REGISTRY_PROJECT)
 
 # --- DEV COMMANDS ---
-install: rebuild up
+install: up jwt
 .PHONY: install
 
 up:
@@ -21,6 +21,10 @@ up:
 down:
 	@docker compose down
 .PHONY: down
+
+jwt:
+	@docker compose exec php php bin/console lexik:jwt:generate-keypair
+.PHONY: jwt
 
 # --- PROD REGISTRY COMMANDS ---
 build-prod:
