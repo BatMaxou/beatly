@@ -11,8 +11,12 @@ REGISTRY_PROJECT = beatly
 REGISTRY = $(REGISTRY_HOST):$(REGISTRY_PORT)/$(REGISTRY_PROJECT)
 
 # --- DEV COMMANDS ---
-install: up jwt
+install: up vendor jwt
 .PHONY: install
+
+vendor:
+	@docker compose exec php composer install
+.PHONY: vendor
 
 up:
 	@docker compose up -d
