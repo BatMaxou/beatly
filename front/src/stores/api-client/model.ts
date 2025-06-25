@@ -1,4 +1,5 @@
 import Me from "./ressources/me";
+import Music from "./ressources/music";
 import { eraseCookie, getCookie, setCookie } from "@/utils/cookies";
 import { apiBaseUrl } from "@/utils/tools";
 import type { User } from "@/utils/types";
@@ -10,12 +11,14 @@ export interface LoginResponse {
 
 export class ApiClient {
   baseUrl: string;
-  me: Me
+  me: Me;
+  music: Music;
   token: string | null;
 
   constructor() {;
     this.baseUrl = apiBaseUrl;
     this.me = new Me(this);
+    this.music = new Music(this);
     this.token = getCookie('token')
   }
 
@@ -23,6 +26,18 @@ export class ApiClient {
     return fetch(`${this.baseUrl}${url}`, this.token ? { headers: { Authorization: `Bearer ${this.token}` } } : undefined)
       .then(response => response.json())
   }
+
+  async getStream(url: string): Promise<ReadableStream> {
+    return fetch(`${this.baseUrl}${url}`, this.token ? { headers: { Authorization: `Bearer ${this.token}` } } : undefined)
+      .then(response => response.body)
+      .then(body => {
+        if (!body) {
+          throw new Error('Failed to fetch stream');
+        }
+        return body;
+      })
+  }
+
 
   async post<T>(url: string, body: object, additionnalHeaders: HeadersInit = {}): Promise<T> {
     const headers: HeadersInit = {

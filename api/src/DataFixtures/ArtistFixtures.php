@@ -15,6 +15,7 @@ use App\Entity\Playlist;
 use App\Enum\RoleEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\File\File;
 
 class ArtistFixtures extends Fixture
 {
@@ -114,8 +115,10 @@ class ArtistFixtures extends Fixture
                 $this->manager->persist($album);
 
                 foreach ($songs as $songTitle => $songCategories) {
+                    $name = sprintf('track_%d.mp3', $musicFileCounter);
                     $musicFile = (new MusicFile())
-                        ->setFile('uploads/music/track_' . $musicFileCounter . '.mp3');
+                        ->setName($name)
+                        ->setFile(new File($name, false));
                     $this->manager->persist($musicFile);
 
                     $music = (new Music())

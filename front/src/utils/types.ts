@@ -12,3 +12,7 @@ export type User = {
   roles: Role[];
 };
 
+export type MusicFile = {
+  id: number;
+  contentUrl: string;
+};

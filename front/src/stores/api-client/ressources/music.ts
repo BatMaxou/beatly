@@ -1,14 +1,13 @@
-import type { User } from "@/utils/types";
 import type { ApiClient } from "../model";
 
-export default class Me {
+export default class Music {
   apiClient: ApiClient;
 
   constructor(apiClient: ApiClient) {
     this.apiClient = apiClient;
   }
 
-  async get(): Promise<User> {
-    return this.apiClient.get<User>(`/me`);
+  async getFile(id: number|string): Promise<ReadableStream> {
+    return this.apiClient.getStream(`/music_files/${id}`);
   }
 }
