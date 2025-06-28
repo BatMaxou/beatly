@@ -33,6 +33,10 @@ class MusicFileController
         }
 
         $musicFile = $this->musicFileRepository->find($id);
+        if (null === $musicFile) {
+            throw new NotFoundHttpException();
+        }
+
         $path = $this->storage->resolvePath($musicFile, 'file');
         if (null === $path) {
             throw new NotFoundHttpException();

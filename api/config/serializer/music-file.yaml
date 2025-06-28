@@ -1,7 +1,9 @@
 App\Entity\MusicFile:
   attributes:
     id:
-      groups: ['music_file:read']
+      groups:
+        - 'music_file:read'
     file:
-      groups: ['music_file:upload']
+      groups:
+        - 'music_file:upload'
 

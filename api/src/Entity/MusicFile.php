@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use ApiPlatform\OpenApi\Model\Operation;
 use ApiPlatform\OpenApi\Model\RequestBody;
 use App\Api\Processor\MusicFileProcessor;
@@ -29,6 +31,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         new Get(
             name: 'api_get_music_file',
             controller: MusicFileController::class,
+        ),
+        new Delete(
+            name: 'api_delete_music_file',
         ),
     ]
 )]

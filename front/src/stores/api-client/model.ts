@@ -9,6 +9,10 @@ export interface LoginResponse {
   user?: User;
 }
 
+export interface DeleteResponse {
+  success: boolean;
+}
+
 export class ApiClient {
   baseUrl: string;
   me: Me;
@@ -38,9 +42,13 @@ export class ApiClient {
       })
   }
 
-
   async post<T>(url: string, body: object, additionnalHeaders: HeadersInit = {}): Promise<T> {
-    const headers: HeadersInit = {
+    const isFormData = body instanceof FormData;
+
+    const headers: HeadersInit = isFormData ? {
+      Accept: 'application/json',
+      ...additionnalHeaders,
+    } : {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       ...additionnalHeaders,
@@ -50,9 +58,9 @@ export class ApiClient {
       method: 'POST',
       headers: {
         ...headers,
-        ...( this.token ? { Authorization: this.token } : {} )
+        ...(this.token ? { Authorization: `Bearer ${this.token}` } : {})
       },
-      body: JSON.stringify(body)
+      body: isFormData ? body : JSON.stringify(body)
     })
       .then(response => response.json())
   }
@@ -68,21 +76,21 @@ export class ApiClient {
       method: 'PUT',
       headers: {
         ...headers,
-        ...( this.token ? { Authorization: this.token } : {} )
+        ...(this.token ? { Authorization: `Bearer ${this.token}` } : {})
       },
       body: JSON.stringify(body)
     })
       .then(response => response.json())
   }
 
-  async delete<T>(url: string): Promise<T> {
+  async delete(url: string): Promise<DeleteResponse> {
     return fetch(`${this.baseUrl}${url}`, {
       method: 'DELETE',
       headers: {
-        Accept: 'application/json',
+        ...(this.token ? { Authorization: `Bearer ${this.token}` } : {})
       },
     })
-      .then(response => response.json())
+      .then(response => ({ success: response.status === 204 }))
   }
 
   async login(email: string, password: string): Promise<object> {
