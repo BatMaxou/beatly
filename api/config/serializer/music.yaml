@@ -1,13 +1,38 @@
 App\Entity\Music:
   attributes:
     id:
-      groups: ['music:read']
+      groups:
+        - 'music:read'
     title:
-      groups: ['music:read']
+      groups:
+        - 'music:read'
+        - 'music:write'
+        - 'music:update'
+    coverName:
+      groups:
+        - 'music:read'
+    cover:
+      groups:
+        - 'music:write'
+        - 'music:update'
+    listeningsNumber:
+      groups:
+        - 'music:read'
+    file:
+      groups:
+        - 'music:read'
+        - 'music:write'
+        - 'music:update'
     artists:
-      groups: ['music:read']
+      groups:
+        - 'music:read'
+        - 'music:write'
     albums:
-      groups: ['music:read']
+      groups:
+        - 'music:read'
     categories:
-      groups: ['music:read']
+      groups:
+        - 'music:read'
+        - 'music:write'
+        - 'music:update'
 

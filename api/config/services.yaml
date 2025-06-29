@@ -9,6 +9,10 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            string $publicUploadsPath: '%env(string:PUBLIC_UPLOADS_PATH)%'
+            string $privateUploadsPath: '%env(string:PRIVATE_UPLOADS_PATH)%'
+            string $ssrPublicUploadsPath: '%env(string:SSR_PUBLIC_UPLOADS_PATH)%'
 
     App\:
         resource: '../src/'

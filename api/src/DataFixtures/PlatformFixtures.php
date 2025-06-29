@@ -2,10 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\DataFixtures\Faker\FakerFixtureTrait;
 use App\Entity\User;
 use App\Enum\RoleEnum;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 class PlatformFixtures extends UserFixtures

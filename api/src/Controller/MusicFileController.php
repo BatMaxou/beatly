@@ -24,7 +24,7 @@ class MusicFileController
     public function __invoke(int $id, Request $request): Response
     {
         if ($request->getMethod() === 'OPTIONS') {
-            return new Response('', 200, [
+            return new Response('', Response::HTTP_OK, [
                 'Access-Control-Allow-Origin' => '*',
                 'Access-Control-Allow-Methods' => 'GET, HEAD, OPTIONS',
                 'Access-Control-Allow-Headers' => 'Range, Content-Type',
