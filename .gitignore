@@ -4,6 +4,7 @@
 /api/.env.*.local
 /api/config/secrets/prod/prod.decrypt.private.php
 /api/public/bundles/
+/api/private/
 /api/var/
 /api/vendor/
 /api/config/jwt/*.pem

@@ -73,17 +73,16 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             }
 
             $this->manager->persist($user);
+            $this->createPlaylists($user);
         }
     }
 
     protected function createUser(?string $email = null, ?string $name = null): User
     {
-        $user = (new User())
+        return (new User())
             ->setEmail($email ?? $this->faker->email())
             ->setName($name ?? $this->faker->name())
             ->setPassword('azerty');
-
-        return $this->createPlaylists($user);
     }
 
     protected function createPlaylists(User $user, ?callable $process = null): User
