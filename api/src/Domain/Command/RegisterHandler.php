@@ -2,6 +2,7 @@
 
 namespace App\Domain\Command;
 
+use App\Entity\Artist;
 use App\Entity\User;
 use App\Enum\RoleEnum;
 use App\Repository\UserRepository;
@@ -24,14 +25,20 @@ class RegisterHandler
             return new JsonResponse(['error' => 'Email already exists'], 409);
         }
 
-        $newUser = (new User())
+        $entity = match ($command->registerType) {
+            RegisterCommand::ARTIST_REGISTER => new Artist(),
+            RegisterCommand::USER_REGISTER => new User(),
+            default => null,
+        };
+
+        if (!$entity) {
+            return new JsonResponse(['error' => 'Invalid registration type'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $newUser = $entity
             ->setEmail($command->email)
             ->setName($command->name)
             ->setPassword($command->password);
-
-        if ($command->registerType === RegisterCommand::ARTIST_REGISTER) {
-            $newUser->addRole(RoleEnum::ARTIST);
-        }
 
         $this->em->persist($newUser);
         $this->em->flush();
