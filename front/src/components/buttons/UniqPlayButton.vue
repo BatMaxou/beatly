@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import playLight from "@/assets/icons/play-light.svg";
 

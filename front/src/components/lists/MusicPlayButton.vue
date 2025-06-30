@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
 import playLight from '@/assets/icons/play-light.svg';
 import pauseLight from '@/assets/icons/pause-light.svg';
@@ -23,9 +23,9 @@ const handleTogglePlay = () => {
 
 <template>
   <div class="music-play-button" @click.stop="handleTogglePlay">
-    <img 
-      :src="isPlaying ? pauseLight : playLight" 
-      :alt="isPlaying ? 'Pause' : 'Play'" 
+    <img
+      :src="isPlaying ? pauseLight : playLight"
+      :alt="isPlaying ? 'Pause' : 'Play'"
       class="play-icon"
       :class="{ 'playing': isPlaying }"
     >

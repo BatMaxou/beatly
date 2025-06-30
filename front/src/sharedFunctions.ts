@@ -1,4 +1,3 @@
-<script>
 // A transformer en composable
 export const convertDurationInMinutes = (duration) => {
   console.log("convertDurationInMinutes", duration);
@@ -12,4 +11,3 @@ export const convertDurationInMinutes = (duration) => {
   const seconds = durationNumber % 60;
   return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 };
-</script>

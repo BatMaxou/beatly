@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import PlaylistTitleMenu from "../../menus/PlaylistTitleMenu.vue";
 import PlaylistMenu from "../../menus/PlaylistMenu.vue";
 import AlbumMenu from "../../menus/AlbumMenu.vue";

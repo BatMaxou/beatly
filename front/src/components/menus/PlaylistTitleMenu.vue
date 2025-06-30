@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 import dotsLight from "@/assets/icons/dots-light.svg";
 import addToFavActive from "@/assets/icons/add-to-fav-active-light.svg";

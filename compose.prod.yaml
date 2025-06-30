@@ -74,6 +74,8 @@ volumes:
   var:
   node_modules:
   db_data:
+  qdrant_data:
+  ollama_data:
 
 networks:
   beatly:

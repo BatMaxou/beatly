@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import Home from "./pages/Home.vue";
 import MusicFile from "./pages/MusicFile.vue"

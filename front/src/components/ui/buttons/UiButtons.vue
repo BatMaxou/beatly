@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AddToFavoriteButton from "../../buttons/AddToFavoriteButton.vue";
 import ListenPlaylistButton from "../../buttons/ListenPlaylistButton.vue";
 </script>
