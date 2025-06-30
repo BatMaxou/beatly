@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import imageVinyl from "@/assets/images/vinyl-black-and-white-landing.jpg";
 import logo from "@/assets/beatly-logo-white.png";

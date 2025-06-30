@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, provide } from "vue";
 import UiNavigation from "../components/ui/UiNavigation.vue";
 import UiButtons from "../components/ui/buttons/UiButtons.vue";

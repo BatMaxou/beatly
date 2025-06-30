@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { defineProps, ref } from "vue";
 import MusicListItem from "@/components/lists/MusicListItem.vue";
 import PlaylistMusicListItem from "@/components/lists/PlaylistMusicListItem.vue";

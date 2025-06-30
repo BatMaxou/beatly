@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
 import playDark from "@/assets/icons/play-dark.svg";
 import playLight from "@/assets/icons/play-light.svg";

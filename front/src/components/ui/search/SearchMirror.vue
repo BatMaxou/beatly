@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useSearch } from "@/providers";
 
 // Récupérer le contexte de recherche

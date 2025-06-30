@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { defineProps } from "vue";
 import AlbumPlayableCover from "@/components/albums/AlbumPlayableCover.vue";
 

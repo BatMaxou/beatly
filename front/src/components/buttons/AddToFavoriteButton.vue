@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
 import addToFavActive from "@/assets/icons/add-to-fav-active-dark.svg";
 import addToFavInactive from "@/assets/icons/add-to-fav-inactive-dark.svg";

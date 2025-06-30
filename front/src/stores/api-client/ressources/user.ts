@@ -13,7 +13,7 @@ type RegisterResponse = {
   status: boolean,
 }
 
-export default class Me {
+export default class User {
   apiClient: ApiClient;
 
   constructor(apiClient: ApiClient) {
