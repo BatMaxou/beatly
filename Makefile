@@ -5,10 +5,10 @@
 ARGS = `arg="$(filter-out $@,$(MAKECMDGOALS))" && echo $${arg:-${1}}`
 
 # --- DOCKER REGISTRY CONFIG ---
-REGISTRY_HOST = registry.mbaheb.fr
-REGISTRY_PORT = 10104
+REGISTRY_HOST = ghcr.io
+REGISTRY_USERNAME = batmaxou
 REGISTRY_PROJECT = beatly
-REGISTRY = $(REGISTRY_HOST):$(REGISTRY_PORT)/$(REGISTRY_PROJECT)
+REGISTRY_REPOSITORY_PREFIX = $(REGISTRY_HOST)/${REGISTRY_USERNAME}/$(REGISTRY_PROJECT)
 
 # --- DEV COMMANDS ---
 install: up vendor jwt
@@ -17,6 +17,10 @@ install: up vendor jwt
 vendor:
 	@docker compose exec php composer install
 .PHONY: vendor
+
+node_modules:
+	@docker compose exec front npm install
+.PHONY: node_modules
 
 up:
 	@docker compose up -d
@@ -49,14 +53,25 @@ clear-uploads:
 	@rm -rf ./api/public/uploads/albums/wallpapers/*
 .PHONY: clear-uploads
 
+network:
+	@docker network create beatly
+.PHONY: network
+
+# --- LINTERS ---
+php-lint:
+.PHONY: php-lint
+
+front-lint:
+.PHONY: front-lint
+
 # --- PROD REGISTRY COMMANDS ---
 build-prod:
-	@REGISTRY=$(REGISTRY) docker compose -f compose.prod.yaml build $(ARGS)
+	@REGISTRY_REPOSITORY_PREFIX=$(registry_repository_prefix) docker compose -f compose.prod.yaml build $(ARGS)
 .PHONY: build-prod
 
 push-prod-%:
-	@docker tag $(REGISTRY)-$* $(REGISTRY)-$*:latest
-	@docker push $(REGISTRY)-$*:latest
+	@docker tag $(REGISTRY_REPOSITORY_PREFIX)-$* $(REGISTRY)-$*:latest
+	@docker push $(REGISTRY_REPOSITORY_PREFIX)-$*:latest
 .PHONY: push-prod-%
 
 push-prod-all:
@@ -69,13 +84,21 @@ push-prod-all:
 
 # --- PROD DEPLOYMENT COMMANDS ---
 up-prod:
-	@REGISTRY=$(REGISTRY) docker compose -f compose.prod.yaml -f compose.override.yaml up -d
+	@REGISTRY_REPOSITORY_PREFIX=$(REGISTRY_REPOSITORY_PREFIX) docker compose -f compose.prod.yaml -f compose.override.yaml up -d $(ARGS)
 .PHONY: up-prod
 
 down-prod:
-	@REGISTRY=$(REGISTRY) docker compose -f compose.prod.yaml down
+	@REGISTRY_REPOSITORY_PREFIX=$(REGISTRY_REPOSITORY_PREFIX) docker compose -f compose.prod.yaml down $(ARGS)
 .PHONY: down-prod
 
 pull-prod:
-	@REGISTRY=$(REGISTRY) docker compose -f compose.prod.yaml pull
+	@git pull
+	@REGISTRY_REPOSITORY_PREFIX=$(REGISTRY_REPOSITORY_PREFIX) docker compose -f compose.prod.yaml pull $(ARGS)
 .PHONY: pull-prod
+
+deploy:
+	@make down-prod $(ARGS)
+	@docker image prune -f
+	@make pull-prod $(ARGS)
+	@make up-prod $(ARGS)
+.PHONY: deploy
