@@ -1,0 +1,28 @@
+name: Build / Push / Pull ollama docker image
+
+on:
+  push:
+    branches:
+      - feat/ci
+    paths:
+      - '.devops/ollama/**'
+
+jobs:
+  build-push-ollama:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup registry & Build / Push ollama image
+        uses: ./.github/callables/registry
+        with:
+          setup: true
+          dockerfile: .devops/ollama/Dockerfile
+          image: ollama
+
+      - name: Deploy image
+        uses: ./.github/callables/deployment
+        with:
+          images: ollama

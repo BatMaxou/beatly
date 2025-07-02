@@ -1,0 +1,57 @@
+name: Registry
+
+on:
+  workflow_call:
+    inputs:
+      image:
+        type: string
+        required: true
+      dockerfile:
+        type: string
+        required: true
+      setup:
+        type: boolean
+        required: false
+        default: false
+      target:
+        type: string
+        required: false
+        default: ''
+
+env:
+  REGISTRY: ghcr.io
+  PROJECT_NAME: beatly
+
+jobs:
+  setup-registry:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.setup == true }}
+
+    steps:
+      - name: Setup registry string
+        run: |
+          REGISTRY_USER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "REGISTRY_USER=$REGISTRY_USER" >> $GITHUB_ENV
+          echo "IMAGE_PREFIX=${{ env.REGISTRY }}/$REGISTRY_USER/${{ env.PROJECT_NAME }}" >> $GITHUB_ENV
+
+      - name: Registry login
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.IMAGE_TOKEN }}
+
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v3
+
+  build-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build / Push images
+        uses: docker/build-push-action@v6
+        with:
+          file: ${{ inputs.dockerfile }}
+          tags: ${{ env.IMAGE_PREFIX }}-${{ inputs.image }}:latest
+          target: ${{ inputs.target }}
+          push: true

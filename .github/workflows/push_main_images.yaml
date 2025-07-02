@@ -1,0 +1,55 @@
+name: Build / Push / Pull main docker images
+
+on:
+  push:
+    branches:
+      - feat/ci
+    paths:
+      - 'front/**'
+      - 'api/**'
+      - '.devops/php/**'
+      - '.devops/nginx/**'
+      - '.devops/node/**'
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-push-main-images:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Registry login
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.IMAGE_TOKEN }}
+
+      - name: Setup registry & Build / Push PHP image
+        uses: ./.github/callables/registry
+        with:
+          setup: true
+          dockerfile: .devops/php/Dockerfile
+          image: php
+
+      - name: Build / Push web image
+        uses: ./.github/callables/registry
+        with:
+          dockerfile: .devops/nginx/Dockerfile
+          image: web
+
+      - name: Build / Push front image
+        uses: ./.github/callables/registry
+        with:
+          dockerfile: .devops/node/Dockerfile
+          image: front
+          target: prod
+
+      - name: Deploy images
+        uses: ./.github/callables/deployment
+        with:
+          images: php web front

@@ -1,0 +1,29 @@
+name: Build / Push / Pull embedder docker image
+
+on:
+  push:
+    branches:
+      - feat/ci
+    paths:
+      - 'embedder/**'
+      - '.devops/python/**'
+
+jobs:
+  build-push-embedder:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup registry & Build / Push embedder image
+        uses: ./.github/callables/registry
+        with:
+          setup: true
+          dockerfile: .devops/python/Dockerfile
+          image: embedder
+
+      - name: Deploy image
+        uses: ./.github/callables/deployment
+        with:
+          images: embedder
