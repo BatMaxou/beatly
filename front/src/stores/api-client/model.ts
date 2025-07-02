@@ -68,15 +68,15 @@ export class ApiClient {
       .then(response => response.json())
   }
 
-  async put<T>(url: string, body: object, additionnalHeaders: HeadersInit = {}): Promise<T> {
+  async patch<T>(url: string, body: object, additionnalHeaders: HeadersInit = {}): Promise<T> {
     const headers: HeadersInit = {
       Accept: 'application/json',
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/merge-patch+json',
       ...additionnalHeaders,
     }
 
     return fetch(`${this.baseUrl}${url}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         ...headers,
         ...(this.token ? { Authorization: `Bearer ${this.token}` } : {})

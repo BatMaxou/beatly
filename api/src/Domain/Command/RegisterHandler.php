@@ -22,7 +22,7 @@ class RegisterHandler
 
     public function __invoke(RegisterCommand $command): Response {
         if ($this->userRepository->findOneBy(['email' => $command->email])) {
-            return new JsonResponse(['error' => 'Email already exists'], 409);
+            return new JsonResponse(['error' => 'Email already exists'], Response::HTTP_CONFLICT);
         }
 
         $entity = match ($command->registerType) {
@@ -43,6 +43,6 @@ class RegisterHandler
         $this->em->persist($newUser);
         $this->em->flush();
 
-        return new JsonResponse(['response' => 'User created'], 201);
+        return new JsonResponse(['response' => 'User created'], Response::HTTP_CREATED);
     }
 }

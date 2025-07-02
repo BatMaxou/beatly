@@ -10,12 +10,10 @@ use App\Entity\Album;
 use App\Entity\Music;
 use App\Entity\MusicFile;
 use App\Entity\Category;
-use App\Entity\User;
-use App\Entity\Playlist;
-use App\Enum\RoleEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ArtistFixtures extends Fixture
 {
@@ -28,6 +26,8 @@ class ArtistFixtures extends Fixture
     private readonly ObjectManager $manager;
 
     public function __construct(
+        private readonly string $ssrPublicUploadsPath,
+        private readonly string $privateUploadsPath,
         private readonly SampleLoader $sampleLoader
     ) {
         $this->initializeFaker();
@@ -80,11 +80,13 @@ class ArtistFixtures extends Fixture
             ->setPassword('azerty', true);
         
         if ($this->faker->boolean(80)) {
-            $artist->setAvatar('https://via.placeholder.com/300x300/'. $this->faker->hexColor .'/ffffff?text=' . urlencode(substr($name, 0, 2)));
+            // TODO: Uncomment after implementing uploader on User entity
+            // $artist->setAvatar($this->createCover());
         }
         
         if ($this->faker->boolean(70)) {
-            $artist->setWallpaper('https://via.placeholder.com/1200x400/'. $this->faker->hexColor .'/ffffff?text=' . urlencode($name));
+            // TODO: Uncomment after implementing uploader on User entity
+            // $artist->setWallpaper($this->createWallpaper());
         }
 
         $this->manager->persist($artist);
@@ -105,25 +107,24 @@ class ArtistFixtures extends Fixture
                     ->setReleaseDate($this->faker->dateTimeBetween('-15 years', 'now'));
 
                 if ($this->faker->boolean(90)) {
-                    $album->setCover('https://via.placeholder.com/400x400/'. $this->faker->hexColor .'/ffffff?text=Album');
+                    // TODO: Uncomment after implementing uploader on Album entity
+                    // $album->setCover($this->createCover());
                 }
 
                 if ($this->faker->boolean(60)) {
-                    $album->setWallpaper('https://via.placeholder.com/1200x400/'. $this->faker->hexColor .'/ffffff?text=Album');
+                    // TODO: Uncomment after implementing uploader on Album entity
+                    // $album->setWallpaper($this->createWallpaper());
                 }
 
                 $this->manager->persist($album);
 
                 foreach ($songs as $songTitle => $songCategories) {
-                    $name = sprintf('track_%d.mp3', $musicFileCounter);
-                    $musicFile = (new MusicFile())
-                        ->setName($name)
-                        ->setFile(new File($name, false));
+                    $musicFile = (new MusicFile())->setName($this->createMusicFile());
                     $this->manager->persist($musicFile);
 
                     $music = (new Music())
                         ->setTitle($songTitle)
-                        ->setDuration(20)
+                        ->setCoverName($this->createCover())
                         ->setFile($musicFile);
 
                     $music->addArtist($artist);
@@ -139,5 +140,34 @@ class ArtistFixtures extends Fixture
                 }
             }
         }
+    }
+    private function createMusicFile(): string
+    {
+        $name = sprintf('track_%s.mp3', $this->faker->unique()->slug(3));
+        $rootDir = sprintf('%s/../..', __DIR__);
+
+        copy(sprintf('%s/track.mp3', __DIR__), sprintf('%s%s/musics/%s', $rootDir, $this->privateUploadsPath, $name));
+
+        return $name;
+    }
+
+    private function createCover(): string
+    {
+        $name = sprintf('cover_%s.jpg', $this->faker->unique()->slug(3));
+        $rootDir = sprintf('%s/../..', __DIR__);
+
+        copy(sprintf('%s/300x300.jpg', __DIR__), sprintf('%s%s/musics/covers/%s', $rootDir, $this->ssrPublicUploadsPath, $name));
+
+        return $name;
+    }
+
+    private function createWallpaper(): string
+    {
+        $name = sprintf('wallpaper_%s.jpg', $this->faker->unique()->slug(3));
+        $rootDir = sprintf('%s/../..', __DIR__);
+
+        copy(sprintf('%s/1200x400.jpg', __DIR__), sprintf('%s%s/musics/wallpapers/%s', $rootDir, $this->ssrPublicUploadsPath, $name));
+
+        return $name;
     }
 }
