@@ -18,7 +18,7 @@ FROM main as dev
 
 COPY ./front /app
 
-RUN npm i
+COPY --from=main /app/node_modules /app
 
 EXPOSE 5173
 
