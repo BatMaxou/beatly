@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
 const goToUi = () => {
-  window.location = '/ui'
-}
+  router.push("/ui");
+};
 </script>
 <template>
-  <button @click="goToUi" class="goto-ui-btn">
-    UI
-  </button>
+  <button @click="goToUi" class="goto-ui-btn">UI</button>
 </template>
 
 <style scoped>
@@ -21,7 +23,7 @@ const goToUi = () => {
   border-radius: 100px;
   cursor: pointer;
   z-index: 1000;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .goto-ui-btn:hover {
