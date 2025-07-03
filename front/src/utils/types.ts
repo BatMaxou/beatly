@@ -1,9 +1,8 @@
-
 export enum Role {
-  PLATFORM = 'ROLE_PLATFORM',
-  ARTIST = 'ROLE_ARTIST',
-  USER = 'ROLE_USER',
-  BANNED = 'ROLE_BANNED',
+  PLATFORM = "ROLE_PLATFORM",
+  ARTIST = "ROLE_ARTIST",
+  USER = "ROLE_USER",
+  BANNED = "ROLE_BANNED",
 }
 
 export type User = {
@@ -15,17 +14,17 @@ export type User = {
 export type Artist = {
   id: number;
   name: string;
-}
+};
 
 export type Album = {
   id: number;
   title: string;
-}
+};
 
 export type Category = {
   id: number;
   name: string;
-}
+};
 
 export type MusicFile = {
   id: number;
@@ -40,4 +39,4 @@ export type Music = {
   file?: string | null;
   cover?: string | null;
   listeningsNumber?: number;
-}
+};

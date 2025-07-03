@@ -1,54 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import Home from "./pages/Home.vue";
-import MusicFile from "./pages/MusicFile.vue"
-import Layout from "./components/layout/Layout.vue";
-import Ui from "./pages/Ui.vue";
-import Auth from "./pages/Auth.vue";
-import Register from "./pages/Register.vue";
-import Login from "./pages/Login.vue";
-import NotFound from "./pages/NotFound.vue";
 import { SearchProvider } from "./providers";
-
-const routes = {
-  "/": Home, // Condition a placer sur l'état de connexion de l'utilisateur / Affichage Landing ou Home
-  "/test-music-file": MusicFile,
-  "/ui": Ui,
-  "/auth": Auth,
-  "/register": Register,
-  "/login": Login,
-};
-
-const currentPath = ref(window.location.pathname);
-
-window.addEventListener("popstate", () => {
-  currentPath.value = window.location.pathname;
-});
-
-const navigateTo = (path) => {
-  window.history.pushState({}, "", path);
-  currentPath.value = path;
-};
-
-onMounted(() => {
-  document.addEventListener("click", (e) => {
-    const link = e.target.closest("a");
-    if (link && link.href.startsWith(window.location.origin) && !link.dataset.external) {
-      e.preventDefault();
-      const url = new URL(link.href);
-      navigateTo(url.pathname);
-    }
-  });
-});
-
-const currentView = computed(() => {
-  console.log("Current path:", currentPath.value);
-  return routes[currentPath.value || "/"] || NotFound;
-});
+import Layout from "./components/layout/Layout.vue";
 </script>
 
 <template>
   <SearchProvider>
-    <Layout :current-view="currentView" class="text-white" />
+    <Layout class="text-white">
+      <router-view />
+    </Layout>
   </SearchProvider>
 </template>
