@@ -1,4 +1,6 @@
 import Me from "./ressources/me";
+import Music from "./ressources/music";
+import UserResource from "./ressources/user";
 import { eraseCookie, getCookie, setCookie } from "@/utils/cookies";
 import { apiBaseUrl } from "@/utils/tools";
 import type { User } from "@/utils/types";
@@ -8,93 +10,121 @@ export interface LoginResponse {
   user?: User;
 }
 
+export interface DeleteResponse {
+  success: boolean;
+}
+
 export class ApiClient {
   baseUrl: string;
-  me: Me
+  me: Me;
+  music: Music;
+  user: UserResource;
   token: string | null;
 
-  constructor() {;
+  constructor() {
     this.baseUrl = apiBaseUrl;
     this.me = new Me(this);
-    this.token = getCookie('token')
+    this.music = new Music(this);
+    this.user = new UserResource(this);
+    this.token = getCookie("token");
   }
 
   async get<T>(url: string): Promise<T> {
-    return fetch(`${this.baseUrl}${url}`, this.token ? { headers: { Authorization: `Bearer ${this.token}` } } : undefined)
-      .then(response => response.json())
+    return fetch(
+      `${this.baseUrl}${url}`,
+      this.token ? { headers: { Authorization: `Bearer ${this.token}` } } : undefined,
+    ).then((response) => response.json());
+  }
+
+  async getStream(url: string): Promise<ReadableStream> {
+    return fetch(
+      `${this.baseUrl}${url}`,
+      this.token ? { headers: { Authorization: `Bearer ${this.token}` } } : undefined,
+    )
+      .then((response) => response.body)
+      .then((body) => {
+        if (!body) {
+          throw new Error("Failed to fetch stream");
+        }
+        return body;
+      });
   }
 
   async post<T>(url: string, body: object, additionnalHeaders: HeadersInit = {}): Promise<T> {
-    const headers: HeadersInit = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      ...additionnalHeaders,
-    }
+    const isFormData = body instanceof FormData;
+
+    const headers: HeadersInit = isFormData
+      ? {
+          Accept: "application/json",
+          ...additionnalHeaders,
+        }
+      : {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          ...additionnalHeaders,
+        };
 
     return fetch(`${this.baseUrl}${url}`, {
-      method: 'POST',
+      method: "POST",
       headers: {
         ...headers,
-        ...( this.token ? { Authorization: this.token } : {} )
+        ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
       },
-      body: JSON.stringify(body)
-    })
-      .then(response => response.json())
+      body: isFormData ? body : JSON.stringify(body),
+    }).then((response) => response.json());
   }
 
-  async put<T>(url: string, body: object, additionnalHeaders: HeadersInit = {}): Promise<T> {
+  async patch<T>(url: string, body: object, additionnalHeaders: HeadersInit = {}): Promise<T> {
     const headers: HeadersInit = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/merge-patch+json",
       ...additionnalHeaders,
-    }
+    };
 
     return fetch(`${this.baseUrl}${url}`, {
-      method: 'PUT',
+      method: "PATCH",
       headers: {
         ...headers,
-        ...( this.token ? { Authorization: this.token } : {} )
+        ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
       },
-      body: JSON.stringify(body)
-    })
-      .then(response => response.json())
+      body: JSON.stringify(body),
+    }).then((response) => response.json());
   }
 
-  async delete<T>(url: string): Promise<T> {
+  async delete(url: string): Promise<DeleteResponse> {
     return fetch(`${this.baseUrl}${url}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        Accept: 'application/json',
+        ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
       },
-    })
-      .then(response => response.json())
+    }).then((response) => ({ success: response.status === 204 }));
   }
 
   async login(email: string, password: string): Promise<object> {
-    return this.post<LoginResponse>('/login', { username: email, password })
-      .then(response => {
+    return this.post<LoginResponse>("/login", { username: email, password })
+      .then((response) => {
         if (response.token) {
-          const decodedTokenExp: number = JSON.parse(atob(response.token.split('.')[1]))?.exp ?? 0;
-          setCookie('token', response.token, new Date(decodedTokenExp * 1000))
-          this.token = response.token
+          const decodedTokenExp: number = JSON.parse(atob(response.token.split(".")[1]))?.exp ?? 0;
+          setCookie("token", response.token, new Date(decodedTokenExp * 1000));
+          this.token = response.token;
         }
 
-        return response
+        return response;
       })
       .then(async (response) => {
         if (response.token) {
           return {
             ...response,
-            user: await this.me.get().then(user => user)
-          }
+            user: await this.me.get().then((user) => user),
+          };
         }
 
-        return response
-      })
+        return response;
+      });
   }
 
   logout(): void {
     this.token = null;
-    eraseCookie('token');
+    eraseCookie("token");
   }
 }

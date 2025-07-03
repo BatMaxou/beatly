@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import MusicList from "@/components/lists/MusicList.vue";
 import AlbumPlayable from "@/components/cards/AlbumPlayableCard.vue";

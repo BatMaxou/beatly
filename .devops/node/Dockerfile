@@ -10,11 +10,15 @@ FROM main as builder
 
 COPY ./front /app
 
+RUN npm i
+
 RUN npm run build
 
 FROM main as dev
 
 COPY ./front /app
+
+COPY --from=main /app/node_modules /app
 
 EXPOSE 5173
 

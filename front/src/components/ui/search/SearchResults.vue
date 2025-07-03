@@ -135,7 +135,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import { useSearch } from "@/providers";
 import MusicList from "@/components/lists/MusicList.vue";

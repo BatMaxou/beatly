@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, defineEmits, onMounted } from "vue";
 import searchIcon from "@/assets/icons/search-dark.svg";
 import SearchResults from "./SearchResults.vue";

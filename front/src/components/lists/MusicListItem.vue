@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { defineProps, defineEmits, ref, computed } from "vue";
-import { convertDurationInMinutes } from "@/sharedFunctions.vue";
+import { convertDurationInMinutes } from "@/sharedFunctions.ts";
 import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
 
 const props = defineProps({

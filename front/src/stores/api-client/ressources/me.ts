@@ -8,7 +8,7 @@ export default class Me {
     this.apiClient = apiClient;
   }
 
-  async get() {
+  async get(): Promise<User> {
     return this.apiClient.get<User>(`/me`);
   }
 }
