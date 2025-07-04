@@ -43,6 +43,6 @@ class RegisterHandler
         $this->em->persist($newUser);
         $this->em->flush();
 
-        return new JsonResponse(['response' => 'User created'], Response::HTTP_CREATED);
+        return new JsonResponse(['response' => 'User created', 'result' => true], Response::HTTP_CREATED);
     }
 }

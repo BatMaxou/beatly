@@ -9,13 +9,14 @@ const router = useRouter();
 const { apiClient } = useApiClient();
 
 function handleSubmitLoginForm(data) {
-  console.log(data);
-  const loginRequest = apiClient
-    .login(data.email, data.password)
-    .then((response) => console.log("Login response:", response));
-
-  console.log("Données du formulaire :", data);
-  console.log("Request du formulaire :", loginRequest);
+  const loginRequest = apiClient.login(data.email, data.password).then((response) => {
+    if (response.user) {
+      localStorage.setItem("token", response.token);
+      router.push("/home");
+    } else {
+      console.error("Erreur durant la connexion");
+    }
+  });
 }
 
 const handleIconClick = (node, e) => {
@@ -58,16 +59,16 @@ function goToForgotPassword() {
       >
         <div class="flex flex-col gap-2 justify-start">
           <FormKit
-            type="text"
-            name="name"
-            label="Nom d'utilisateur"
+            type="email"
+            name="email"
+            label="Adresse courriel"
             :classes="{
               input:
                 'px-4 py-2 max-h-12 h-12 w-full text-black rounded border border-[#5523bf] focus:outline-none focus:ring-2 focus:ring-[#5523bf]',
             }"
-            validation="required"
+            validation="required|email"
             validation-visibility="submit"
-            placeholder="Nom d'utilisateur"
+            placeholder="Adresse email"
           />
         </div>
         <div class="flex flex-col gap-2 justify-start">

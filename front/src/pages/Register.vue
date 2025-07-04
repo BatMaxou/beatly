@@ -9,11 +9,15 @@ const { apiClient } = useApiClient();
 
 function handleSubmitRegisterForm(data) {
   const registerRequest = apiClient.user
-    .register(data)
-    .then((response) => console.log("Register response:", response));
-
-  console.log("Données du formulaire :", data);
-  console.log("Request du formulaire :", registerRequest);
+    .register({
+      email: data.email,
+      password: data.password,
+      name: data.name,
+      registerType: "user_register",
+    })
+    .then((response) =>
+      response.result ? goToLogin() : console.error("Erreur durant l'inscription"),
+    );
 }
 
 function goToLogin() {
