@@ -1,0 +1,133 @@
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useApiClient } from "@/stores/api-client";
+import { useToast } from "@/composables/useToast";
+import PublicLayout from "@/components/PublicLayout.vue";
+import loading from "@/assets/icons/loading-light.svg";
+
+const router = useRouter();
+const { apiClient } = useApiClient();
+const route = useRoute();
+const { showSuccess, showError } = useToast();
+const resetToken = ref("");
+const isAuthorized = ref(true);
+const isLoading = ref(true);
+
+onMounted(async () => {
+  resetToken.value = route.params.token as string;
+
+  if (!resetToken.value) {
+    return;
+  }
+
+  const response = await apiClient.user
+    .verifyToken({ token: resetToken.value })
+    .then((response) => {
+      if (response.result) {
+        isLoading.value = false;
+      } else {
+        isAuthorized.value = false;
+        setTimeout(() => {
+          router.push("/forgot-password");
+        }, 5000);
+      }
+    });
+});
+
+function handleSubmitResetPasswordForm(data: { password: string }) {
+  apiClient.user
+    .resetPassword({ password: data.password, token: resetToken.value })
+    .then((response) => {
+      if (response.result) {
+        showSuccess("Mot de passe mit à jour avec succès");
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
+      } else {
+        showError("Erreur durant la réinitialisation du mot de passe");
+      }
+    })
+    .catch((error) => {
+      showError("Erreur lors de la réinitialisation du mot de passe");
+      console.error("Erreur lors de la réinitialisation du mot de passe :", error);
+    });
+}
+</script>
+
+<template>
+  <PublicLayout title="Réinitialisation du mot de passe">
+    <!-- Affichage du loader le temps de vérifier le token -->
+    <div
+      v-if="isLoading"
+      class="absolute inset-0 container z-20 flex flex-col items-center justify-center h-full"
+    >
+      <div class="flex flex-col items-center max-w-[400px] w-full">
+        <img :src="loading" alt="Chargement" class="h-12 w-12 animate-spin mb-4" />
+        <p class="text-white text-lg text-center" v-if="!isAuthorized">
+          Le lien de réinitialisation du mot de passe est invalide ou a expiré. Vous allez être
+          redirigé vers la page de réinitialisation du mot de passe dans quelques secondes.
+        </p>
+        <p v-if="isAuthorized" class="text-white text-lg">Chargement...</p>
+      </div>
+    </div>
+
+    <!-- Affichage du formulaire si verification terminée et valide -->
+    <FormKit
+      v-if="!isLoading && isAuthorized"
+      type="form"
+      :classes="{
+        form: 'w-full flex flex-col gap-4 max-w-[400px]',
+      }"
+      @submit="handleSubmitResetPasswordForm"
+      :actions="false"
+      :messages-class="'hidden'"
+    >
+      <div class="flex flex-col gap-2 justify-start">
+        <FormKit
+          type="password"
+          name="password"
+          label="Mot de passe"
+          :classes="{
+            input:
+              'px-4 py-2 max-h-12 h-12 w-full text-black rounded border border-[#5523bf] focus:outline-none focus:ring-2 focus:ring-[#5523bf]',
+          }"
+          validation="required|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/"
+          :validation-messages="{
+            regex:
+              'Le mot de passe doit contenir au moins 1 majuscule, 1 chiffre et 1 caractère spécial',
+          }"
+          validation-visibility="submit"
+          placeholder="Mot de passe"
+        />
+      </div>
+      <div class="flex flex-col gap-2 justify-start">
+        <FormKit
+          type="password"
+          name="password_confirm"
+          label="Confirmation du mot de passe"
+          :classes="{
+            input:
+              'px-4 py-2 max-h-12 h-12 w-full text-black rounded border border-[#5523bf] focus:outline-none focus:ring-2 focus:ring-[#5523bf]',
+          }"
+          validation="required|confirm:password"
+          :validation-messages="{
+            confirm: 'Les mot de passe ne correspondent pas',
+          }"
+          validation-visibility="submit"
+          placeholder="Confirmation du mot de passe"
+        />
+      </div>
+      <div class="flex justify-center mt-8 mb-16">
+        <FormKit
+          type="submit"
+          label="Enregistrer le mot de passe"
+          :classes="{
+            input:
+              'uppercase bg-[#B00D70] rounded-3xl w-fit px-10 py-2 text-sm font-bold text-white hover:bg-[#940a5e] transition disabled:opacity-50',
+          }"
+        />
+      </div>
+    </FormKit>
+  </PublicLayout>
+</template>

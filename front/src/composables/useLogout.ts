@@ -7,7 +7,7 @@ export function useLogout() {
 
   const logout = async () => {
     apiClient.logout();
-    await router.push({ name: "Login" });
+    await router.push({ name: "Root" });
   };
 
   return {

@@ -9,6 +9,7 @@ use App\Api\Provider\MeProvider;
 use App\Domain\Command\ForgotPasswordCommand;
 use App\Domain\Command\RegisterCommand;
 use App\Domain\Command\ResetPasswordCommand;
+use App\Domain\Command\VerifyResetTokenCommand;
 use App\Entity\Reservation\SimpleReservation;
 use App\Enum\RoleEnum;
 use App\Repository\UserRepository;
@@ -48,6 +49,12 @@ use Symfony\Component\Validator\Constraints as Assert;
             name: 'api_reset_password',
             messenger: 'input',
             input: ResetPasswordCommand::class,
+        ),
+        new Post(
+            uriTemplate: '/verify-token',
+            name: 'api_verify_token',
+            messenger: 'input',
+            input: VerifyResetTokenCommand::class,
         ),
     ],
 )]

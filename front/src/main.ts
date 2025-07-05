@@ -6,12 +6,16 @@ import { createPinia } from "pinia";
 import { plugin as FormKitPlugin, defaultConfig } from "@formkit/vue";
 import { fr } from "@formkit/i18n";
 import router from "./router";
+import Vue3Toastify, { type ToastContainerOptions } from "vue3-toastify";
 
 import App from "./App.vue";
 
 createApp(App)
   .use(createPinia())
   .use(router)
+  .use(Vue3Toastify, {
+    expandCustomProps: true,
+  } as ToastContainerOptions)
   .use(
     FormKitPlugin,
     defaultConfig({
