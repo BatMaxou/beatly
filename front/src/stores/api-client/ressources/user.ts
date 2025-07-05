@@ -21,6 +21,24 @@ type ForgotPasswordResponse = {
   result: boolean;
 };
 
+export type ResetPasswordData = {
+  token: string;
+  password: string;
+};
+
+type ResetPasswordResponse = {
+  result: boolean;
+  message: string;
+};
+
+export type VerifyTokenData = {
+  token: string;
+};
+
+type VerifyTokenResponse = {
+  result: boolean;
+};
+
 export default class User {
   apiClient: ApiClient;
 
@@ -41,5 +59,29 @@ export default class User {
         result: response.result,
       }));
     return response;
+  }
+
+  async resetPassword(data: ResetPasswordData): Promise<ResetPasswordResponse> {
+    const response = await this.apiClient
+      .post<{ message: string; result: boolean }>(`/reset-password`, data)
+      .then((response) => ({
+        message: response.message,
+        result: response.result,
+      }));
+    return response;
+  }
+
+  async verifyToken(data: VerifyTokenData): Promise<VerifyTokenResponse> {
+    try {
+      const response = await this.apiClient
+        .post<{ result: boolean }>(`/verify-token`, data)
+        .then((response) => ({
+          result: response.result,
+        }));
+      return response;
+    } catch (error) {
+      console.error("Erreur lors de la vérification du token:", error);
+      return { result: false };
+    }
   }
 }

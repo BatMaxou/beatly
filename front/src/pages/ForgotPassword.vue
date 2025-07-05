@@ -11,7 +11,7 @@ const successMessage = ref("");
 const errorMessage = ref("");
 const isSubmitting = ref(false);
 
-function handleSubmitResetPasswordForm(data) {
+function handleSubmitForgotPasswordForm(data) {
   isSubmitting.value = true;
   errorMessage.value = "";
   successMessage.value = "";
@@ -71,7 +71,7 @@ function handleSubmitResetPasswordForm(data) {
         :classes="{
           form: 'w-full flex flex-col gap-4 max-w-[400px]',
         }"
-        @submit="handleSubmitResetPasswordForm"
+        @submit="handleSubmitForgotPasswordForm"
         :actions="false"
         :messages-class="'hidden'"
       >

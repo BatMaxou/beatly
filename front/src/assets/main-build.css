@@ -859,6 +859,10 @@ video {
   margin-top: 0.25rem;
 }
 
+.mb-12 {
+  margin-bottom: 3rem;
+}
+
 .box-border {
   box-sizing: border-box;
 }
@@ -1058,6 +1062,16 @@ video {
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 
 .cursor-not-allowed {
@@ -1307,6 +1321,11 @@ video {
 .bg-red-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 226 226 / var(--tw-bg-opacity, 1));
+}
+
+.bg-red-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(239 68 68 / var(--tw-bg-opacity, 1));
 }
 
 .bg-\[url\(\'\@\/assets\/images\/dancing-concert-hands-up\.jpg\'\)\] {
