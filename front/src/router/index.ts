@@ -6,8 +6,9 @@ import Landing from "../pages/Landing.vue";
 import Register from "../pages/Register.vue";
 import Login from "../pages/Login.vue";
 import NotFound from "../pages/NotFound.vue";
+import { getCookie } from "@/utils/cookies";
 
-const token = localStorage.getItem("token");
+const token = getCookie("token");
 
 const routes = [
   {

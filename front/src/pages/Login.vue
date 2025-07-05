@@ -9,9 +9,8 @@ const router = useRouter();
 const { apiClient } = useApiClient();
 
 function handleSubmitLoginForm(data) {
-  const loginRequest = apiClient.login(data.email, data.password).then((response) => {
+  apiClient.login(data.email, data.password).then((response) => {
     if (response.user) {
-      localStorage.setItem("token", response.token);
       router.push("/home");
     } else {
       console.error("Erreur durant la connexion");
