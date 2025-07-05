@@ -5,6 +5,7 @@ import Ui from "../pages/Ui.vue";
 import Landing from "../pages/Landing.vue";
 import Register from "../pages/Register.vue";
 import Login from "../pages/Login.vue";
+import ForgotPassword from "../pages/ForgotPassword.vue";
 import NotFound from "../pages/NotFound.vue";
 import { getCookie } from "@/utils/cookies";
 import { useLogout } from "@/composables/useLogout";
@@ -49,6 +50,11 @@ const routes = [
       const { logout } = useLogout();
       await logout();
     },
+  },
+  {
+    path: "/forgot-password",
+    name: "ForgotPassword",
+    component: ForgotPassword,
   },
 ];
 
