@@ -863,6 +863,30 @@ video {
   margin-bottom: 3rem;
 }
 
+.mt-16 {
+  margin-top: 4rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.-mb-20 {
+  margin-bottom: -5rem;
+}
+
+.-mt-12 {
+  margin-top: -3rem;
+}
+
+.-mt-16 {
+  margin-top: -4rem;
+}
+
+.-mt-20 {
+  margin-top: -5rem;
+}
+
 .box-border {
   box-sizing: border-box;
 }
@@ -1264,6 +1288,11 @@ video {
   border-color: rgb(248 113 113 / var(--tw-border-opacity, 1));
 }
 
+.border-\[\#B00D70\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(176 13 112 / var(--tw-border-opacity, 1));
+}
+
 .bg-\[\#B00D70\] {
   --tw-bg-opacity: 1;
   background-color: rgb(176 13 112 / var(--tw-bg-opacity, 1));
@@ -1442,6 +1471,26 @@ video {
   padding-right: 3rem;
 }
 
+.pe-10 {
+  padding-inline-end: 2.5rem;
+}
+
+.ps-6 {
+  padding-inline-start: 1.5rem;
+}
+
+.ps-4 {
+  padding-inline-start: 1rem;
+}
+
+.ps-5 {
+  padding-inline-start: 1.25rem;
+}
+
+.pe-8 {
+  padding-inline-end: 2rem;
+}
+
 .text-center {
   text-align: center;
 }
@@ -1573,6 +1622,11 @@ video {
   color: rgb(185 28 28 / var(--tw-text-opacity, 1));
 }
 
+.text-\[\#940a5e\] {
+  --tw-text-opacity: 1;
+  color: rgb(148 10 94 / var(--tw-text-opacity, 1));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -1690,9 +1744,18 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.hover\:order-\[\#B00D70\]:hover {
+  order: #B00D70;
+}
+
 .hover\:-translate-y-0\.5:hover {
   --tw-translate-y: -0.125rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.hover\:border-\[\#B00D70\]:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(176 13 112 / var(--tw-border-opacity, 1));
 }
 
 .hover\:bg-\[\#940a5e\]:hover {
@@ -1724,6 +1787,11 @@ video {
 
 .hover\:bg-white\/10:hover {
   background-color: rgb(255 255 255 / 0.1);
+}
+
+.hover\:bg-\[\#B00D70\]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(176 13 112 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:text-gray-700:hover {

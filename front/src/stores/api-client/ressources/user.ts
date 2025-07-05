@@ -10,7 +10,7 @@ export type RegisterData = {
 };
 
 type RegisterResponse = {
-  status: boolean;
+  result: boolean;
 };
 
 export type ForgotPasswordData = {
@@ -47,8 +47,8 @@ export default class User {
   }
 
   async register(data: RegisterData): Promise<RegisterResponse> {
-    return this.apiClient.post<{ status: number }>(`/register`, data).then((response) => ({
-      status: response.status === 201,
+    return this.apiClient.post<{ result: boolean }>(`/register`, data).then((response) => ({
+      result: response.result,
     }));
   }
 

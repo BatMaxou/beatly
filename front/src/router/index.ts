@@ -1,10 +1,8 @@
-import { ref } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import Home from "../pages/Home.vue";
 import MusicFile from "../pages/MusicFile.vue";
 import Ui from "../pages/Ui.vue";
-import Landing from "../pages/Landing.vue";
 import RootPage from "../pages/RootPage.vue";
 import Register from "../pages/Register.vue";
 import Login from "../pages/Login.vue";
@@ -14,25 +12,11 @@ import NotFound from "../pages/NotFound.vue";
 import { getCookie } from "@/utils/cookies";
 import { useLogout } from "@/composables/useLogout";
 
-const token = ref(getCookie("token"));
-
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
     component: RootPage,
     name: "Root",
-  },
-  {
-    path: "/home",
-    name: "Home",
-    component: Home,
-    beforeEnter: (to, from, next) => {
-      if (!getCookie("token")) {
-        next({ name: "Root" });
-      } else {
-        next();
-      }
-    },
   },
   {
     path: "/test-music-file",
