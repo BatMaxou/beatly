@@ -7,6 +7,7 @@ import Register from "../pages/Register.vue";
 import Login from "../pages/Login.vue";
 import NotFound from "../pages/NotFound.vue";
 import { getCookie } from "@/utils/cookies";
+import { useLogout } from "@/composables/useLogout";
 
 const token = getCookie("token");
 
@@ -40,6 +41,14 @@ const routes = [
     path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: NotFound,
+  },
+  {
+    path: "/logout",
+    name: "Logout",
+    beforeEnter: async () => {
+      const { logout } = useLogout();
+      await logout();
+    },
   },
 ];
 

@@ -11,7 +11,7 @@ const { apiClient } = useApiClient();
 function handleSubmitLoginForm(data) {
   apiClient.login(data.email, data.password).then((response) => {
     if (response.user) {
-      router.push("/home");
+      router.push("/");
     } else {
       console.error("Erreur durant la connexion");
     }
