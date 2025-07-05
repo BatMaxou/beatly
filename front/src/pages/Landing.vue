@@ -1,3 +1,19 @@
+<script setup lang="ts">
+import imageVinyl from "@/assets/images/vinyl-black-and-white-landing.jpg";
+import logo from "@/assets/beatly-logo-white.png";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+function goToLogin() {
+  router.push("/login");
+}
+
+function goToRegister() {
+  router.push("/register");
+}
+</script>
+
 <template>
   <div class="relative min-h-screen flex justify-center">
     <div
@@ -45,15 +61,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import imageVinyl from "@/assets/images/vinyl-black-and-white-landing.jpg";
-import logo from "@/assets/beatly-logo-white.png";
-function goToLogin() {
-  window.location = "/login";
-}
-
-function goToRegister() {
-  window.location = "/register";
-}
-</script>
