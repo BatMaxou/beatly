@@ -23,7 +23,7 @@ import loadingIcon from "@/assets/icons/loading-light.svg";
 
 <template>
   <button
-    class=" bg-[#B00D70] rounded-3xl px-10 py-2 hover:bg-[#940a5e] transition"
+    class=" bg-[#B00D70] rounded-3xl px-10 py-2 hover:bg-[#940a5e] transition flex items-center justify-center"
     :type=props.type
     :disabled="props.loading"
   >

@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/auth";
-import PublicLayout from "@/components/PublicLayout.vue";
+import PublicLayout from "@/components/layout/PublicLayout.vue";
 import LandingButton from "@/components/buttons/LandingButton.vue";
 
 const router = useRouter();
@@ -12,6 +12,7 @@ const { apiClient } = useApiClient();
 const { showSuccess, showError } = useToast();
 const authStore = useAuthStore();
 const email = ref(authStore.email || "");
+const isFromLogout = ref(authStore.logoutSuccess || false);
 const loading = ref(false);
 let emailValue = "";
 
@@ -19,6 +20,12 @@ if (email.value !== "") {
   showSuccess("Compte crée !");
   emailValue = email.value || "";
   authStore.setEmail("");
+}
+
+if (isFromLogout.value) {
+  showSuccess("Vous êtes déconnecté !");
+  isFromLogout.value = false;
+  authStore.setLogoutSuccess(false);
 }
 
 if (authStore.forgotPasswordMessage) {
@@ -31,6 +38,7 @@ function handleSubmitLoginForm(data: { email: string; password: string }) {
   apiClient.login(data.email, data.password).then((response: { user?: any }) => {
     if (response.user) {
       authStore.setLoginSuccess(true);
+      authStore.setUser(response.user);
       router.push("/");
     } else {
       loading.value = false;

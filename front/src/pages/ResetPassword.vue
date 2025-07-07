@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
-import PublicLayout from "@/components/PublicLayout.vue";
+import PublicLayout from "@/components/layout/PublicLayout.vue";
 import loading from "@/assets/icons/loading-light.svg";
 import LandingButton from "@/components/buttons/LandingButton.vue";
 
