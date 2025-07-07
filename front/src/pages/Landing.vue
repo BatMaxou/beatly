@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import PublicLayout from "@/components/PublicLayout.vue";
+import LandingButton from "@/components/buttons/LandingButton.vue";
 
 const router = useRouter();
 
@@ -18,21 +19,11 @@ function goToRegister() {
     <div class="flex flex-row gap-32 mb-28">
       <div class="flex flex-col gap-8 items-center justify-between max-w-[375px] text-xl">
         <p class="text-center">Profiter gratuitement <br />de toutes votre musique</p>
-        <button
-          class="uppercase bg-[#B00D70] rounded-3xl px-10 py-2 text-sm font-bold text-white hover:bg-[#940a5e] transition"
-          @click="goToRegister"
-        >
-          S'inscrire
-        </button>
+        <LandingButton label="S'inscrire" @click="goToRegister"/>
       </div>
       <div class="flex flex-col gap-8 items-center justify-between max-w-[375px] text-xl">
         <p class="text-center">Vous avez déjà un compte ?</p>
-        <button
-          class="uppercase bg-[#B00D70] rounded-3xl px-10 py-2 text-sm font-bold text-white hover:bg-[#940a5e] transition"
-          @click="goToLogin"
-        >
-          Se connecter
-        </button>
+        <LandingButton label="Se connecter" @click="goToLogin"/>
       </div>
     </div>
 
