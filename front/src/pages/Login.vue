@@ -5,12 +5,14 @@ import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/auth";
 import PublicLayout from "@/components/PublicLayout.vue";
+import LandingButton from "@/components/buttons/LandingButton.vue";
 
 const router = useRouter();
 const { apiClient } = useApiClient();
 const { showSuccess, showError } = useToast();
 const authStore = useAuthStore();
 const email = ref(authStore.email || "");
+const loading = ref(false);
 let emailValue = "";
 
 if (email.value !== "") {
@@ -25,11 +27,13 @@ if (authStore.forgotPasswordMessage) {
 }
 
 function handleSubmitLoginForm(data: { email: string; password: string }) {
+  loading.value = true;
   apiClient.login(data.email, data.password).then((response: { user?: any }) => {
     if (response.user) {
       authStore.setLoginSuccess(true);
       router.push("/");
     } else {
+      loading.value = false;
       showError("Email ou mot de passe incorrect");
     }
   });
@@ -66,6 +70,7 @@ function goToForgotPassword() {
           name="email"
           label="Adresse courriel"
           :value="emailValue"
+          v-focus="emailValue !== '' ? false : true"
           :classes="{
             input:
               'px-4 py-2 max-h-12 h-12 w-full text-black rounded border border-[#5523bf] focus:outline-none focus:ring-2 focus:ring-[#5523bf]',
@@ -80,6 +85,7 @@ function goToForgotPassword() {
           type="password"
           name="password"
           label="Mot de passe"
+          v-focus
           :classes="{
             inner: 'relative flex items-center',
             input:
@@ -102,25 +108,17 @@ function goToForgotPassword() {
       </div>
 
       <div class="flex justify-center mt-8 mb-16">
-        <FormKit
-          type="submit"
+        <LandingButton
           label="Se connecter"
-          :classes="{
-            input:
-              'uppercase bg-[#B00D70] rounded-3xl w-fit px-10 py-2 text-sm font-bold text-white hover:bg-[#940a5e] transition',
-          }"
+          type="submit"
+          :loading="loading"
         />
       </div>
     </FormKit>
 
     <p class="text-center mb-4 text-white font-light">Vous n'avez pas de compte ?</p>
     <div class="flex justify-center mb-16">
-      <button
-        class="uppercase bg-[#B00D70] rounded-3xl w-fit px-10 py-2 text-sm font-bold text-white hover:bg-[#940a5e] transition"
-        @click="goToRegister"
-      >
-        S'inscrire
-      </button>
+      <LandingButton label="S'inscrire" @click="goToRegister"/>
     </div>
   </PublicLayout>
 </template>

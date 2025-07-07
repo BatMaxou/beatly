@@ -1,16 +1,20 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useApiClient } from "@/stores/api-client";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "@/composables/useToast";
 import PublicLayout from "@/components/PublicLayout.vue";
+import LandingButton from "@/components/buttons/LandingButton.vue";
 
 const router = useRouter();
 const { apiClient } = useApiClient();
 const authStore = useAuthStore();
 const { showError } = useToast();
+const loading = ref(false);
 
 function handleSubmitRegisterForm(data) {
+  loading.value = true;
   apiClient.user
     .register({
       email: data.email,
@@ -23,6 +27,7 @@ function handleSubmitRegisterForm(data) {
         authStore.setEmail(data.email);
         goToLogin();
       } else {
+        loading.value = false;
         showError("Erreur durant l'inscription");
       }
     });
@@ -147,13 +152,10 @@ const handleIconClick = (node, e) => {
         conseils sur les produits et services Beatly.
       </p>
       <div class="flex justify-center">
-        <FormKit
-          type="submit"
+        <LandingButton
           label="S'inscrire"
-          :classes="{
-            input:
-              'uppercase bg-[#B00D70] rounded-3xl w-fit px-10 py-2 text-sm font-bold text-white hover:bg-[#940a5e] transition',
-          }"
+          type="submit"
+          :loading="loading"
         />
       </div>
     </FormKit>

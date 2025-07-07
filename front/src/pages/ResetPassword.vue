@@ -5,6 +5,7 @@ import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
 import PublicLayout from "@/components/PublicLayout.vue";
 import loading from "@/assets/icons/loading-light.svg";
+import LandingButton from "@/components/buttons/LandingButton.vue";
 
 const router = useRouter();
 const { apiClient } = useApiClient();
@@ -13,6 +14,7 @@ const { showSuccess, showError } = useToast();
 const resetToken = ref("");
 const isAuthorized = ref(true);
 const isLoading = ref(true);
+const loadingSubmit = ref(false);
 
 onMounted(async () => {
   resetToken.value = route.params.token as string;
@@ -36,6 +38,7 @@ onMounted(async () => {
 });
 
 function handleSubmitResetPasswordForm(data: { password: string }) {
+  loadingSubmit.value = true;
   apiClient.user
     .resetPassword({ password: data.password, token: resetToken.value })
     .then((response) => {
@@ -45,12 +48,13 @@ function handleSubmitResetPasswordForm(data: { password: string }) {
           router.push("/login");
         }, 2000);
       } else {
+        loadingSubmit.value = false;
         showError("Erreur durant la réinitialisation du mot de passe");
       }
     })
     .catch((error) => {
+      loadingSubmit.value = false;
       showError("Erreur lors de la réinitialisation du mot de passe");
-      console.error("Erreur lors de la réinitialisation du mot de passe :", error);
     });
 }
 </script>
@@ -119,13 +123,10 @@ function handleSubmitResetPasswordForm(data: { password: string }) {
         />
       </div>
       <div class="flex justify-center mt-8 mb-16">
-        <FormKit
-          type="submit"
+        <LandingButton
           label="Enregistrer le mot de passe"
-          :classes="{
-            input:
-              'uppercase bg-[#B00D70] rounded-3xl w-fit px-10 py-2 text-sm font-bold text-white hover:bg-[#940a5e] transition disabled:opacity-50',
-          }"
+          type="submit"
+          :loading="loadingSubmit"
         />
       </div>
     </FormKit>
