@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\Interface\EmbeddableEntityInterface;
+use App\Entity\Interface\ListenableEntityInterface;
 use App\Repository\MusicRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -44,7 +45,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         ),
     ]
 )]
-class Music implements EmbeddableEntityInterface
+class Music implements EmbeddableEntityInterface, ListenableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -236,6 +237,11 @@ class Music implements EmbeddableEntityInterface
         $this->albums->removeElement($album);
 
         return $this;
+    }
+
+    public function listen(): void
+    {
+        $this->listeningsNumber++;
     }
 
     public function prepareForEmbedding(): string

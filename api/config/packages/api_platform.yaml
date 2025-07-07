@@ -9,4 +9,6 @@ api_platform:
         json: ['application/json']
         jsonld: ['application/ld+json']
         multipart: ['multipart/form-data']
+    resource_class_directories:
+        - '%kernel.project_dir%/src/Api/Model'
 

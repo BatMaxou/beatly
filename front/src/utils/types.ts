@@ -49,3 +49,9 @@ export type Playlist = {
   title: string;
   musics: Music[];
 };
+
+export type Listen = {
+  music: string,
+  playlist?: string,
+  album?: string,
+}

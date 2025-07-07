@@ -27,6 +27,9 @@ class LastListened
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $listenedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -40,6 +43,18 @@ class LastListened
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getListenedAt(): ?\DateTimeImmutable
+    {
+        return $this->listenedAt;
+    }
+
+    public function setListenedAt(\DateTimeImmutable $listenedAt): static
+    {
+        $this->listenedAt = $listenedAt;
 
         return $this;
     }
