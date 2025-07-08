@@ -1,6 +1,7 @@
 import Me from "./ressources/me";
 import Music from "./ressources/music";
 import UserResource from "./ressources/user";
+import Category from "./ressources/category";
 import { eraseCookie, getCookie, setCookie } from "@/utils/cookies";
 import { apiBaseUrl } from "@/utils/tools";
 import type { User } from "@/utils/types";
@@ -19,6 +20,7 @@ export class ApiClient {
   me: Me;
   music: Music;
   user: UserResource;
+  category: Category;
   token: string | null;
 
   constructor() {
@@ -26,6 +28,7 @@ export class ApiClient {
     this.me = new Me(this);
     this.music = new Music(this);
     this.user = new UserResource(this);
+    this.category = new Category(this);
     this.token = getCookie("token");
   }
 
