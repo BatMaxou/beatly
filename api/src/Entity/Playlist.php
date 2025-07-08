@@ -3,6 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\Api\Processor\PlaylistCreationProcessor;
+use App\Enum\ApiReusableRoute;
 use App\Repository\PlaylistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,7 +25,32 @@ use Doctrine\ORM\Mapping\InheritanceType;
     'classic' => Playlist::class,
     'platform' => PlatformPlaylist::class,
 ])]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Post(
+            name: ApiReusableRoute::CREATE_PLAYLIST->value,
+            processor: PlaylistCreationProcessor::class,
+            normalizationContext: ['groups' => ['playlist:read']],
+            denormalizationContext: ['groups' => ['playlist:write']],
+        ),
+        new Patch(
+            name: 'api_update_playlist',
+            normalizationContext: ['groups' => ['playlist:read']],
+            denormalizationContext: ['groups' => ['playlist:update']],
+        ),
+        new Get(
+            name: 'api_get_playlist',
+            normalizationContext: ['groups' => ['playlist:read']],
+        ),
+        new GetCollection(
+            name: 'api_get_playlist_collection',
+            normalizationContext: ['groups' => ['playlist:collection:read']],
+        ),
+        new Delete(
+            name: 'api_delete_playlist',
+        ),
+    ]
+)]
 class Playlist
 {
     #[ORM\Id]

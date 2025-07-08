@@ -1,7 +1,26 @@
 App\Entity\Album:
   attributes:
     id:
-      groups: ['music:read']
+      groups:
+        - 'album:read'
+        - 'album:collection:read'
+        - 'music:read'
     title:
-      groups: ['music:read']
+      groups:
+        - 'album:read'
+        - 'album:collection:read'
+        - 'album:write'
+        - 'album:update'
+        - 'music:read'
+        - 'playlist:read'
+    releaseDate:
+      groups:
+        - 'album:read'
+        - 'album:write'
+        - 'album:update'
+    musics:
+      groups:
+        - 'album:read'
+        - 'album:write'
+        - 'album:update'
 

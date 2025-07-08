@@ -1,0 +1,20 @@
+App\Entity\Playlist:
+  attributes:
+    id:
+      groups:
+        - 'playlist:read'
+        - 'playlist:collection:read'
+        - 'music:read'
+    title:
+      groups:
+        - 'playlist:read'
+        - 'playlist:collection:read'
+        - 'playlist:write'
+        - 'playlist:update'
+        - 'music:read'
+    musics:
+      groups:
+        - 'playlist:read'
+        - 'playlist:write'
+        - 'playlist:update'
+

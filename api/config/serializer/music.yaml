@@ -8,9 +8,13 @@ App\Entity\Music:
         - 'music:read'
         - 'music:write'
         - 'music:update'
+        - 'album:read'
+        - 'playlist:read'
     coverName:
       groups:
         - 'music:read'
+        - 'album:read'
+        - 'playlist:read'
     cover:
       groups:
         - 'music:write'
@@ -18,21 +22,30 @@ App\Entity\Music:
     listeningsNumber:
       groups:
         - 'music:read'
+        - 'album:read'
+        - 'playlist:read'
     file:
       groups:
         - 'music:read'
         - 'music:write'
         - 'music:update'
+        - 'album:read'
+        - 'playlist:read'
     artists:
       groups:
         - 'music:read'
         - 'music:write'
+        - 'album:read'
+        - 'playlist:read'
     albums:
       groups:
         - 'music:read'
+        - 'playlist:read'
     categories:
       groups:
         - 'music:read'
         - 'music:write'
         - 'music:update'
+        - 'album:read'
+        - 'playlist:read'
 
