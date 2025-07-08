@@ -23,7 +23,7 @@ onMounted(async () => {
     return;
   }
 
-  const response = await apiClient.user
+    await apiClient.user
     .verifyToken({ token: resetToken.value })
     .then((response) => {
       if (response.result) {
@@ -52,7 +52,7 @@ function handleSubmitResetPasswordForm(data: { password: string }) {
         showError("Erreur durant la réinitialisation du mot de passe");
       }
     })
-    .catch((error) => {
+    .catch(() => {
       loadingSubmit.value = false;
       showError("Erreur lors de la réinitialisation du mot de passe");
     });

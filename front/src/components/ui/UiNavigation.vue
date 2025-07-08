@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from "vue";
 
-const props = defineProps({
+defineProps({
   activeItem: {
     type: String,
     default: "buttons",
@@ -39,7 +39,7 @@ const navItems = ref([
   { id: "alerts", label: "Alertes" },
 ]);
 
-function selectItem(id, label) {
+function selectItem(id: string, label: string) {
   emit("selectedId", id);
   emit("selectedTitle", label);
 }

@@ -2,14 +2,14 @@ import { defineStore } from "pinia";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    email: "",
+    email: null as string | null,
     loginSuccess: false,
     logoutSuccess: false,
-    forgotPasswordMessage: "",
+    forgotPasswordMessage: null as string | null,
     user: {},
   }),
   actions: {
-    setEmail(email: string | any) {
+    setEmail(email: string | null) {
       this.email = email;
     },
     setLoginSuccess(loginSuccess: boolean) {
@@ -18,18 +18,14 @@ export const useAuthStore = defineStore("auth", {
     setLogoutSuccess(logoutSuccess: boolean) {
       this.logoutSuccess = logoutSuccess;
     },
-    setForgotPasswordMessage(forgotPasswordMessage: string | any) {
+    setForgotPasswordMessage(forgotPasswordMessage: string | null) {
       this.forgotPasswordMessage = forgotPasswordMessage;
     },
-    setUser(user: object | any) {
-      this.user = user;
-    },
     logout() {
-      this.email = "";
+      this.email = null;
       this.loginSuccess = false;
       this.logoutSuccess = true;
-      this.forgotPasswordMessage = "";
-      this.user = {};
+      this.forgotPasswordMessage = null;
     }
   },
 });

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { getCookie } from "@/utils/cookies";
-import Home from "./Home.vue";
-import Landing from "./Landing.vue";
+import Home from "./HomePage.vue";
+import Landing from "./LandingPage.vue";
 
 const isAuthenticated = ref(false);
 

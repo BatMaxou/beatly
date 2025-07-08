@@ -16,7 +16,7 @@
     >
       <div class="absolute inset-0 bg-black/60"></div>
       <div class="relative z-10 p-4">
-        <component v-if="!isEmptyComponent" :is="currentComponent" />
+        <component v-if="currentComponent" :is="currentComponent" />
         <div v-else class="text-center py-12 px-4 text-white">
           <p class="my-2 text-lg">Aucun composant trouvé pour "{{ activeComponentTitle }}"</p>
           <p class="text-sm text-gray-300">Nous travaillons à l'ajouter prochainement.</p>
@@ -38,43 +38,58 @@ import UiSearch from "../components/ui/search/UiSearch.vue";
 provide("isSearchProvided", true);
 
 // Définition des statuts d'onglets
-const activeComponent = ref("music");
-const activeComponentTitle = ref("Musique");
-const isEmptyComponent = ref(false);
+const activeComponent = ref<string>("music");
+const activeComponentTitle = ref<string>("Musique");
+const isEmptyComponent = ref<boolean>(false);
 
 // Changement d'onglets
-const selectComponent = (componentId) => {
-  console.log(componentId);
+const selectComponent = (componentId: string) => {
   isEmptyComponent.value = false;
   activeComponent.value = componentId;
+  updateComponentTitle(componentId);
 };
 
-const selectComponentTitle = (componentTitle) => {
+const selectComponentTitle = (componentTitle: string) => {
   activeComponentTitle.value = componentTitle;
 };
 
-// Composant à afficher en fonction de la sélection
+const updateComponentTitle = (componentId: string) => {
+  switch (componentId) {
+    case "buttons":
+      activeComponentTitle.value = "Boutons";
+      break;
+    case "forms":
+      activeComponentTitle.value = "Formulaires";
+      break;
+    case "menus":
+      activeComponentTitle.value = "Menus";
+      break;
+    case "music":
+      activeComponentTitle.value = "Musique";
+      break;
+    case "search":
+      activeComponentTitle.value = "Recherche";
+      break;
+    default:
+      isEmptyComponent.value = true;
+      break;
+  }
+};
+
 const currentComponent = computed(() => {
   switch (activeComponent.value) {
     case "buttons":
-      activeComponentTitle.value = "Boutons";
       return UiButtons;
     case "forms":
-      activeComponentTitle.value = "Formulaires";
       return UiForms;
     case "menus":
-      activeComponentTitle.value = "Menus";
       return UiMenu;
     case "music":
-      activeComponentTitle.value = "Musique";
       return UiMusic;
     case "search":
-      activeComponentTitle.value = "Recherche";
       return UiSearch;
     default:
-      isEmptyComponent.value = true;
-      console.log(isEmptyComponent);
-      return {};
+      return null;
   }
 });
 </script>

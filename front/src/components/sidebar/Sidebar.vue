@@ -5,8 +5,7 @@ import NavItem from "../navigation/NavItem.vue";
 import heart from "@/assets/icons/add-to-fav-inactive-light.svg";
 import library from "@/assets/icons/library-light.svg";
 import user from "@/assets/icons/user-light.svg";
-import settings from "@/assets/icons/settings-light.svg";
-import Searchbar from "../search/Searchbar.vue";
+import SearchBar from "../search/SearchBar.vue";
 </script>
 
 <template>
@@ -16,7 +15,7 @@ import Searchbar from "../search/Searchbar.vue";
     </div>
     <!-- Barre de recherche -->
     <div>
-      <Searchbar/>
+      <SearchBar/>
     </div>
 
     <!-- Menu -->
@@ -28,12 +27,6 @@ import Searchbar from "../search/Searchbar.vue";
       <NavItem
       label="Bibliothèque"
       :icon="library"
-      />
-    </div>
-    <div>
-      <NavItem
-      label="Paramètres"
-      :icon="settings"
       />
     </div>
     <div>

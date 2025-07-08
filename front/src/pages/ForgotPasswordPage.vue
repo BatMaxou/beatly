@@ -18,7 +18,7 @@ function goToLogin() {
   router.push("/login");
 }
 
-function handleSubmitForgotPasswordForm(data) {
+function handleSubmitForgotPasswordForm(data: { email: string }) {
   loading.value = true;
   apiClient.user
     .forgotPassword({ email: data.email })

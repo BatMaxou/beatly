@@ -3,7 +3,7 @@ import imageVinyl from "@/assets/images/vinyl-black-and-white-landing.jpg";
 import logo from "@/assets/beatly-logo-white.png";
 import { defineProps } from "vue";
 
-const props = defineProps({
+defineProps({
   title: {
     type: String,
   },
@@ -11,7 +11,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="relative min-h-screen flex justify-center">
+  <div class="relative min-h-screen flex justify-center text-white">
     <div
       class="absolute inset-0 bg-cover bg-center z-0"
       :style="{ backgroundImage: `url(${imageVinyl})` }"

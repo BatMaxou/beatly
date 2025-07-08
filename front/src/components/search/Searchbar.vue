@@ -75,7 +75,7 @@ function focusSearchInput() {
   }
  .search input:not(:placeholder-shown), .search input:focus {
   width: 100%;
-  padding: 0 30px 0 4px;
+  padding: 0 30px 5px 4px;
   cursor: text;
   border-bottom: 1px solid white;
   transition: all 0.6s ease;

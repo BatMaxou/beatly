@@ -2,7 +2,7 @@
 import { defineProps } from "vue";
 import AlbumPlayableCover from "@/components/albums/AlbumPlayableCover.vue";
 
-const props = defineProps({
+defineProps({
   albumCover: {
     type: String,
     required: true,

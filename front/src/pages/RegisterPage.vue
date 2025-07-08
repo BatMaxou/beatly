@@ -13,7 +13,7 @@ const authStore = useAuthStore();
 const { showError } = useToast();
 const loading = ref(false);
 
-function handleSubmitRegisterForm(data) {
+function handleSubmitRegisterForm(data: { email: string; password: string; name: string }) {
   loading.value = true;
   apiClient.user
     .register({
@@ -39,7 +39,7 @@ function goToLogin() {
   });
 }
 
-const handleIconClick = (node, e) => {
+const handleIconClick = (node: { props: { suffixIcon: string; type: string } }) => {
   node.props.suffixIcon = node.props.suffixIcon === "eye" ? "eyeClosed" : "eye";
   node.props.type = node.props.type === "password" ? "text" : "password";
 };

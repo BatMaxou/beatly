@@ -9,7 +9,7 @@
 
   const inputNew = ref<File | null>(null);
   const inputUpdate = ref<File | null>(null);
-  const musicId = ref<string | null>(null);
+  const musicId = ref<number | any>(null);
   const musicUrl = ref<string>('');
 
   // LOGIN TO GET TOKEN IF NOT EXIST INTO COOKIES
@@ -58,12 +58,14 @@
       })
   });
 
-  const onInputNew = ({ target: { files } }) => {
-    inputNew.value = files?.[0] || null;
+  const onInputNew = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    inputNew.value = target.files?.[0] || null;
   };
 
-  const onInputUpdate = ({ target: { files } }) => {
-    inputUpdate.value = files?.[0] || null;
+  const onInputUpdate = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    inputUpdate.value = target.files?.[0] || null;
   };
 
   const onDeleteClick = () => {

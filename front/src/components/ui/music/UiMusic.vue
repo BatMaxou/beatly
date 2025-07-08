@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import MusicList from "@/components/lists/MusicList.vue";
 import AlbumPlayable from "@/components/cards/AlbumPlayableCard.vue";
+import PlaylistPlayable from "@/components/cards/PlaylistPlayableCard.vue";
 import ArtistProfile from "@/components/artists/ArtistProfile.vue";
 import MusicStyleCard from "@/components/musicstyles/MusicStyleCard.vue";
 import cover1 from "@/assets/music/cover1.jpg";
@@ -11,7 +12,7 @@ const musicStyle = ref("electronic");
 const musicStyles = ["rock", "pop", "jazz", "electronic", "hiphop", "classical", "reggae", "rnb"];
 
 // Mapping des noms de genres en français
-const genreNames = {
+const genreNames = <Record<string, string>>{
   rock: "Rock",
   pop: "Pop",
   jazz: "Jazz",
@@ -109,6 +110,13 @@ const albumMusicList = [
               albumName="Pain"
               artistName="Ryan Jones"
               releaseYear="2022"
+            />
+          </div>
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-2">Playlist</h3>
+            <PlaylistPlayable
+              :playlistCover="cover1"
+              playlistName="Pain"
             />
           </div>
 

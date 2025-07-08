@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
 
-const props = defineProps({
+defineProps({
   artistCover: {
     type: String,
     required: true,

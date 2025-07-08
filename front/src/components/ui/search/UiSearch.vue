@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, defineEmits, onMounted } from "vue";
 import searchIcon from "@/assets/icons/search-dark.svg";
 import SearchResults from "./SearchResults.vue";
 import SearchMirror from "./SearchMirror.vue";
@@ -45,7 +44,6 @@ const handleBlur = () => {
             @input="updateSearchQuery(searchQuery)"
             @focus="handleFocus"
             @blur="handleBlur"
-            @keyup="handleKeyPress"
             placeholder="Trouvez votre vibe..."
             class="w-full py-3 px-4 pr-12 text-base border border-gray-300 dark:border-gray-700 rounded-lg outline-none transition-colors duration-200 ease-in-out dark:bg-gray-800 dark:text-white"
             :class="{ 'border-gray-600 dark:border-gray-500 shadow-sm': isSearchFocused }"
