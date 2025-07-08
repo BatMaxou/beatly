@@ -1,7 +1,15 @@
 App\Entity\Category:
   attributes:
     id:
-      groups: ['music:read']
+      groups:
+        - 'album:read'
+        - 'album:collection:read'
+        - 'music:read'
+        - 'playlist:read'
     name:
-      groups: ['music:read']
+      groups:
+        - 'album:read'
+        - 'album:collection:read'
+        - 'music:read'
+        - 'playlist:read'
 

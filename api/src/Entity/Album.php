@@ -3,6 +3,11 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\AlbumRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,7 +15,31 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AlbumRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Post(
+            name: 'api_create_album',
+            normalizationContext: ['groups' => ['album:read']],
+            denormalizationContext: ['groups' => ['album:write']],
+        ),
+        new Patch(
+            name: 'api_update_album',
+            normalizationContext: ['groups' => ['album:read']],
+            denormalizationContext: ['groups' => ['album:update']],
+        ),
+        new Get(
+            name: 'api_get_album',
+            normalizationContext: ['groups' => ['album:read']],
+        ),
+        new GetCollection(
+            name: 'api_get_album_collection',
+            normalizationContext: ['groups' => ['album:collection:read']],
+        ),
+        new Delete(
+            name: 'api_delete_album',
+        ),
+    ]
+)]
 class Album
 {
     #[ORM\Id]

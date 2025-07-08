@@ -19,6 +19,8 @@ export type Artist = {
 export type Album = {
   id: number;
   title: string;
+  releaseDate: string;
+  musics: Music[];
 };
 
 export type Category = {
@@ -40,4 +42,10 @@ export type Music = {
   file?: string | null;
   cover?: string | null;
   listeningsNumber?: number;
+};
+
+export type Playlist = {
+  id: number;
+  title: string;
+  musics: Music[];
 };
