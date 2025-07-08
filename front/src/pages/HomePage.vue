@@ -5,6 +5,7 @@ import { useApiClient } from "@/stores/api-client";
 import { useUserStore } from "@/stores/user";
 import PlaylistPlayable from "@/components/cards/PlaylistPlayableCard.vue";
 import albumDefaultIcon from "@/assets/icons/disc-dark.svg"
+import AlbumPlayableCard from "@/components/cards/AlbumPlayableCard.vue";
 
 const { apiClient } = useApiClient();
 const recentlyListened = ref(["", ""]);
@@ -59,6 +60,12 @@ onBeforeMount(async () => {
 
     <div v-if="recommendationList.length > 0" class="p-4">
       <h2 class="text-white text-3xl font-bold mb-4">D'après vos écoutes...</h2>
+      <AlbumPlayableCard
+        :albumCover="albumDefaultIcon"
+        albumName="Mon album préféré !"
+        artistName="Lomepal"
+        releaseYear="2017"
+      />
     </div>
 
     <div v-if="hitsList.length > 0" class="p-4">
@@ -66,11 +73,11 @@ onBeforeMount(async () => {
     </div>
 
     <div v-if="categoryList.length > 0" class="p-4">
-      <h2 class="text-white text-3xl font-bold mb-4">Pour une envie particulière</h2><!-- Les + écoutés  -->
+      <h2 class="text-white text-3xl font-bold mb-4">Pour une envie particulière</h2><!-- Liste des catégories  -->
     </div>
 
     <div v-if="mostFavoriteList.length > 0" class="p-4">
-      <h2 class="text-white text-3xl font-bold mb-4">Ils font l'unanimité</h2><!-- Les + écoutés  -->
+      <h2 class="text-white text-3xl font-bold mb-4">Ils font l'unanimité</h2><!-- Les + mis en favoris  -->
     </div>
   </InAppLayout>
 </template>
