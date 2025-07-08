@@ -3,11 +3,11 @@ import { defineProps } from "vue";
 import UniqPlayPauseButton from "../buttons/UniqPlayButton.vue";
 
 defineProps({
-  albumCover: {
+  playlistCover: {
     type: String,
     required: true,
   },
-  albumName: {
+  playlistName: {
     type: String,
     required: true,
   },
@@ -17,8 +17,8 @@ defineProps({
 <template>
   <div class="relative w-full overflow-hidden group">
     <img
-      :src="albumCover"
-      :alt="albumName"
+      :src="playlistCover"
+      :alt="playlistName"
       class="w-full block transition-transform duration-300 ease-in-out"
     />
     <div

@@ -50,7 +50,7 @@ export class ApiClient {
       });
   }
 
-  async post<T>(url: string, body: object, additionnalHeaders: HeadersInit = {}): Promise<T> {
+  async post<T>(url: string, body: object = {}, additionnalHeaders: HeadersInit = {}): Promise<T> {
     const isFormData = body instanceof FormData;
 
     const headers: HeadersInit = isFormData

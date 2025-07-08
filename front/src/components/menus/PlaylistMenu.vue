@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import dotsLight from "@/assets/icons/dots-light.svg";
 import playListLight from "@/assets/icons/play-list-light.svg";
 import removelight from "@/assets/icons/remove-light.svg";
@@ -15,9 +15,9 @@ const props = defineProps({
     default: false,
   },
   position: {
-    type: String,
+    type: String as () => "top-left" | "top-right" | "bottom-left" | "bottom-right",
     default: "bottom-left",
-    validator: (value) => ["top-left", "top-right", "bottom-left", "bottom-right"].includes(value),
+    validator: (value: string) => ["top-left", "top-right", "bottom-left", "bottom-right"].includes(value),
   },
   isPublic: {
     type: Boolean,
@@ -39,7 +39,7 @@ const emit = defineEmits([
 ]);
 
 const menuVisible = ref(props.showMenu);
-const menuRef = ref(null);
+const menuRef = ref<HTMLElement | null>(null);
 
 const toggleMenu = () => {
   menuVisible.value = !menuVisible.value;
@@ -48,13 +48,14 @@ const toggleMenu = () => {
   }
 };
 
-const handleAction = (action) => {
+const handleAction = (action: "addToQueue" | "deletePlaylist" | "editPlaylist" | "togglePrivacy" | "addToLibrary" | "closeMenu"
+) => {
   emit(action);
   toggleMenu();
 };
 
-const handleClickOutside = (event) => {
-  if (menuRef.value && !menuRef.value.contains(event.target) && menuVisible.value) {
+const handleClickOutside = (event: Event) => {
+  if (menuRef.value && !menuRef.value.contains(event.target as HTMLElement) && menuVisible.value) {
     menuVisible.value = false;
     emit("closeMenu");
   }
@@ -64,7 +65,7 @@ onMounted(() => {
   document.addEventListener("click", handleClickOutside);
 });
 
-onBeforeUnmounted(() => {
+onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
 });
 </script>

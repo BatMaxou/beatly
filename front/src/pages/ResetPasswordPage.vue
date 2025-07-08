@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
-import PublicLayout from "@/components/PublicLayout.vue";
+import PublicLayout from "@/components/layout/PublicLayout.vue";
 import loading from "@/assets/icons/loading-light.svg";
 import LandingButton from "@/components/buttons/LandingButton.vue";
 
@@ -23,7 +23,7 @@ onMounted(async () => {
     return;
   }
 
-  const response = await apiClient.user
+    await apiClient.user
     .verifyToken({ token: resetToken.value })
     .then((response) => {
       if (response.result) {
@@ -52,7 +52,7 @@ function handleSubmitResetPasswordForm(data: { password: string }) {
         showError("Erreur durant la réinitialisation du mot de passe");
       }
     })
-    .catch((error) => {
+    .catch(() => {
       loadingSubmit.value = false;
       showError("Erreur lors de la réinitialisation du mot de passe");
     });

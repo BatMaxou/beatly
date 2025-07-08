@@ -19,7 +19,7 @@ const props = defineProps({
 // Cette fonction génère le style d'arrière-plan basé sur le genre musical
 // A adapter quand les genres seront récupérés depuis l'API avec leurs couleurs / fond respectif.ve.s
 const backgroundStyle = computed(() => {
-  const gradients = {
+  const gradients: Record<string, string> = {
     rock: "linear-gradient(45deg, #e74c3c, #c0392b)",
     pop: "linear-gradient(45deg, #3498db, #2980b9)",
     jazz: "linear-gradient(45deg, #f1c40f, #f39c12)",

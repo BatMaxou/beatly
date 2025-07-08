@@ -3,7 +3,7 @@ import { ref } from "vue";
 import arrowLeft from "@/assets/icons/arrow-left-light.svg";
 import { useRouter } from "vue-router";
 import { useApiClient } from "@/stores/api-client";
-import PublicLayout from "@/components/PublicLayout.vue";
+import PublicLayout from "@/components/layout/PublicLayout.vue";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/auth";
 import LandingButton from "@/components/buttons/LandingButton.vue";
@@ -18,7 +18,7 @@ function goToLogin() {
   router.push("/login");
 }
 
-function handleSubmitForgotPasswordForm(data) {
+function handleSubmitForgotPasswordForm(data: { email: string }) {
   loading.value = true;
   apiClient.user
     .forgotPassword({ email: data.email })

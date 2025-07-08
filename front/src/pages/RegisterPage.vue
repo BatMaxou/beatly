@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 import { useApiClient } from "@/stores/api-client";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "@/composables/useToast";
-import PublicLayout from "@/components/PublicLayout.vue";
+import PublicLayout from "@/components/layout/PublicLayout.vue";
 import LandingButton from "@/components/buttons/LandingButton.vue";
 
 const router = useRouter();
@@ -13,7 +13,7 @@ const authStore = useAuthStore();
 const { showError } = useToast();
 const loading = ref(false);
 
-function handleSubmitRegisterForm(data) {
+function handleSubmitRegisterForm(data: { email: string; password: string; name: string }) {
   loading.value = true;
   apiClient.user
     .register({
@@ -39,7 +39,7 @@ function goToLogin() {
   });
 }
 
-const handleIconClick = (node, e) => {
+const handleIconClick = (node: { props: { suffixIcon: string; type: string } }) => {
   node.props.suffixIcon = node.props.suffixIcon === "eye" ? "eyeClosed" : "eye";
   node.props.type = node.props.type === "password" ? "text" : "password";
 };
@@ -48,7 +48,7 @@ const handleIconClick = (node, e) => {
 <template>
   <PublicLayout title="Créer un compte">
     <p class="-mt-20 mb-20 cursor-pointer">
-      Vous avez déjà un compte ? <span @click="goToLogin">Connectez-vous</span>
+      Vous avez déjà un compte ? <span class="font-bold" @click="goToLogin">Connectez-vous</span>
     </p>
 
     <FormKit

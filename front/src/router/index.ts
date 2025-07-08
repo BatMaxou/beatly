@@ -1,14 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
-import Home from "../pages/Home.vue";
-import MusicFile from "../pages/MusicFile.vue";
-import Ui from "../pages/Ui.vue";
+import MusicFile from "../pages/MusicFilePage.vue";
+import Ui from "../pages/UiPage.vue";
 import RootPage from "../pages/RootPage.vue";
-import Register from "../pages/Register.vue";
-import Login from "../pages/Login.vue";
-import ForgotPassword from "../pages/ForgotPassword.vue";
-import ResetPassword from "../pages/ResetPassword.vue";
-import NotFound from "../pages/NotFound.vue";
+import Register from "../pages/RegisterPage.vue";
+import Login from "../pages/LoginPage.vue";
+import ForgotPassword from "../pages/ForgotPasswordPage.vue";
+import ResetPassword from "../pages/ResetPasswordPage.vue";
+import NotFound from "../pages/NotFoundPage.vue";
 import { getCookie } from "@/utils/cookies";
 import { useLogout } from "@/composables/useLogout";
 

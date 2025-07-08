@@ -13,9 +13,9 @@ const props = defineProps({
     default: false,
   },
   size: {
-    type: String,
-    default: "default", // 'small', 'default', 'large'
-    validator: (value) => ["small", "default", "large"].includes(value),
+    type: String as () => "small" | "default" | "large",
+    default: "default",
+    validator: (value: string) => ["small", "default", "large"].includes(value),
   },
 });
 
@@ -35,7 +35,7 @@ const buttonClasses = computed(() => {
     "flex items-center justify-center gap-2.5 rounded-full transition-all duration-300 focus:outline-none box-border";
 
   // Classes de taille
-  const sizeClasses = {
+  const sizeClasses: Record<"small" | "default" | "large", string> = {
     small: "px-6 py-2 text-sm",
     default: "px-10 py-3 text-base",
     large: "px-10 py-3 text-lg",
@@ -62,7 +62,7 @@ const heartClasses = computed(() => {
   const baseClasses = "transition-all duration-300";
 
   // Classes de taille
-  const sizeClasses = {
+  const sizeClasses: Record<"small" | "default" | "large", string> = {
     small: "w-4 h-4",
     default: "w-5 h-5",
     large: "w-6 h-6",

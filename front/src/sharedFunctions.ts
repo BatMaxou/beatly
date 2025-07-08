@@ -1,5 +1,5 @@
 // A transformer en composable
-export const convertDurationInMinutes = (duration) => {
+export const convertDurationInMinutes = (duration: string | number) => {
   console.log("convertDurationInMinutes", duration);
   const durationNumber = typeof duration === "string" ? parseInt(duration, 10) : duration;
 

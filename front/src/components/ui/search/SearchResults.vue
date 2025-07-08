@@ -143,8 +143,18 @@ import AlbumPlayable from "@/components/cards/AlbumPlayableCard.vue";
 import ArtistProfile from "@/components/artists/ArtistProfile.vue";
 import SearchBestResult from "@/components/cards/SearchBestResult.vue";
 
+interface SearchResult {
+  id: number;
+  title: string;
+  type: 'album' | 'artist' | 'song';
+  cover?: string;
+  artist?: string;
+  year?: string;
+  duration?: string;
+}
+
 // Récupérer le contexte de recherche
-const { searchQuery, searchResults, isSearchFocused } = useSearch();
+const { searchQuery, searchResults } = useSearch();
 
 // Calculer le meilleur résultat (le premier de la liste)
 const bestResult = computed(() => {
@@ -153,25 +163,25 @@ const bestResult = computed(() => {
 
 // Filtrer les résultats par type
 const songsResults = computed(() => {
-  return searchResults.value.filter((result) => result.type === "song");
+  return searchResults.value.filter((result: SearchResult) => result.type === "song");
 });
 
 const albumsResults = computed(() => {
-  return searchResults.value.filter((result) => result.type === "album");
+  return searchResults.value.filter((result: SearchResult) => result.type === "album");
 });
 
 const artistsResults = computed(() => {
-  return searchResults.value.filter((result) => result.type === "artist");
+  return searchResults.value.filter((result: SearchResult) => result.type === "artist");
 });
 
 const otherResults = computed(() => {
   return searchResults.value.filter(
-    (result) => result.type !== "song" && result.type !== "album" && result.type !== "artist",
+    (result: SearchResult) => result.type !== "song" && result.type !== "album" && result.type !== "artist",
   );
 });
 
 // Fonction pour sélectionner un résultat
-const selectResult = (result) => {
+const selectResult = (result: SearchResult) => {
   // On pourrait ajouter ici la logique pour traiter le résultat sélectionné
   console.log("Résultat sélectionné:", result);
 

@@ -8,6 +8,6 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "include": ["env.d.ts"]
+    // "include": ["env.d.ts"]
   }
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import PublicLayout from "@/components/PublicLayout.vue";
+import PublicLayout from "@/components/layout/PublicLayout.vue";
 import LandingButton from "@/components/buttons/LandingButton.vue";
 
 const router = useRouter();

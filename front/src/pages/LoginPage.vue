@@ -4,21 +4,30 @@ import { useRouter } from "vue-router";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/auth";
-import PublicLayout from "@/components/PublicLayout.vue";
+import { useUserStore } from "@/stores/user";
+import PublicLayout from "@/components/layout/PublicLayout.vue";
 import LandingButton from "@/components/buttons/LandingButton.vue";
 
 const router = useRouter();
 const { apiClient } = useApiClient();
 const { showSuccess, showError } = useToast();
 const authStore = useAuthStore();
+const userStore = useUserStore();
 const email = ref(authStore.email || "");
+const isFromLogout = ref(authStore.logoutSuccess || false);
 const loading = ref(false);
-let emailValue = "";
+let emailValue = null;
 
-if (email.value !== "") {
+if (email.value) {
   showSuccess("Compte crée !");
-  emailValue = email.value || "";
-  authStore.setEmail("");
+  emailValue = email.value || null;
+  authStore.setEmail(null);
+}
+
+if (isFromLogout.value) {
+  showSuccess("Vous êtes déconnecté !");
+  isFromLogout.value = false;
+  authStore.setLogoutSuccess(false);
 }
 
 if (authStore.forgotPasswordMessage) {
@@ -28,9 +37,10 @@ if (authStore.forgotPasswordMessage) {
 
 function handleSubmitLoginForm(data: { email: string; password: string }) {
   loading.value = true;
-  apiClient.login(data.email, data.password).then((response: { user?: any }) => {
+  apiClient.login(data.email, data.password).then((response: { user?: object | null, token?: string }) => {
     if (response.user) {
       authStore.setLoginSuccess(true);
+      userStore.setUser({ ...response.user, token: response.token } );
       router.push("/");
     } else {
       loading.value = false;
@@ -39,7 +49,7 @@ function handleSubmitLoginForm(data: { email: string; password: string }) {
   });
 }
 
-const handleIconClick = (node: any, e: Event) => {
+const handleIconClick = (node: { props: { suffixIcon: string; type: string } }) => {
   node.props.suffixIcon = node.props.suffixIcon === "eye" ? "eyeClosed" : "eye";
   node.props.type = node.props.type === "password" ? "text" : "password";
 };
@@ -69,7 +79,7 @@ function goToForgotPassword() {
           type="email"
           name="email"
           label="Adresse courriel"
-          :value="emailValue"
+          :value="emailValue || ''"
           v-focus="emailValue !== '' ? false : true"
           :classes="{
             input:
