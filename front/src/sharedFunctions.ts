@@ -1,6 +1,5 @@
-// A transformer en composable
 export const convertDurationInMinutes = (duration: string | number) => {
-  console.log("convertDurationInMinutes", duration);
+  console.warn("convertDurationInMinutes est dépréciée. Remplacé par useTimeFormat().");
   const durationNumber = typeof duration === "string" ? parseInt(duration, 10) : duration;
 
   if (isNaN(durationNumber)) {

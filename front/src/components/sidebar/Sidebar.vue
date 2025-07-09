@@ -6,10 +6,14 @@ import heart from "@/assets/icons/add-to-fav-inactive-light.svg";
 import library from "@/assets/icons/library-light.svg";
 import user from "@/assets/icons/user-light.svg";
 import SearchBar from "../search/SearchBar.vue";
+import { usePlayerStore } from "@/stores/player";
+
+const playerStore = usePlayerStore();
+
 </script>
 
 <template>
-  <div class="flex flex-col justify-between h-screen bg-black/50">
+  <div :class="playerStore.isPlayerActive ? 'flex flex-col justify-between playingHeight bg-black/50 transition-all duration-300 ease' : 'flex flex-col justify-between h-screen bg-black/50 transition-all duration-300 ease'">
     <div class="p-4">
       <img :src="logo" alt="Logo Beatly" class="h-24 mb-4 mx-auto mt-4 object-contain" />
     </div>
@@ -37,3 +41,9 @@ import SearchBar from "../search/SearchBar.vue";
     </div>
   </div>
 </template>
+
+<style scoped>
+.playingHeight {
+  height: calc(100vh - 80px);
+}
+</style>
