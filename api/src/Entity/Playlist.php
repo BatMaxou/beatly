@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Api\Processor\PlaylistCreationProcessor;
 use App\Enum\ApiReusableRoute;
+use App\Entity\Interface\ListenableEntityInterface;
 use App\Repository\PlaylistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -51,7 +52,7 @@ use Doctrine\ORM\Mapping\InheritanceType;
         ),
     ]
 )]
-class Playlist
+class Playlist implements ListenableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
