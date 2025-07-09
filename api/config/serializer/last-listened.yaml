@@ -1,0 +1,9 @@
+App\Entity\LastListened:
+  attributes:
+    target:
+      groups:
+        - 'dashboard:read'
+    listenedAt:
+      groups:
+        - 'dashboard:read'
+

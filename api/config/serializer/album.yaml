@@ -5,6 +5,7 @@ App\Entity\Album:
         - 'album:read'
         - 'album:collection:read'
         - 'music:read'
+        - 'dashboard:read'
     title:
       groups:
         - 'album:read'
@@ -13,6 +14,7 @@ App\Entity\Album:
         - 'album:update'
         - 'music:read'
         - 'playlist:read'
+        - 'dashboard:read'
     releaseDate:
       groups:
         - 'album:read'

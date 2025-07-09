@@ -5,6 +5,7 @@ App\Entity\Playlist:
         - 'playlist:read'
         - 'playlist:collection:read'
         - 'music:read'
+        - 'dashboard:read'
     title:
       groups:
         - 'playlist:read'
@@ -12,6 +13,7 @@ App\Entity\Playlist:
         - 'playlist:write'
         - 'playlist:update'
         - 'music:read'
+        - 'dashboard:read'
     musics:
       groups:
         - 'playlist:read'

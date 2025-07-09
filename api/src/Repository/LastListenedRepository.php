@@ -25,38 +25,59 @@ class LastListenedRepository extends ServiceEntityRepository
         Playlist::class => LastPlaylistListened::class,
     ];
 
+    const ATTR_MAPPING = [
+        Music::class => 'music',
+        Album::class => 'album',
+        Playlist::class => 'playlist',
+    ];
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, LastListened::class);
     }
 
-    public function getListeningByDate(User $user, string $entityClass): array 
+    public function findByUser(User $user): array
     {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('listened')
-            ->from(self::MAPPING[$entityClass], 'listened')
-            ->innerJoin(LastListened::class, 'abstract')
-            ->where('listened.user = :user')
-            ->orderBy('listened.listenedAt', 'DESC')
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult();
+        return $this->findBy(['user' => $user], ['listenedAt' => 'DESC']);
     }
 
-    public function deleteOutdated(ListenableEntityInterface $listened, User $user): void
+    public function deleteDuplicates(ListenableEntityInterface $listened, User $user): void
     {
-        $lastListened = $this->getListeningByDate($user, $listened::class);
+        $em = $this->getEntityManager();
+        $class = self::MAPPING[$listened::class];
 
-        if (count($lastListened) <= 0) {
+        $duplicates = $em->createQueryBuilder()
+            ->select('listened')
+            ->from($class, 'listened')
+            ->where('listened.user = :user')
+            ->andWhere(sprintf('listened.%s = :listened', self::ATTR_MAPPING[$listened::class]))
+            ->setParameter('user', $user)
+            ->setParameter('listened', $listened)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($duplicates as $duplicate) {
+            $em->remove($duplicate);
+        }
+        
+        $em->flush();
+    }
+
+    public function deleteOutdated(User $user): void
+    {
+        $lastListened = $this->findByUser($user);
+
+        if (count($lastListened) <= 10) {
             return;
         }
 
-        $toDelete = array_slice($lastListened, 9);
+        $toDelete = array_slice($lastListened, 10);
     
         $em = $this->getEntityManager();
         foreach ($toDelete as $last) {
             $em->remove($last);
         }
+
         $em->flush();
     }
 
@@ -66,12 +87,7 @@ class LastListenedRepository extends ServiceEntityRepository
         $lastListened = new $class();
         $lastListened->setUser($user);
         $lastListened->setListenedAt(new \DateTimeImmutable());
-        
-        match (true) {
-            $listened instanceof Music => $lastListened->setMusic($listened),
-            $listened instanceof Album => $lastListened->setAlbum($listened),
-            $listened instanceof Playlist => $lastListened->setPlaylist($listened),
-        };
+        $lastListened->setTarget($listened);
 
         $em = $this->getEntityManager();
         $em->persist($lastListened);

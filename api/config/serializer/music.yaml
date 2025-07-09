@@ -10,6 +10,7 @@ App\Entity\Music:
         - 'music:update'
         - 'album:read'
         - 'playlist:read'
+        - 'dashboard:read'
     coverName:
       groups:
         - 'music:read'
@@ -31,6 +32,7 @@ App\Entity\Music:
         - 'music:update'
         - 'album:read'
         - 'playlist:read'
+        - 'dashboard:read'
     artists:
       groups:
         - 'music:read'

@@ -5,6 +5,9 @@ namespace App\Entity;
 use App\Repository\LastMusicListenedRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @extends LastListened<Music>
+ */
 #[ORM\Entity(repositoryClass: LastMusicListenedRepository::class)]
 class LastMusicListened extends LastListened
 {
@@ -12,12 +15,12 @@ class LastMusicListened extends LastListened
     #[ORM\JoinColumn(nullable: false)]
     private ?Music $music = null;
 
-    public function getMusic(): ?Music
+    public function getTarget(): ?object
     {
         return $this->music;
     }
 
-    public function setMusic(?Music $music): static
+    public function setTarget(?object $music): static
     {
         $this->music = $music;
 
