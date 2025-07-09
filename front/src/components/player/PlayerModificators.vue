@@ -1,51 +1,33 @@
 <script setup lang="ts">
 import volumeIcon from '@/assets/icons/volume-light.svg'
 import volumeOffIcon from '@/assets/icons/volume-off-light.svg'
-import { ref, computed, watch } from 'vue'
-import { usePlayer } from '@/composables/usePlayer'
-import { usePlayerStore } from '@/stores/player'
+import { useVolumeRange } from '@/composables/useVolumeRange'
 
-const playerStore = usePlayerStore();
-const player = usePlayer();
-
-const { setMute, setVolume } = player;
-
-const volumeValue = ref(playerStore.volume);
-
-const isInteracting = ref(false);
-
-const rangeBackground = computed(() => {
-  const percentage = volumeValue.value;
-  const activeColor = isInteracting.value ? '#ffffffcc' : '#ffffff';
-  return `linear-gradient(90deg, ${activeColor} ${percentage}%, #ffffff2a ${percentage}%)`;
-});
-
-watch(volumeValue, (newValue) => {
-  setVolume(newValue);
-});
+const {
+  volumeValue,
+  volumeBackground,
+  toggleMute,
+  isMuted
+} = useVolumeRange();
 </script>
 
 <template>
-  <div v-if="!playerStore.muted" class="volume-controls flex items-center gap-2">
-    <img :src="volumeIcon" alt="Volume Icon" class="w-8 h-8 cursor-pointer" @click="setMute(!playerStore.muted)" />
+  <div v-if="!isMuted" class="volume-controls flex items-center gap-2">
+    <img :src="volumeIcon" alt="Volume Icon" class="w-8 h-8 cursor-pointer" @click="toggleMute" />
     <input 
       type="range" 
       v-model="volumeValue"
-      name="range" 
+      v-volume-range
+      name="volumeRange" 
       min="0" 
       max="100" 
-      id="inputRange" 
+      id="volumeInputRange" 
       class="inputRange cursor-pointer"
-      :style="{ background: rangeBackground }"
-      @mouseleave="isInteracting = false"
-      @mousedown="isInteracting = true"
-      @mouseup="isInteracting = false"
-      @focus="isInteracting = true"
-      @blur="isInteracting = false"
+      :style="{ background: volumeBackground }"
     />
   </div>
   <div v-else class="volume-controls">
-    <img :src="volumeOffIcon" alt="Volume Icon" class="w-8 h-8 cursor-pointer" @click="setMute(!playerStore.muted)" />
+    <img :src="volumeOffIcon" alt="Volume Icon" class="w-8 h-8 cursor-pointer" @click="toggleMute" />
   </div>
 </template>
 

@@ -8,6 +8,10 @@ export const usePlayerStore = defineStore('player', {
     muted: false as boolean,
     isPlay: false as boolean,
     isPlayerActive: false as boolean,
+    audioPlayer: null as HTMLAudioElement | null,
+    duration: 0 as number,
+    isPlayerInteraction: false as boolean,
+    isVolumeInteraction: false as boolean,
   }),
   actions: {
     setCurrentMusic(music: Music | null) {
@@ -24,6 +28,18 @@ export const usePlayerStore = defineStore('player', {
     },
     setIsPlayerActive(isPlayerActive: boolean) {
       this.isPlayerActive = isPlayerActive
-    }
+    },
+    setAudioPlayer(audio: HTMLAudioElement | null) {
+      this.audioPlayer = audio
+    },
+    setDuration(duration: number) {
+      this.duration = duration
+    },
+    setIsPlayerInteraction(isPlayerInteraction: boolean) {
+      this.isPlayerInteraction = isPlayerInteraction
+    },
+    setIsVolumeInteraction(isVolumeInteraction: boolean) {
+      this.isVolumeInteraction = isVolumeInteraction
+    },
   }
 })
