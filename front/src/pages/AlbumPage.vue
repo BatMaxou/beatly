@@ -56,6 +56,7 @@ onMounted(async () => {
               <p class="text-white text-4xl font-bold">{{ album?.title }}</p>
               <p class="text-md font-bold">
                 <!-- <span class="font-bold" v-for="artist in album.artists" :key="artist.id">{{ artist.name }}</span> -->
+                <span class="">{{ releaseYear }}</span>
                 <span class="text-lg front-bold "> • </span>
                 <span class="">{{ album.musics.length }} titre{{ album.musics.length > 1 ? 's' : '' }}</span>
               </p>
