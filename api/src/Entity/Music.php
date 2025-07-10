@@ -84,9 +84,9 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface
     private Collection $artists;
 
     /**
-     * @var Collection<int, Album>
+     * @var Collection<int, AlbumMusic>
      */
-    #[ORM\ManyToMany(targetEntity: Album::class, inversedBy: 'musics')]
+    #[ORM\OneToMany(targetEntity: AlbumMusic::class, mappedBy: 'music', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $albums;
 
     public function __construct()
@@ -216,25 +216,31 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface
     }
 
     /**
-     * @return Collection<int, Album>
+     * @return Collection<int, AlbumMusic>
      */
     public function getAlbums(): Collection
     {
         return $this->albums;
     }
 
-    public function addAlbum(Album $album): static
+    public function addAlbum(AlbumMusic $album): static
     {
         if (!$this->albums->contains($album)) {
             $this->albums->add($album);
+            $album->setMusic($this);
         }
 
         return $this;
     }
 
-    public function removeAlbum(Album $album): static
+    public function removeAlbum(AlbumMusic $album): static
     {
-        $this->albums->removeElement($album);
+        if ($this->albums->removeElement($album)) {
+            // set the owning side to null (unless already changed)
+            if ($album->getAlbum() === $this) {
+                $album->setAlbum(null);
+            }
+        }
 
         return $this;
     }
@@ -248,7 +254,7 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface
     {
         $categories = $this->categories->map(fn(Category $category) => md5($category->getName()))->toArray();
         $artists = $this->artists->map(fn(Artist $artist) => md5($artist->getName()))->toArray();
-        $albums = $this->albums->map(fn(Album $album) => md5($album->getTitle()))->toArray();
+        $albums = $this->albums->map(fn(AlbumMusic $album) => md5($album->getAlbum()->getTitle()))->toArray();
 
         return sprintf(
             '%s - %s - %s - %s',

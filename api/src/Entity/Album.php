@@ -61,9 +61,9 @@ class Album implements ListenableEntityInterface
     private ?\DateTime $releaseDate = null;
 
     /**
-     * @var Collection<int, Music>
+     * @var Collection<int, AlbumMusic>
      */
-    #[ORM\ManyToMany(targetEntity: Music::class, mappedBy: 'albums')]
+    #[ORM\OneToMany(targetEntity: AlbumMusic::class, mappedBy: 'album', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $musics;
 
     public function __construct()
@@ -125,27 +125,30 @@ class Album implements ListenableEntityInterface
     }
 
     /**
-     * @return Collection<int, Music>
+     * @return Collection<int, AlbumMusic>
      */
     public function getMusics(): Collection
     {
         return $this->musics;
     }
 
-    public function addMusic(Music $music): static
+    public function addMusic(AlbumMusic $music): static
     {
         if (!$this->musics->contains($music)) {
             $this->musics->add($music);
-            $music->addAlbum($this);
+            $music->setAlbum($this);
         }
 
         return $this;
     }
 
-    public function removeMusic(Music $music): static
+    public function removeMusic(AlbumMusic $music): static
     {
         if ($this->musics->removeElement($music)) {
-            $music->removeAlbum($this);
+            // set the owning side to null (unless already changed)
+            if ($music->getAlbum() === $this) {
+                $music->setAlbum(null);
+            }
         }
 
         return $this;
