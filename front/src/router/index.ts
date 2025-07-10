@@ -7,6 +7,7 @@ import Register from "../pages/RegisterPage.vue";
 import Login from "../pages/LoginPage.vue";
 import ForgotPassword from "../pages/ForgotPasswordPage.vue";
 import ResetPassword from "../pages/ResetPasswordPage.vue";
+import PlaylistPage from "../pages/PlaylistPage.vue";
 import NotFound from "../pages/NotFoundPage.vue";
 import { getCookie } from "@/utils/cookies";
 import { useLogout } from "@/composables/useLogout";
@@ -16,6 +17,11 @@ const routes: RouteRecordRaw[] = [
     path: "/",
     component: RootPage,
     name: "Root",
+  },
+  {
+    path: "/playlist/:id",
+    name: "Playlist",
+    component: PlaylistPage,
   },
   {
     path: "/test-music-file",

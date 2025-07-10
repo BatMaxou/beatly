@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, ref, computed } from "vue";
-import { convertDurationInMinutes } from "@/sharedFunctions.ts";
 import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
-
+const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const props = defineProps({
   music: {
     type: Object,
@@ -28,11 +27,17 @@ const props = defineProps({
 
 const emit = defineEmits(["toggle-play"]);
 
-const isHovered = ref(false);
-
-const formattedDuration = computed(() => {
-  return convertDurationInMinutes(props.music.duration);
+const musicInformations = computed(() => {
+  return {
+    title: props.music.music.title,
+    cover: ressourceUrl + props.music.music.cover,
+    position: props.music.position,
+    albums: props.music.music.albums || [],
+    artists: props.music.music.artists || [],
+    id: props.music.music.id,
+  };
 });
+const isHovered = ref(false);
 
 const handleMouseEnter = () => {
   isHovered.value = true;
@@ -53,7 +58,7 @@ const textColor = computed(() => {
 
 <template>
   <div
-    class="flex flex-row justify-between items-center h-14 px-4 transition-colors duration-200 ease-in-out cursor-pointer border-b border-gray-200/20 hover:bg-black/80 hover:text-white"
+    class="flex flex-row items-center h-14 px-4 transition-colors duration-200 ease-in-out cursor-pointer border-b border-gray-200/20 hover:bg-black/80 hover:text-white"
     :class="{ 'bg-black/80 text-white': isPlaying }"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
@@ -61,24 +66,27 @@ const textColor = computed(() => {
   >
     <div class="flex flex-row items-center gap-2">
       <div class="relative flex items-center justify-center w-12">
-        <img :src="props.music.cover" class="w-12 h-12 rounded" />
+        <img :src="musicInformations.cover" class="w-12 h-12 rounded" />
         <div
           v-if="isHovered"
           class="absolute inset-0 flex items-center justify-center bg-black/50 rounded"
         >
           <MusicPlayButton
-            :musicId="props.music.position"
+            :musicId="musicInformations.position"
             :isPlaying="isPlaying"
-            @toggle-play="$emit('toggle-play', props.music.position)"
+            @toggle-play="$emit('toggle-play', musicInformations.position)"
           />
         </div>
       </div>
 
-      <span class="text-gray-400 mx-2" :class="textColor"> | </span>
-      <span class="font-medium" :class="textColor">{{ props.music.title }}</span>
-    </div>
-    <div class="text-gray-500 font-normal">
-      <h4 class="m-0 text-sm">{{ formattedDuration }}</h4>
+      <div class="flex flex-col">
+        <span class="font-medium" :class="textColor">{{ musicInformations.title }}</span>
+        <p class="font-medium" :class="textColor">
+          <span v-for="(artist) in musicInformations.artists" :key="artist.id" class="text-white/70 text-sm">
+            {{ artist.name }}
+          </span>
+        </p>
+      </div>
     </div>
   </div>
 </template>

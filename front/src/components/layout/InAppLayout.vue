@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SideBar from "@/components/sidebar/SideBar.vue";
+import SideBar from "@/components/sidebar/Sidebar.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "@/composables/useToast";
 import loadingIcon from "@/assets/icons/loading-light.svg";
@@ -8,11 +8,15 @@ import { usePlayerStore } from '@/stores/player'
 
 
 // Props
-const { loading } = defineProps({
+const { loading, padding } = defineProps({
   loading: {
     type: Boolean,
     default: false,
-  }
+  },
+  padding: {
+    type: String,
+    default: "pt-10 ps-10",
+  },
 });
 
 const playerStore = usePlayerStore()
@@ -35,10 +39,10 @@ if (authStore.loginSuccess) {
 
     <div :class="playerStore.isPlayerActive ? 'playingMinHeight z-20 flex' : 'min-h-screen z-20 flex'">
       <!-- Sidebar -->
-      <SideBar class="max-w-[250px] w-full z-20"/>
+      <SideBar class="fixed left-0 top-0 min-w-[250px] w-full max-w-[250px] z-20"/>
     
       <!-- Emplacement du contenu de la page -->
-      <div class="z-20 w-full ps-8 pt-10 relative">
+      <div :class="'ms-[250px] z-20 w-full relative ' + padding">
           <div v-if="loading" class="absolute inset-0 flex flex-col items-center justify-center">
             <img :src="loadingIcon" alt="Chargement" class="h-12 w-12 animate-spin mb-4" />
           </div>

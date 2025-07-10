@@ -19,10 +19,11 @@ defineProps({
     <img
       :src="playlistCover"
       :alt="playlistName"
-      class="w-full block transition-transform duration-300 ease-in-out"
+      class="w-full block transition-transform duration-300 ease-in-out w-[160px] h-[160px] object-cover group-hover:scale-110"      
     />
     <div
-      class="absolute inset-0 bg-black/50 flex justify-center items-center opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
+      class="absolute bottom-2 right-2 p-4 w-[50px] h-[50px] bg-black/80 rounded-full flex justify-center items-center opacity-0 transition-all duration-300 ease-in-out hover:bg-black group-hover:opacity-100"
+      data-play-button
     >
       <UniqPlayPauseButton />
     </div>
