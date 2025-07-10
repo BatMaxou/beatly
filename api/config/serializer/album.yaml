@@ -28,3 +28,21 @@ App\Entity\Album:
         - 'album:write'
         - 'album:update'
 
+App\Entity\AlbumMusic:
+  attributes:
+    album:
+      groups:
+        - 'music:read'
+    music:
+      groups:
+        - 'album:read'
+        - 'album:write'
+        - 'album:update'
+    position:
+      groups:
+        - 'album:read'
+        - 'album:write'
+        - 'album:update'
+    addedAt:
+      groups:
+        - 'album:read'

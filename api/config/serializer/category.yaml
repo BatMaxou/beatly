@@ -2,14 +2,10 @@ App\Entity\Category:
   attributes:
     id:
       groups:
-        - 'album:read'
-        - 'album:collection:read'
         - 'music:read'
         - 'dashboard:read'
     name:
       groups:
-        - 'album:read'
-        - 'album:collection:read'
         - 'music:read'
         - 'dashboard:read'
 

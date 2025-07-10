@@ -7,6 +7,7 @@ use App\DataFixtures\Sample\SampleLoader;
 use App\DataFixtures\Sample\SampleType;
 use App\Entity\Artist;
 use App\Entity\Album;
+use App\Entity\AlbumMusic;
 use App\Entity\Music;
 use App\Entity\MusicFile;
 use App\Entity\Category;
@@ -96,7 +97,6 @@ class ArtistFixtures extends Fixture
 
     private function createAlbumsAndMusics(array $artists): void
     {
-        $musicFileCounter = 1;
         foreach ($artists as $artistName => $artistInfo) {
             $artist = $artistInfo['entity'];
             $artistData = $artistInfo['data'];
@@ -118,6 +118,7 @@ class ArtistFixtures extends Fixture
 
                 $this->manager->persist($album);
 
+                $musicPosition = 1;
                 foreach ($songs as $songTitle => $songCategories) {
                     $musicFile = (new MusicFile())->setName($this->createMusicFile());
                     $this->manager->persist($musicFile);
@@ -128,7 +129,11 @@ class ArtistFixtures extends Fixture
                         ->setFile($musicFile);
 
                     $music->addArtist($artist);
-                    $music->addAlbum($album);
+                    $music->addAlbum((new AlbumMusic())
+                        ->setAlbum($album)
+                        ->setPosition($musicPosition)
+                    );
+
                     foreach ($songCategories as $category) {
                         if (isset($this->categories[$category->value])) {
                             $music->addCategory($this->categories[$category->value]);
@@ -136,7 +141,7 @@ class ArtistFixtures extends Fixture
                     }
 
                     $this->manager->persist($music);
-                    $musicFileCounter++;
+                    $musicPosition++;
                 }
             }
         }
