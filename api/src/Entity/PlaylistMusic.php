@@ -24,9 +24,6 @@ class PlaylistMusic
     private ?Music $music = null;
 
     #[ORM\Column]
-    private ?int $position = null;
-
-    #[ORM\Column]
     private ?\DateTimeImmutable $addedAt = null;
 
     public function __construct()
@@ -59,18 +56,6 @@ class PlaylistMusic
     public function setMusic(?Music $music): static
     {
         $this->music = $music;
-
-        return $this;
-    }
-
-    public function getPosition(): ?int
-    {
-        return $this->position;
-    }
-
-    public function setPosition(int $position): static
-    {
-        $this->position = $position;
 
         return $this;
     }
