@@ -1,7 +1,11 @@
 App\Entity\Artist:
   attributes:
     id:
-      groups: ['music:read']
+      groups:
+        - 'music:read'
+        - 'playlist:read'
     name:
-      groups: ['music:read']
+      groups:
+        - 'music:read'
+        - 'playlist:read'
 

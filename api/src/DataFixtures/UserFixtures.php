@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\DataFixtures\Faker\FakerFixtureTrait;
 use App\Entity\Playlist;
+use App\Entity\PlaylistMusic;
 use App\Entity\User;
 use App\Enum\RoleEnum;
 use App\Repository\MusicRepository;
@@ -112,7 +113,10 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     {
         for ($j = 0; $j < $this->faker->numberBetween(5, 15); ++$j) {
             $music = $this->faker->randomElement($this->musics);
-            $playlist->addMusic($music);
+            $playlist->addMusic((new PlaylistMusic()
+                ->setMusic($music)
+                ->setPosition($j + 1)
+            ));
         }
 
         return $playlist;

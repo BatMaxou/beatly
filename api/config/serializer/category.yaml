@@ -5,13 +5,11 @@ App\Entity\Category:
         - 'album:read'
         - 'album:collection:read'
         - 'music:read'
-        - 'playlist:read'
         - 'dashboard:read'
     name:
       groups:
         - 'album:read'
         - 'album:collection:read'
         - 'music:read'
-        - 'playlist:read'
         - 'dashboard:read'
 

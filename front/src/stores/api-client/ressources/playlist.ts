@@ -15,7 +15,7 @@ export default class Playlist {
   }
 
   async get(id: number|string): Promise<PlaylistType> {
-    return this.apiClient.get<PlaylistType>(`${ApiRessourcePath}/${id}`);
+    return this.apiClient.get<PlaylistType>(`${ApiRessourcePath}/${id}`, { Accept: 'application/ld+json' });
   }
 
   async getAll(): Promise<PlaylistType[]> {

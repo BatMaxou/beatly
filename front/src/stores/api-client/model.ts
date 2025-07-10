@@ -38,11 +38,14 @@ export class ApiClient {
     this.token = getCookie("token");
   }
 
-  async get<T>(url: string): Promise<T> {
-    return fetch(
-      `${this.baseUrl}${url}`,
-      this.token ? { headers: { Authorization: `Bearer ${this.token}` } } : undefined,
-    ).then((response) => response.json());
+  async get<T>(url: string, additionnalHeaders: HeadersInit = {}): Promise<T> {
+    return fetch(`${this.baseUrl}${url}`, {
+      headers: {
+        Accept: "application/json",
+        ...additionnalHeaders,
+        ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
+      },
+    }).then((response) => response.json());
   }
 
   async getStream(url: string): Promise<ReadableStream> {

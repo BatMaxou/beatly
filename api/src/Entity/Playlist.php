@@ -73,9 +73,9 @@ class Playlist implements ListenableEntityInterface
     private ?User $creator = null;
 
     /**
-     * @var Collection<int, Music>
+     * @var Collection<int, PlaylistMusic>
      */
-    #[ORM\ManyToMany(targetEntity: Music::class, inversedBy: 'playlists')]
+    #[ORM\OneToMany(targetEntity: PlaylistMusic::class, mappedBy: 'playlist', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $musics;
 
     public function __construct()
@@ -137,25 +137,31 @@ class Playlist implements ListenableEntityInterface
     }
 
     /**
-     * @return Collection<int, Music>
+     * @return Collection<int, PlaylistMusic>
      */
     public function getMusics(): Collection
     {
         return $this->musics;
     }
 
-    public function addMusic(Music $music): static
+    public function addMusic(PlaylistMusic $music): static
     {
         if (!$this->musics->contains($music)) {
             $this->musics->add($music);
+            $music->setPlaylist($this);
         }
 
         return $this;
     }
 
-    public function removeMusic(Music $music): static
+    public function removeMusic(PlaylistMusic $music): static
     {
-        $this->musics->removeElement($music);
+        if ($this->musics->removeElement($music)) {
+            // set the owning side to null (unless already changed)
+            if ($music->getPlaylist() === $this) {
+                $music->setPlaylist(null);
+            }
+        }
 
         return $this;
     }
