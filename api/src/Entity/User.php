@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
+use App\Api\Processor\UserFilesProcessor;
 use App\Api\Provider\MeProvider;
 use App\Domain\Command\ForgotPasswordCommand;
 use App\Domain\Command\RegisterCommand;
@@ -20,10 +21,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[Vich\Uploadable]
 #[ApiResource(
     operations: [
         new Get(
@@ -56,6 +60,12 @@ use Symfony\Component\Validator\Constraints as Assert;
             messenger: 'input',
             input: VerifyResetTokenCommand::class,
         ),
+        new Post(
+            name: 'api_update_user_files',
+            uriTemplate: '/users/{id}/files',
+            processor: UserFilesProcessor::class,
+            normalizationContext: ['groups' => ['playlist:read']],
+        ),
     ],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -78,10 +88,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $avatar = null;
+    private ?string $avatarName = null;
+
+    #[Vich\UploadableField(mapping: 'user_avatar', fileNameProperty: 'avatarName')]
+    private ?File $avatar = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $wallpaper = null;
+    private ?string $wallpaperName = null;
+
+    #[Vich\UploadableField(mapping: 'user_wallpaper', fileNameProperty: 'wallpaperName')]
+    private ?File $wallpaper = null;
 
     #[Assert\NotBlank]
     #[Assert\Email]
@@ -101,6 +117,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $resetToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     /**
      * @var Collection<int, Playlist>
@@ -131,26 +150,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAvatar(): ?string
+    public function getAvatarName(): ?string
     {
-        return $this->avatar;
+        return $this->avatarName;
     }
 
-    public function setAvatar(?string $avatar): static
+    public function setAvatarName(?string $avatarName): static
     {
-        $this->avatar = $avatar;
+        $this->avatarName = $avatarName;
 
         return $this;
     }
 
-    public function getWallpaper(): ?string
+    public function getAvatar(): ?File
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?File $avatar = null): static
+    {
+        $this->avatar = $avatar;
+
+        if ($avatar) {
+            // Important to update at least one field to trigger the doctrine events
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    public function getWallpaperName(): ?string
+    {
+        return $this->wallpaperName;
+    }
+
+    public function setWallpaperName(?string $wallpaperName): static
+    {
+        $this->wallpaperName = $wallpaperName;
+
+        return $this;
+    }
+
+    public function getWallpaper(): ?File
     {
         return $this->wallpaper;
     }
 
-    public function setWallpaper(?string $wallpaper): static
+    public function setWallpaper(?File $wallpaper = null): static
     {
         $this->wallpaper = $wallpaper;
+
+        if ($wallpaper) {
+            // Important to update at least one field to trigger the doctrine events
+            $this->updatedAt = new \DateTimeImmutable();
+        }
 
         return $this;
     }

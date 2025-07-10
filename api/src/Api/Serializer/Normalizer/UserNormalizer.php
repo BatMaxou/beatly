@@ -2,16 +2,17 @@
 
 namespace App\Api\Serializer\Normalizer;
 
-use App\Entity\Album;
+use App\Entity\Playlist;
+use App\Entity\User;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class AlbumNormalizer implements NormalizerInterface, NormalizerAwareInterface
+final class UserNormalizer implements NormalizerInterface, NormalizerAwareInterface
 {
     use NormalizerAwareTrait;
 
-    private const ALREADY_CALLED = 'album_normalizer_already_called';
+    private const ALREADY_CALLED = 'user_normalizer_already_called';
 
     public function __construct(
         private readonly string $publicUploadsPath,
@@ -19,7 +20,7 @@ final class AlbumNormalizer implements NormalizerInterface, NormalizerAwareInter
     }
 
     /**
-     * @param Album $object
+     * @param User $object
      */
     public function normalize(mixed $object, ?string $format = null, array $context = []): array|string
     {
@@ -29,25 +30,19 @@ final class AlbumNormalizer implements NormalizerInterface, NormalizerAwareInter
             $context + [self::ALREADY_CALLED => true]
         );
 
-        if (isset($normalized['musics']) && is_array($normalized['musics'])) {
-            usort($normalized['musics'], function ($a, $b) {
-                return $a['position'] <=> $b['position'];
-            });
-        }
-
-        if (isset($normalized['coverName'])) {
-            unset($normalized['coverName']);
-            $normalized['cover'] = sprintf(
-                '%s/albums/covers/%s',
+        if (isset($normalized['avatarName'])) {
+            unset($normalized['avatarName']);
+            $normalized['avatar'] = \sprintf(
+                '%s/users/avatars/%s',
                 $this->publicUploadsPath,
-                $object->getCoverName(),
+                $object->getAvatarName(),
             );
         }
 
         if (isset($normalized['wallpaperName'])) {
             unset($normalized['wallpaperName']);
-            $normalized['wallpaper'] = sprintf(
-                '%s/albums/wallpapers/%s',
+            $normalized['wallpaper'] = \sprintf(
+                '%s/users/wallpapers/%s',
                 $this->publicUploadsPath,
                 $object->getWallpaperName(),
             );
@@ -58,13 +53,13 @@ final class AlbumNormalizer implements NormalizerInterface, NormalizerAwareInter
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return $data instanceof Album && false === ($context[self::ALREADY_CALLED] ?? false);
+        return ($data instanceof User || is_subclass_of($data, User::class)) && false === ($context[self::ALREADY_CALLED] ?? false);
     }
 
     public function getSupportedTypes(?string $format): array
     {
         return [
-            Album::class => false,
+            User::class => false,
         ];
     }
 }

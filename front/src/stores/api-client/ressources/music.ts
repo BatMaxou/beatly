@@ -68,6 +68,13 @@ export default class Music {
     return response;
   }
 
+  async updateCover(id: number|string, file: File): Promise<MusicType> {
+    const formData = new FormData();
+    formData.append("cover", file);
+
+    return this.apiClient.post<MusicType>(`${ApiRessourcePath.MUSIC}/${id}/files`, formData, { Accept: 'application/ld+json' });
+  }
+
   async deleteFile(id: number|string): Promise<DeleteResponse> {
     return this.apiClient.delete(`${ApiRessourcePath.FILE}/${id}`)
   }

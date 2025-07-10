@@ -1,9 +1,29 @@
 App\Entity\User:
   attributes:
     name:
-      groups: ['me:read']
+      groups:
+        - 'user:read'
+        - 'me:read'
     email:
-      groups: ['me:read']
+      groups:
+        - 'user:read'
+        - 'me:read'
     roles:
-      groups: ['me:read']
+      groups:
+        - 'user:read'
+        - 'me:read'
+    avatarName:
+      groups:
+        - 'user:read'
+        - 'me:read'
+    avatar:
+      groups:
+        - 'user:write'
+    wallpaperName:
+      groups:
+        - 'user:read'
+        - 'me:read'
+    wallpaper:
+      groups:
+        - 'user:write'
 

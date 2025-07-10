@@ -30,6 +30,20 @@ export default class Playlist {
     return this.apiClient.patch<ResourceResponse>(`${ApiRessourcePath}/${id}`, data, { Accept: 'application/ld+json' });
   }
 
+  async updateFiles(id: number|string, cover?: File, wallpaper?: File): Promise<PlaylistType> {
+    const formData = new FormData();
+
+    if (cover) {
+      formData.append("cover", cover);
+    }
+
+    if (wallpaper) {
+      formData.append("wallpaper", wallpaper);
+    }
+
+    return this.apiClient.post<PlaylistType>(`${ApiRessourcePath}/${id}/files`, formData, { Accept: 'application/ld+json' });
+  }
+
   async delete(id: number|string): Promise<DeleteResponse> {
     return this.apiClient.delete(`${ApiRessourcePath}/${id}`)
   }

@@ -9,6 +9,9 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Api\Processor\MusicCreationProcessor;
+use App\Api\Processor\MusicFilesProcessor;
+use App\Domain\Command\File\MusicFilesCommand;
 use App\Entity\Interface\EmbeddableEntityInterface;
 use App\Entity\Interface\ListenableEntityInterface;
 use App\Repository\MusicRepository;
@@ -24,8 +27,15 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     operations: [
         new Post(
             name: 'api_create_music',
+            processor: MusicCreationProcessor::class,
             normalizationContext: ['groups' => ['music:read']],
             denormalizationContext: ['groups' => ['music:write']],
+        ),
+        new Post(
+            name: 'api_update_music_files',
+            uriTemplate: '/music/{id}/files',
+            processor: MusicFilesProcessor::class,
+            normalizationContext: ['groups' => ['music:read']],
         ),
         new Patch(
             name: 'api_update_music',

@@ -14,6 +14,8 @@ export type User = {
   name: string;
   email: string;
   roles: Role[];
+  avatar?: string;
+  wallpaper?: string;
 };
 
 export type Artist = {
@@ -21,12 +23,20 @@ export type Artist = {
   name: string;
 };
 
+export type AlbumMusic = {
+  id: number;
+  music: Music|string;
+  position: number;
+  addedAt: string;
+};
+
 export type Album = {
   id: number;
   title: string;
   releaseDate: string;
-  musics: Music[];
-  release_date: Date;
+  musics: AlbumMusic[];
+  cover?: string;
+  wallpaper?: string;
 };
 
 export type Category = {
@@ -45,15 +55,14 @@ export type Music = {
   title: string;
   artists: Artist[];
   categories: Category[];
-  file?: string | null;
-  cover?: string | null;
+  file?: string;
+  cover?: string;
   listeningsNumber?: number;
 };
 
 export type PlaylistMusic = {
   id: number;
   music: Music|string;
-  position: number;
   addedAt: string;
 };
 
@@ -61,6 +70,8 @@ export type Playlist = {
   id: number;
   title: string;
   musics: PlaylistMusic[];
+  cover?: string;
+  wallpaper?: string;
   '@type'?: PlaylistType;
 };
 
