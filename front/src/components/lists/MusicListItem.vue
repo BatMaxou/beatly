@@ -2,37 +2,25 @@
 import { defineProps, defineEmits, ref, computed } from "vue";
 import { convertDurationInMinutes } from "@/sharedFunctions.ts";
 import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
+import type { Music } from "@/utils/types";
+import AlbumTitleMenu from "../menus/AlbumTitleMenu.vue";
 
-const props = defineProps({
-  music: {
-    type: Object,
-    required: true,
-  },
-  index: {
-    type: Number,
-    required: true,
-  },
-  isPlaying: {
-    type: Boolean,
-    default: false,
-  },
-  customStyles: {
-    type: Object,
-    default: () => ({}),
-  },
-  theme: {
-    type: String,
-    default: "dark",
-  },
-});
+const props = defineProps<{
+  music: Music;
+  index: number;
+  isPlaying?: boolean;
+  theme?: string;
+  position: number;
+}>();
+
+const {
+  isPlaying = false,
+  theme = "dark"
+} = props;
 
 const emit = defineEmits(["toggle-play"]);
 
 const isHovered = ref(false);
-
-const formattedDuration = computed(() => {
-  return convertDurationInMinutes(props.music.duration);
-});
 
 const handleMouseEnter = () => {
   isHovered.value = true;
@@ -40,10 +28,6 @@ const handleMouseEnter = () => {
 
 const handleMouseLeave = () => {
   isHovered.value = false;
-};
-
-const handleRowClick = () => {
-  emit("toggle-play", props.music.position);
 };
 
 const textColor = computed(() => {
@@ -57,25 +41,23 @@ const textColor = computed(() => {
     :class="{ 'bg-black/80 text-white': isPlaying }"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
-    @click="handleRowClick"
   >
     <div class="flex flex-row items-center gap-2">
       <div class="flex items-center justify-center w-8 min-w-8">
-        <span v-if="!isHovered && !isPlaying" class="text-gray-500 font-medium">
+        <span v-if="!isHovered && !isPlaying" class="text-white font-medium">
           {{ index + 1 }}
         </span>
         <MusicPlayButton
           v-else
-          :musicId="music.position"
+          :musicId="position"
           :isPlaying="isPlaying"
-          @toggle-play="$emit('toggle-play', music.position)"
         />
       </div>
-      <span class="text-gray-400 mx-2"> | </span>
+      <span class="text-white/30 mx-2"> | </span>
       <span class="font-medium" :class="textColor">{{ music.title }}</span>
     </div>
     <div class="text-gray-500 font-normal">
-      <h4 class="m-0 text-sm">{{ formattedDuration }}</h4>
+      <AlbumTitleMenu position="bottom-right"/>
     </div>
   </div>
 </template>

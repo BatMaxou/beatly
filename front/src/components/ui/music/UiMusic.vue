@@ -23,78 +23,90 @@ const genreNames = <Record<string, string>>{
   rnb: "R&B",
 };
 
-const albumMusicList = [
-  {
-    id: 1,
-    title: "Pain",
-    duration: "142",
-    position: 1,
-    cover: cover1,
-  },
-  {
-    id: 2,
-    title: "Hardware",
-    duration: "153",
-    position: 2,
-    cover: cover1,
-  },
-  {
-    id: 3,
-    title: "Processor",
-    duration: "130",
-    position: 3,
-    cover: cover1,
-  },
-  {
-    id: 4,
-    title: "Digital Dreams",
-    duration: "175",
-    position: 4,
-    cover: cover1,
-  },
-  {
-    id: 5,
-    title: "Neon Nights",
-    duration: "168",
-    position: 5,
-    cover: cover1,
-  },
-  {
-    id: 6,
-    title: "Binary Beat",
-    duration: "147",
-    position: 6,
-    cover: cover1,
-  },
-  {
-    id: 7,
-    title: "Silicon Soul",
-    duration: "195",
-    position: 7,
-    cover: cover1,
-  },
-  {
-    id: 8,
-    title: "Electric Echo",
-    duration: "162",
-    position: 8,
-    cover: cover1,
-  },
-  {
-    id: 9,
-    title: "Memory Lane",
-    duration: "183",
-    position: 9,
-    cover: cover1,
-  },
-  {
-    id: 10,
-    title: "Quantum Quirk",
-    duration: "159",
-    position: 10,
-    cover: cover1,
-  },
-];
+const albumMusicList = {
+  musics: [
+    {
+      position: 1,
+      music:{
+      id: 1,
+      title: "Pain",
+      cover: cover1,
+      }
+    },
+    {
+      position: 2,
+      music:{
+      id: 2,
+      title: "Hardware",
+      cover: cover1,
+      }
+    },
+    {
+      position: 3,
+      music:{
+      id: 3,
+      title: "Processor",
+      cover: cover1,
+      }
+    },
+    {
+      position: 4,
+      music:{
+      id: 4,
+      title: "Digital Dreams",
+      cover: cover1,
+      }
+    },
+    {
+      position: 5,
+      music:{
+      id: 5,
+      title: "Neon Nights",
+      cover: cover1,
+      }
+    },
+    {
+      position: 6,
+      music:{
+      id: 6,
+      title: "Binary Beat",
+      cover: cover1,
+      }
+    },
+    {
+      position: 7,
+      music:{
+      id: 7,
+      title: "Silicon Soul",
+      cover: cover1,
+      }
+    },
+    {
+      position: 8,
+      music:{
+      id: 8,
+      title: "Electric Echo",
+      cover: cover1,
+      }
+    },
+    {
+      position: 9,
+      music:{
+      id: 9,
+      title: "Memory Lane",
+      cover: cover1,
+      }
+    },
+    {
+      position: 10,
+      music:{
+      id: 10,
+      title: "Quantum Quirk",
+      cover: cover1,
+      }
+    },
+  ]
+};
 </script>
 
 <template>
@@ -150,7 +162,7 @@ const albumMusicList = [
     <div class="max-w-[650px] mt-8 overflow-hidden">
       <div class="mb-6">
         <h3 class="text-lg font-semibold mb-2">Liste ( Album )</h3>
-        <MusicList :musicList="albumMusicList" :origin="`playlist`" :theme="`light`" />
+        <MusicList :musicList="albumMusicList.musics" :origin="`album`" :theme="`light`" />
       </div>
     </div>
   </div>

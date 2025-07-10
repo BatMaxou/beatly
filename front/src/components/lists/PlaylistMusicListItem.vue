@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, ref, computed } from "vue";
 import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
+import PlaylistTitleMenu from "../menus/PlaylistTitleMenu.vue";
 const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const props = defineProps({
   music: {
@@ -87,6 +88,7 @@ const textColor = computed(() => {
           </span>
         </p>
       </div>
+      <PlaylistTitleMenu :isFavorite="false" />
     </div>
   </div>
 </template>
