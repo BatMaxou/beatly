@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PlaylistMusicRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ApiResource(operations: [])]
 #[ORM\Entity(repositoryClass: PlaylistMusicRepository::class)]
 class PlaylistMusic
 {
