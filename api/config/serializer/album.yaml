@@ -32,6 +32,7 @@ App\Entity\AlbumMusic:
   attributes:
     album:
       groups:
+        - 'playlist:read'
         - 'music:read'
     music:
       groups:
