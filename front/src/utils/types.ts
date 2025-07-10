@@ -46,7 +46,7 @@ export type Music = {
 
 export type PlaylistMusic = {
   id: number;
-  music: Music;
+  music: Music|string;
   position: number;
   addedAt: string;
 };
@@ -54,7 +54,7 @@ export type PlaylistMusic = {
 export type Playlist = {
   id: number;
   title: string;
-  musics: Music[];
+  musics: PlaylistMusic[];
 };
 
 export type Listen = {
