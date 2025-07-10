@@ -5,6 +5,11 @@ export enum Role {
   BANNED = "ROLE_BANNED",
 }
 
+export enum PlaylistType {
+  PRIVATE = "Playlist",
+  PLATFORM = "PlatformPlaylist",
+}
+
 export type User = {
   name: string;
   email: string;
@@ -55,6 +60,7 @@ export type Playlist = {
   id: number;
   title: string;
   musics: PlaylistMusic[];
+  '@type'?: PlaylistType;
 };
 
 export type Listen = {
