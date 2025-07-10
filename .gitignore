@@ -26,6 +26,7 @@
 /front/dist-ssr
 /front/coverage
 /front/*.local
+front/assets/main-build.css
 
 /front/cypress/videos/
 /front/cypress/screenshots/
