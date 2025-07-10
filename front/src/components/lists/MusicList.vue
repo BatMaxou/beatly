@@ -46,7 +46,8 @@ const togglePlay = (musicId: number) => {
     <MusicListItem
       v-for="(music, index) in musicList"
       :key="music?.position"
-      :music="music"
+      :music="music.music"
+      :position="music.position"
       :index="index"
       :isPlaying="currentPlayingId === music.position"
       :customStyles="props.customStyles"

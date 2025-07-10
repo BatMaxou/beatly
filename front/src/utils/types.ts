@@ -26,6 +26,7 @@ export type Album = {
   title: string;
   releaseDate: string;
   musics: Music[];
+  release_date: Date;
 };
 
 export type Category = {

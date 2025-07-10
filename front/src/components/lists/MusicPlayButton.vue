@@ -14,15 +14,10 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['toggle-play']);
-
-const handleTogglePlay = () => {
-  emit('toggle-play', props.musicId);
-};
 </script>
 
 <template>
-  <div class="music-play-button" @click.stop="handleTogglePlay">
+  <div class="music-play-button">
     <img
       :src="isPlaying ? pauseLight : playLight"
       :alt="isPlaying ? 'Pause' : 'Play'"
@@ -41,8 +36,8 @@ const handleTogglePlay = () => {
 }
 
 .play-icon {
-  width: 2rem;
-  height: 2rem;
+  width: 0.7rem;
+  height: 0.7rem;
   transition: transform 0.3s ease;
 }
 
