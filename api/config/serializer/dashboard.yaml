@@ -1,0 +1,14 @@
+App\Api\Model\Dashboard:
+  attributes:
+    lastListened:
+      groups:
+        - 'dashboard:read'
+    mostPopularCategories:
+      groups:
+        - 'dashboard:read'
+    mostListenedMusics:
+      groups:
+        - 'dashboard:read'
+    mostLikedMusics:
+      groups:
+        - 'dashboard:read'

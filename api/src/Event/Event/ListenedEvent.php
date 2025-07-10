@@ -10,6 +10,7 @@ class ListenedEvent extends AbstractUserAwareEvent
     public function __construct(
         public User $user,
         public ListenableEntityInterface $listened,
+        public bool $isLinked = false,
     ) {
         parent::__construct($user);
     }

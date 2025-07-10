@@ -28,23 +28,30 @@ class ListenedSubscriber implements EventSubscriberInterface
     public function onListened(ListenedEvent $event): void
     {
         $listened = $event->listened;
+        $user = $event->user;
 
         match (true) {
-            $listened instanceof Music => $this->handleMusic($listened, $event->user),
-            default => $this->handle($listened, $event->user),
+            $listened instanceof Music => $this->handleMusic($listened, $user, $event->isLinked),
+            default => $this->handle($listened, $user, $event->isLinked),
         };
+
+        $this->lastListenedRepository->deleteOutdated($user);
     }
 
-    private function handleMusic(Music $music, User $user): void
+    private function handleMusic(Music $music, User $user, bool $isLinked): void
     {
         $music->listen();
 
-        $this->handle($music, $user);
+        $this->handle($music, $user, $isLinked);
     }
 
-    private function handle(ListenableEntityInterface $listened, User $user): void
+    private function handle(ListenableEntityInterface $listened, User $user, bool $isLinked): void
     {
-        $this->lastListenedRepository->deleteOutdated($listened, $user);
+        if ($isLinked) {
+            return;
+        }
+
+        $this->lastListenedRepository->deleteDuplicates($listened, $user);
         $this->lastListenedRepository->create($listened, $user);
     }
 }

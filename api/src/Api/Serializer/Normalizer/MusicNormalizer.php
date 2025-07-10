@@ -23,13 +23,17 @@ final class MusicNormalizer implements NormalizerInterface, NormalizerAwareInter
     /**
      * @param Music $object
      */
-    public function normalize(mixed $object, ?string $format = null, array $context = []): array
+    public function normalize(mixed $object, ?string $format = null, array $context = []): array|string
     {
         $normalized = $this->normalizer->normalize(
             $object,
             $format,
             $context + [self::ALREADY_CALLED => true]
         );
+
+        if (!isset($normalized['coverName'])) {
+            return $normalized;
+        }
 
         unset($normalized['coverName']);
         $normalized['cover'] = sprintf(

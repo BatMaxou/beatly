@@ -8,6 +8,9 @@ use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
 
+/**
+ * @template T of LastMusicListened|LastPlaylistListened|LastAlbumListened
+ */
 #[ORM\Entity(repositoryClass: LastListenedRepository::class)]
 #[InheritanceType('JOINED')]
 #[DiscriminatorColumn(name: 'discr', type: 'string')]
@@ -16,7 +19,7 @@ use Doctrine\ORM\Mapping\InheritanceType;
     'playlist' => LastPlaylistListened::class,
     'album' => LastAlbumListened::class,
 ])]
-class LastListened
+abstract class LastListened
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -58,4 +61,14 @@ class LastListened
 
         return $this;
     }
+
+    /**
+     * @return T|null
+     */
+    abstract public function getTarget(): ?object;
+
+    /**
+     * @param T $target
+     */
+    abstract public function setTarget(object $target): static;
 }
