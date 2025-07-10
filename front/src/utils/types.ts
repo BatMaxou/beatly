@@ -44,6 +44,13 @@ export type Music = {
   listeningsNumber?: number;
 };
 
+export type PlaylistMusic = {
+  id: number;
+  music: Music;
+  position: number;
+  addedAt: string;
+};
+
 export type Playlist = {
   id: number;
   title: string;

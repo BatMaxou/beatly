@@ -20,3 +20,18 @@ App\Entity\Playlist:
         - 'playlist:write'
         - 'playlist:update'
 
+App\Entity\PlaylistMusic:
+  attributes:
+    music:
+      groups:
+        - 'playlist:read'
+        - 'playlist:write'
+        - 'playlist:update'
+    position:
+      groups:
+        - 'playlist:read'
+        - 'playlist:write'
+        - 'playlist:update'
+    addedAt:
+      groups:
+        - 'playlist:read'

@@ -3,6 +3,7 @@ App\Entity\Music:
     id:
       groups:
         - 'music:read'
+        - 'playlist:read'
     title:
       groups:
         - 'music:read'
@@ -24,7 +25,6 @@ App\Entity\Music:
       groups:
         - 'music:read'
         - 'album:read'
-        - 'playlist:read'
     file:
       groups:
         - 'music:read'
@@ -49,5 +49,4 @@ App\Entity\Music:
         - 'music:write'
         - 'music:update'
         - 'album:read'
-        - 'playlist:read'
 
