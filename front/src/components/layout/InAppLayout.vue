@@ -39,10 +39,10 @@ if (authStore.loginSuccess) {
 
     <div :class="playerStore.isPlayerActive ? 'playingMinHeight z-20 flex' : 'min-h-screen z-20 flex'">
       <!-- Sidebar -->
-      <SideBar class="min-w-[250px] w-full max-w-[250px] z-20"/>
+      <SideBar class="fixed left-0 top-0 min-w-[250px] w-full max-w-[250px] z-20"/>
     
       <!-- Emplacement du contenu de la page -->
-      <div :class="'z-20 w-full relative ' + padding">
+      <div :class="'ms-[250px] z-20 w-full relative ' + padding">
           <div v-if="loading" class="absolute inset-0 flex flex-col items-center justify-center">
             <img :src="loadingIcon" alt="Chargement" class="h-12 w-12 animate-spin mb-4" />
           </div>

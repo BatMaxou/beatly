@@ -47,7 +47,7 @@ onMounted(async () => {
     <div v-if="playlist">
       <div :style="{ backgroundImage: playlist.wallpaper ? `url(${ressourceUrl + playlist.wallpaper})` : `url(${defaultWallpaper})` }" class="bg-cover bg-center object-cover relative playlistBackground z-2">
         <div class="relative flex flex-row justify-start items-between gap-4 pt-24 ps-16 mb-6 z-10">
-          <img :src="playlist.cover ? ressourceUrl + playlist.cover : defaultCover" alt="Playlist Cover" class="w-[300px] h-[300px] object-cover" />
+          <img :src="playlist.cover ? ressourceUrl + playlist.cover : defaultCover" alt="Playlist Cover" class="w-[200px] h-[200px] object-cover" />
           <div class="flex flex-col items-start justify-end mb-4">
               <span class="mb-8">Playlist</span>
               <p class="text-white text-4xl font-bold">{{ playlist?.title }}</p>
