@@ -79,15 +79,13 @@ class ArtistFixtures extends Fixture
             ->setName($name)
             ->setEmail(strtolower(str_replace(' ', '.', $name)) . '@music.com')
             ->setPassword('azerty', true);
-        
-        if ($this->faker->boolean(80)) {
-            // TODO: Uncomment after implementing uploader on User entity
-            // $artist->setAvatar($this->createCover());
+
+        if ($this->faker->boolean(10)) {
+            $artist->setAvatarName($this->createAvatar());
         }
-        
-        if ($this->faker->boolean(70)) {
-            // TODO: Uncomment after implementing uploader on User entity
-            // $artist->setWallpaper($this->createWallpaper());
+
+        if ($this->faker->boolean(10)) {
+            $artist->setWallpaperName($this->createWallpaper('user'));
         }
 
         $this->manager->persist($artist);
@@ -106,14 +104,12 @@ class ArtistFixtures extends Fixture
                     ->setTitle($albumTitle)
                     ->setReleaseDate($this->faker->dateTimeBetween('-15 years', 'now'));
 
-                if ($this->faker->boolean(90)) {
-                    // TODO: Uncomment after implementing uploader on Album entity
-                    // $album->setCover($this->createCover());
+                if ($this->faker->boolean(10)) {
+                    $album->setCoverName($this->createCover('album'));
                 }
 
-                if ($this->faker->boolean(60)) {
-                    // TODO: Uncomment after implementing uploader on Album entity
-                    // $album->setWallpaper($this->createWallpaper());
+                if ($this->faker->boolean(10)) {
+                    $album->setWallpaperName($this->createWallpaper('album'));
                 }
 
                 $this->manager->persist($album);
@@ -125,8 +121,11 @@ class ArtistFixtures extends Fixture
 
                     $music = (new Music())
                         ->setTitle($songTitle)
-                        ->setCoverName($this->createCover())
                         ->setFile($musicFile);
+
+                    if ($this->faker->boolean(10)) {
+                        $music->setCoverName($this->createCover('music'));
+                    }
 
                     $music->addArtist($artist);
                     $music->addAlbum((new AlbumMusic())
@@ -148,30 +147,40 @@ class ArtistFixtures extends Fixture
     }
     private function createMusicFile(): string
     {
-        $name = sprintf('track_%s.mp3', $this->faker->unique()->slug(3));
-        $rootDir = sprintf('%s/../..', __DIR__);
+        $name = \sprintf('track_%s.mp3', $this->faker->unique()->slug(3));
+        $rootDir = \sprintf('%s/../..', __DIR__);
 
-        copy(sprintf('%s/track.mp3', __DIR__), sprintf('%s%s/musics/%s', $rootDir, $this->privateUploadsPath, $name));
-
-        return $name;
-    }
-
-    private function createCover(): string
-    {
-        $name = sprintf('cover_%s.jpg', $this->faker->unique()->slug(3));
-        $rootDir = sprintf('%s/../..', __DIR__);
-
-        copy(sprintf('%s/300x300.jpg', __DIR__), sprintf('%s%s/musics/covers/%s', $rootDir, $this->ssrPublicUploadsPath, $name));
+        copy(\sprintf('%s/track.mp3', __DIR__), \sprintf('%s%s/musics/%s', $rootDir, $this->privateUploadsPath, $name));
 
         return $name;
     }
 
-    private function createWallpaper(): string
+    private function createAvatar(): string
     {
-        $name = sprintf('wallpaper_%s.jpg', $this->faker->unique()->slug(3));
-        $rootDir = sprintf('%s/../..', __DIR__);
+        $name = \sprintf('avatar_%s.jpg', $this->faker->unique()->slug(3));
+        $rootDir = \sprintf('%s/../..', __DIR__);
 
-        copy(sprintf('%s/1200x400.jpg', __DIR__), sprintf('%s%s/musics/wallpapers/%s', $rootDir, $this->ssrPublicUploadsPath, $name));
+        copy(\sprintf('%s/300x300.jpg', __DIR__), \sprintf('%s%s/users/avatars/%s', $rootDir, $this->ssrPublicUploadsPath, $name));
+
+        return $name;
+    }
+
+    private function createCover(string $type): string
+    {
+        $name = \sprintf('cover_%s.jpg', $this->faker->unique()->slug(3));
+        $rootDir = \sprintf('%s/../..', __DIR__);
+
+        copy(\sprintf('%s/300x300.jpg', __DIR__), \sprintf('%s%s/%ss/covers/%s', $rootDir, $this->ssrPublicUploadsPath, $type, $name));
+
+        return $name;
+    }
+
+    private function createWallpaper(string $type): string
+    {
+        $name = \sprintf('wallpaper_%s.jpg', $this->faker->unique()->slug(3));
+        $rootDir = \sprintf('%s/../..', __DIR__);
+
+        copy(\sprintf('%s/1200x400.jpg', __DIR__), \sprintf('%s%s/%ss/wallpapers/%s', $rootDir, $this->ssrPublicUploadsPath, $type, $name));
 
         return $name;
     }

@@ -3,7 +3,6 @@
 namespace App\Api\Serializer\Normalizer;
 
 use App\Entity\Music;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -16,7 +15,6 @@ final class MusicNormalizer implements NormalizerInterface, NormalizerAwareInter
 
     public function __construct(
         private readonly string $publicUploadsPath,
-        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 

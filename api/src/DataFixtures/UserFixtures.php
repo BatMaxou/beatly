@@ -31,10 +31,12 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         'Party Mix', 'Love Songs', 'Breakup Playlist', 'Motivation Station',
         'Deep Focus', 'Sleep Sounds', 'Morning Motivation', 'Evening Chill'
     ];
+
     /** @var Music[] */
     private array $musics;
 
     public function __construct(
+        private readonly string $ssrPublicUploadsPath,
         private readonly MusicRepository $musicRepository,
     ) {
         $this->initializeFaker();
@@ -104,9 +106,19 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
     protected function createPlaylist(User $user): Playlist
     {
-        return $this->hydratePlaylist(new Playlist())
+        $playlist = $this->hydratePlaylist(new Playlist())
             ->setTitle($this->faker->randomElement(self::PLAYLIST_NAMES))
             ->setCreator($user);
+
+        if ($this->faker->boolean(10)) {
+            $playlist->setCoverName($this->createCover());
+        }
+
+        if ($this->faker->boolean(10)) {
+            $playlist->setWallpaperName($this->createWallpaper());
+        }
+
+        return $playlist;
     }
 
     protected function hydratePlaylist(Playlist $playlist): Playlist
@@ -131,5 +143,25 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user->addRole(RoleEnum::BANNED);
 
         return $user;
+    }
+
+    private function createCover(): string
+    {
+        $name = sprintf('cover_%s.jpg', $this->faker->unique()->slug(3));
+        $rootDir = sprintf('%s/../..', __DIR__);
+
+        copy(sprintf('%s/300x300.jpg', __DIR__), sprintf('%s%s/playlists/covers/%s', $rootDir, $this->ssrPublicUploadsPath, $name));
+
+        return $name;
+    }
+
+    private function createWallpaper(): string
+    {
+        $name = sprintf('wallpaper_%s.jpg', $this->faker->unique()->slug(3));
+        $rootDir = sprintf('%s/../..', __DIR__);
+
+        copy(sprintf('%s/1200x400.jpg', __DIR__), sprintf('%s%s/playlists/wallpapers/%s', $rootDir, $this->ssrPublicUploadsPath, $name));
+
+        return $name;
     }
 }

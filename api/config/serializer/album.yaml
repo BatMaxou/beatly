@@ -22,6 +22,18 @@ App\Entity\Album:
         - 'album:read'
         - 'album:write'
         - 'album:update'
+    coverName:
+      groups:
+        - 'album:read'
+    cover:
+      groups:
+        - 'album:write'
+    wallpaperName:
+      groups:
+        - 'album:read'
+    wallpaper:
+      groups:
+        - 'album:write'
     musics:
       groups:
         - 'album:read'

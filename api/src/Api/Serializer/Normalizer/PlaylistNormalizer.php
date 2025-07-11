@@ -13,6 +13,11 @@ final class PlaylistNormalizer implements NormalizerInterface, NormalizerAwareIn
 
     private const ALREADY_CALLED = 'playlist_normalizer_already_called';
 
+    public function __construct(
+        private readonly string $publicUploadsPath,
+    ) {
+    }
+
     /**
      * @param Playlist $object
      */
@@ -28,6 +33,24 @@ final class PlaylistNormalizer implements NormalizerInterface, NormalizerAwareIn
             usort($normalized['musics'], function ($a, $b) {
                 return $a['addedAt'] <=> $b['addedAt'];
             });
+        }
+
+        if (isset($normalized['coverName'])) {
+            unset($normalized['coverName']);
+            $normalized['cover'] = sprintf(
+                '%s/playlists/covers/%s',
+                $this->publicUploadsPath,
+                $object->getCoverName(),
+            );
+        }
+
+        if (isset($normalized['wallpaperName'])) {
+            unset($normalized['wallpaperName']);
+            $normalized['wallpaper'] = sprintf(
+                '%s/playlists/wallpapers/%s',
+                $this->publicUploadsPath,
+                $object->getWallpaperName(),
+            );
         }
 
         return $normalized;

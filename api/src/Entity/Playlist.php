@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Api\Processor\PlaylistCreationProcessor;
+use App\Api\Processor\PlaylistFilesProcessor;
 use App\Enum\ApiReusableRoute;
 use App\Entity\Interface\ListenableEntityInterface;
 use App\Repository\PlaylistRepository;
@@ -18,7 +19,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: PlaylistRepository::class)]
 #[InheritanceType('JOINED')]
 #[DiscriminatorColumn(name: 'discr', type: 'string')]
@@ -33,6 +37,12 @@ use Doctrine\ORM\Mapping\InheritanceType;
             processor: PlaylistCreationProcessor::class,
             normalizationContext: ['groups' => ['playlist:read']],
             denormalizationContext: ['groups' => ['playlist:write']],
+        ),
+        new Post(
+            name: 'api_update_playlist_files',
+            uriTemplate: '/playlists/{id}/files',
+            processor: PlaylistFilesProcessor::class,
+            normalizationContext: ['groups' => ['playlist:read']],
         ),
         new Patch(
             name: 'api_update_playlist',
@@ -63,14 +73,23 @@ class Playlist implements ListenableEntityInterface
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $cover = null;
+    private ?string $coverName = null;
+
+    #[Vich\UploadableField(mapping: 'playlist_cover', fileNameProperty: 'coverName')]
+    private ?File $cover = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $wallpaper = null;
+    private ?string $wallpaperName = null;
+
+    #[Vich\UploadableField(mapping: 'playlist_wallpaper', fileNameProperty: 'wallpaperName')]
+    private ?File $wallpaper = null;
 
     #[ORM\ManyToOne(inversedBy: 'playlists')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $creator = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     /**
      * @var Collection<int, PlaylistMusic>
@@ -100,26 +119,60 @@ class Playlist implements ListenableEntityInterface
         return $this;
     }
 
-    public function getCover(): ?string
+    public function getCoverName(): ?string
     {
-        return $this->cover;
+        return $this->coverName;
     }
 
-    public function setCover(?string $cover): static
+    public function setCoverName(?string $coverName): static
     {
-        $this->cover = $cover;
+        $this->coverName = $coverName;
 
         return $this;
     }
 
-    public function getWallpaper(): ?string
+    public function getCover(): ?File
+    {
+        return $this->cover;
+    }
+
+    public function setCover(?File $cover = null): static
+    {
+        $this->cover = $cover;
+
+        if ($cover) {
+            // Important to update at least one field to trigger the doctrine events
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    public function getWallpaperName(): ?string
+    {
+        return $this->wallpaperName;
+    }
+
+    public function setWallpaperName(?string $wallpaperName): static
+    {
+        $this->wallpaperName = $wallpaperName;
+
+        return $this;
+    }
+
+    public function getWallpaper(): ?File
     {
         return $this->wallpaper;
     }
 
-    public function setWallpaper(?string $wallpaper): static
+    public function setWallpaper(?File $wallpaper = null): static
     {
         $this->wallpaper = $wallpaper;
+
+        if ($wallpaper) {
+            // Important to update at least one field to trigger the doctrine events
+            $this->updatedAt = new \DateTimeImmutable();
+        }
 
         return $this;
     }

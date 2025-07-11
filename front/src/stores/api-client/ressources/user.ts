@@ -1,3 +1,4 @@
+import type { User as UserType } from "@/utils/types";
 import type { ApiClient } from "../model";
 
 export type RegisterType = "artist_register" | "user_register";
@@ -38,6 +39,8 @@ export type VerifyTokenData = {
 type VerifyTokenResponse = {
   result: boolean;
 };
+
+const ApiRessourcePath = '/users';
 
 export default class User {
   apiClient: ApiClient;
@@ -83,5 +86,19 @@ export default class User {
       console.error("Erreur lors de la vérification du token:", error);
       return { result: false };
     }
+  }
+
+  async updateFiles(id: number|string, avatar?: File, wallpaper?: File): Promise<UserType> {
+    const formData = new FormData();
+
+    if (avatar) {
+      formData.append("avatar", avatar);
+    }
+
+    if (wallpaper) {
+      formData.append("wallpaper", wallpaper);
+    }
+
+    return this.apiClient.post<UserType>(`${ApiRessourcePath}/${id}/files`, formData, { Accept: 'application/ld+json' });
   }
 }

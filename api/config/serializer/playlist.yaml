@@ -19,6 +19,18 @@ App\Entity\Playlist:
         - 'playlist:read'
         - 'playlist:write'
         - 'playlist:update'
+    coverName:
+      groups:
+        - 'playlist:read'
+    cover:
+      groups:
+        - 'playlist:write'
+    wallpaperName:
+      groups:
+        - 'playlist:read'
+    wallpaper:
+      groups:
+        - 'playlist:write'
 
 App\Entity\PlaylistMusic:
   attributes:

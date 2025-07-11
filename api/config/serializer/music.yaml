@@ -20,7 +20,6 @@ App\Entity\Music:
     cover:
       groups:
         - 'music:write'
-        - 'music:update'
     listeningsNumber:
       groups:
         - 'music:read'
@@ -36,7 +35,6 @@ App\Entity\Music:
     artists:
       groups:
         - 'music:read'
-        - 'music:write'
         - 'album:read'
         - 'playlist:read'
     albums:
