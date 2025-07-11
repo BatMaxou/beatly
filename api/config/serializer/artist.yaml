@@ -6,4 +6,7 @@ App\Entity\Artist:
     albums:
       groups:
         - 'artist:read'
+    featuredMusics:
+      groups:
+        - 'artist:read'
 

@@ -20,6 +20,7 @@ export interface User {
 
 export interface Artist extends User {
   musics?: Music[];
+  featuredMusics?: Music[];
   albums?: Album[];
 };
 
@@ -53,6 +54,7 @@ export type MusicFile = {
 export type Music = {
   id: number;
   title: string;
+  mainArtist: Artist;
   artists: Artist[];
   categories: Category[];
   file?: string;

@@ -30,7 +30,7 @@ class Artist extends User
    * @var Collection<int, Music>
    */
   #[ORM\ManyToMany(targetEntity: Music::class, mappedBy: 'artists')]
-  private Collection $musics;
+  private Collection $featuredMusics;
 
   /**
    * @var Collection<int, Album>
@@ -38,35 +38,42 @@ class Artist extends User
   #[ORM\OneToMany(targetEntity: Album::class, mappedBy: 'artist', orphanRemoval: true)]
   private Collection $albums;
 
+  /**
+   * @var Collection<int, Music>
+   */
+  #[ORM\OneToMany(targetEntity: Music::class, mappedBy: 'mainArtist', orphanRemoval: true)]
+  private Collection $musics;
+
   public function __construct()
   {
     parent::__construct();
     $this->addRole(RoleEnum::ARTIST);
-    $this->musics = new ArrayCollection();
+    $this->featuredMusics = new ArrayCollection();
     $this->albums = new ArrayCollection();
+    $this->musics = new ArrayCollection();
   }
 
   /**
    * @return Collection<int, Music>
    */
-  public function getMusics(): Collection
+  public function getFeaturedMusics(): Collection
   {
-      return $this->musics;
+      return $this->featuredMusics;
   }
 
-  public function addMusic(Music $music): static
+  public function addFeaturedMusic(Music $music): static
   {
-      if (!$this->musics->contains($music)) {
-          $this->musics->add($music);
+      if (!$this->featuredMusics->contains($music)) {
+          $this->featuredMusics->add($music);
           $music->addArtist($this);
       }
 
       return $this;
   }
 
-  public function removeMusic(Music $music): static
+  public function removeFeaturedMusic(Music $music): static
   {
-      if ($this->musics->removeElement($music)) {
+      if ($this->featuredMusics->removeElement($music)) {
           $music->removeArtist($this);
       }
 
@@ -97,6 +104,36 @@ class Artist extends User
           // set the owning side to null (unless already changed)
           if ($album->getArtist() === $this) {
               $album->setArtist(null);
+          }
+      }
+
+      return $this;
+  }
+
+  /**
+   * @return Collection<int, Music>
+   */
+  public function getMusics(): Collection
+  {
+      return $this->musics;
+  }
+
+  public function addMusic(Music $music): static
+  {
+      if (!$this->musics->contains($music)) {
+          $this->musics->add($music);
+          $music->setMainArtist($this);
+      }
+
+      return $this;
+  }
+
+  public function removeMusic(Music $music): static
+  {
+      if ($this->musics->removeElement($music)) {
+          // set the owning side to null (unless already changed)
+          if ($music->getMainArtist() === $this) {
+              $music->setMainArtist(null);
           }
       }
 

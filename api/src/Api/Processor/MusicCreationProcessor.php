@@ -4,6 +4,7 @@ namespace App\Api\Processor;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
+use App\Entity\Artist;
 use App\Entity\Music;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -26,7 +27,11 @@ class MusicCreationProcessor implements ProcessorInterface
             throw new \LogicException('User must be authenticated to create a playlist');
         }
 
-        $data->addArtist($user);
+        if (!$user instanceof Artist) {
+            throw new \LogicException('User must be an instance of Artist to create a music');
+        }
+
+        $data->setMainArtist($user);
 
         $this->em->persist($data);
         $this->em->flush();

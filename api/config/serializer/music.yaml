@@ -42,6 +42,12 @@ App\Entity\Music:
         - 'dashboard:read'
         - 'artist:read'
         - 'recommendation:read'
+    mainArtist:
+      groups:
+        - 'music:read'
+        - 'album:read'
+        - 'playlist:read'
+        - 'recommendation:read'
     artists:
       groups:
         - 'music:read'

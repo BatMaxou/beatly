@@ -90,7 +90,7 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface
     /**
      * @var Collection<int, Artist>
      */
-    #[ORM\ManyToMany(targetEntity: Artist::class, inversedBy: 'musics')]
+    #[ORM\ManyToMany(targetEntity: Artist::class, inversedBy: 'featuredMusics')]
     private Collection $artists;
 
     /**
@@ -98,6 +98,10 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface
      */
     #[ORM\OneToMany(targetEntity: AlbumMusic::class, mappedBy: 'music', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $albums;
+
+    #[ORM\ManyToOne(inversedBy: 'musics')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Artist $mainArtist = null;
 
     public function __construct()
     {
@@ -251,6 +255,18 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface
                 $album->setAlbum(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMainArtist(): ?Artist
+    {
+        return $this->mainArtist;
+    }
+
+    public function setMainArtist(?Artist $mainArtist): static
+    {
+        $this->mainArtist = $mainArtist;
 
         return $this;
     }
