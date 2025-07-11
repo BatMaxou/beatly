@@ -80,3 +80,19 @@ export type Listen = {
   playlist?: string,
   album?: string,
 }
+
+export type LastListened = {
+  target: Music|Playlist|Album,
+  listenedAt: string,
+}
+
+export type Dashboard = {
+  lastListened: LastListened[];
+  mostPopularCategories: Category[];
+  mostLikedMusics: Music[];
+  mostListenedMusics: Music[];
+}
+
+export type Recommendation = {
+  recommendations: Music[];
+}

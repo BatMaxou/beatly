@@ -50,7 +50,7 @@ class LastListenedRepository extends ServiceEntityRepository
             ->select('listened')
             ->from($class, 'listened')
             ->where('listened.user = :user')
-            ->andWhere(sprintf('listened.%s = :listened', self::ATTR_MAPPING[$listened::class]))
+            ->andWhere(\sprintf('listened.%s = :listened', self::ATTR_MAPPING[$listened::class]))
             ->setParameter('user', $user)
             ->setParameter('listened', $listened)
             ->getQuery()
@@ -59,7 +59,7 @@ class LastListenedRepository extends ServiceEntityRepository
         foreach ($duplicates as $duplicate) {
             $em->remove($duplicate);
         }
-        
+
         $em->flush();
     }
 

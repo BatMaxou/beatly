@@ -9,6 +9,7 @@ App\Entity\User:
         - 'album:read'
         - 'music:read'
         - 'playlist:read'
+        - 'recommendation:read'
     name:
       groups:
         - 'user:read'
@@ -19,6 +20,7 @@ App\Entity\User:
         - 'album:read'
         - 'music:read'
         - 'playlist:read'
+        - 'recommendation:read'
     email:
       groups:
         - 'user:read'
