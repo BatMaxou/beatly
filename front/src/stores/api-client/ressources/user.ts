@@ -1,5 +1,5 @@
 import type { User as UserType } from "@/utils/types";
-import type { ApiClient } from "../model";
+import type { ApiClient, DeleteResponse } from "../model";
 
 export type RegisterType = "artist_register" | "user_register";
 
@@ -39,6 +39,10 @@ export type VerifyTokenData = {
 type VerifyTokenResponse = {
   result: boolean;
 };
+
+interface ResourceResponse extends Partial<UserType> {
+  '@id': string;
+}
 
 const ApiRessourcePath = '/users';
 
@@ -88,6 +92,18 @@ export default class User {
     }
   }
 
+  async get(id: number|string): Promise<UserType> {
+    return this.apiClient.get<UserType>(`${ApiRessourcePath}/${id}`, { Accept: 'application/ld+json' });
+  }
+
+  async getAll(): Promise<UserType[]> {
+    return this.apiClient.get<UserType[]>(ApiRessourcePath);
+  }
+
+  async update(id: number|string, data: Partial<UserType>): Promise<ResourceResponse> {
+    return this.apiClient.patch<ResourceResponse>(`${ApiRessourcePath}/${id}`, data, { Accept: 'application/ld+json' });
+  }
+
   async updateFiles(id: number|string, avatar?: File, wallpaper?: File): Promise<UserType> {
     const formData = new FormData();
 
@@ -100,5 +116,9 @@ export default class User {
     }
 
     return this.apiClient.post<UserType>(`${ApiRessourcePath}/${id}/files`, formData, { Accept: 'application/ld+json' });
+  }
+
+  async delete(id: number|string): Promise<DeleteResponse> {
+    return this.apiClient.delete(`${ApiRessourcePath}/${id}`)
   }
 }

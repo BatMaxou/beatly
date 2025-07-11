@@ -4,6 +4,7 @@ App\Entity\Music:
       groups:
         - 'music:read'
         - 'playlist:read'
+        - 'artist:read'
     title:
       groups:
         - 'music:read'
@@ -12,11 +13,13 @@ App\Entity\Music:
         - 'album:read'
         - 'playlist:read'
         - 'dashboard:read'
+        - 'artist:read'
     coverName:
       groups:
         - 'music:read'
         - 'album:read'
         - 'playlist:read'
+        - 'artist:read'
     cover:
       groups:
         - 'music:write'
@@ -24,6 +27,7 @@ App\Entity\Music:
       groups:
         - 'music:read'
         - 'album:read'
+        - 'artist:read'
     file:
       groups:
         - 'music:read'
@@ -32,6 +36,7 @@ App\Entity\Music:
         - 'album:read'
         - 'playlist:read'
         - 'dashboard:read'
+        - 'artist:read'
     artists:
       groups:
         - 'music:read'
@@ -47,4 +52,5 @@ App\Entity\Music:
         - 'music:write'
         - 'music:update'
         - 'album:read'
+        - 'artist:read'
 

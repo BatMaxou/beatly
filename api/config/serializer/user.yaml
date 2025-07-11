@@ -1,29 +1,44 @@
 App\Entity\User:
   attributes:
+    id:
+      groups:
+        - 'user:read'
+        - 'user:collection:read'
+        - 'artist:read'
+        - 'artist:collection:read'
+        - 'album:read'
+        - 'music:read'
+        - 'playlist:read'
     name:
       groups:
         - 'user:read'
-        - 'me:read'
+        - 'user:collection:read'
+        - 'user:update'
+        - 'artist:read'
+        - 'artist:collection:read'
+        - 'album:read'
+        - 'music:read'
+        - 'playlist:read'
     email:
       groups:
         - 'user:read'
-        - 'me:read'
+        - 'user:collection:read'
+        - 'user:update'
     roles:
       groups:
         - 'user:read'
-        - 'me:read'
     avatarName:
       groups:
         - 'user:read'
-        - 'me:read'
-    avatar:
-      groups:
-        - 'user:write'
+        - 'user:collection:read'
+        - 'artist:read'
+        - 'artist:collection:read'
+        - 'album:read'
     wallpaperName:
       groups:
         - 'user:read'
-        - 'me:read'
-    wallpaper:
+        - 'artist:read'
+    password:
       groups:
-        - 'user:write'
+        - 'user:update'
 

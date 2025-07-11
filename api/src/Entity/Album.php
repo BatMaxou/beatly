@@ -85,6 +85,10 @@ class Album implements ListenableEntityInterface
     #[ORM\OneToMany(targetEntity: AlbumMusic::class, mappedBy: 'album', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $musics;
 
+    #[ORM\ManyToOne(inversedBy: 'albums')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Artist $artist = null;
+
     public function __construct()
     {
         $this->musics = new ArrayCollection();
@@ -203,6 +207,18 @@ class Album implements ListenableEntityInterface
                 $music->setAlbum(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getArtist(): ?Artist
+    {
+        return $this->artist;
+    }
+
+    public function setArtist(?Artist $artist): static
+    {
+        $this->artist = $artist;
 
         return $this;
     }

@@ -52,7 +52,7 @@ class ArtistFixtures extends Fixture
             $category = (new Category())
                 ->setName($categoryData['name'])
                 ->setColor($categoryData['color']);
-            
+
             $this->manager->persist($category);
             $categories[$categoryData['name']] = $category;
         }
@@ -102,6 +102,7 @@ class ArtistFixtures extends Fixture
             foreach ($artistData['albums'] as $albumTitle => $songs) {
                 $album = (new Album())
                     ->setTitle($albumTitle)
+                    ->setArtist($artist)
                     ->setReleaseDate($this->faker->dateTimeBetween('-15 years', 'now'));
 
                 if ($this->faker->boolean(10)) {
