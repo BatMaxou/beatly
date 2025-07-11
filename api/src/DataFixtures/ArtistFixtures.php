@@ -78,7 +78,7 @@ class ArtistFixtures extends Fixture
         $artist = (new Artist())
             ->setName($name)
             ->setEmail(strtolower(str_replace(' ', '.', $name)) . '@music.com')
-            ->setPassword('azerty', true);
+            ->setPassword('azerty');
 
         if ($this->faker->boolean(10)) {
             $artist->setAvatarName($this->createAvatar());
@@ -98,7 +98,6 @@ class ArtistFixtures extends Fixture
         foreach ($artists as $artistName => $artistInfo) {
             $artist = $artistInfo['entity'];
             $artistData = $artistInfo['data'];
-            
             foreach ($artistData['albums'] as $albumTitle => $songs) {
                 $album = (new Album())
                     ->setTitle($albumTitle)
@@ -128,7 +127,7 @@ class ArtistFixtures extends Fixture
                         $music->setCoverName($this->createCover('music'));
                     }
 
-                    $music->addArtist($artist);
+                    $music->setMainArtist($artist);
                     $music->addAlbum((new AlbumMusic())
                         ->setAlbum($album)
                         ->setPosition($musicPosition)
@@ -146,6 +145,7 @@ class ArtistFixtures extends Fixture
             }
         }
     }
+
     private function createMusicFile(): string
     {
         $name = \sprintf('track_%s.mp3', $this->faker->unique()->slug(3));
