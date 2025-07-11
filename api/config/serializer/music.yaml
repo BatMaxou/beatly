@@ -28,6 +28,7 @@ App\Entity\Music:
         - 'music:read'
         - 'album:read'
         - 'artist:read'
+        - 'dashboard:read'
     file:
       groups:
         - 'music:read'

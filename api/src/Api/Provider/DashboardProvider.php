@@ -30,8 +30,8 @@ class DashboardProvider implements ProviderInterface
         return new Dashboard(
             $this->lastListenedRepository->findByUser($currentUser),
             $this->categoryRepository->findMostPopular(),
-            $this->musicRepository->findBy([], ['listeningsNumber' => 'DESC'], 10),
             $this->musicRepository->findMostLiked(),
+            $this->musicRepository->findMostListened(),
         );
     }
 }

@@ -27,4 +27,14 @@ class MusicRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findMostListened(int $limit = 10): array
+    {
+        return $this->createQueryBuilder('music')
+            ->where('music.listeningsNumber > 0')
+            ->orderBy('music.listeningsNumber', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }
