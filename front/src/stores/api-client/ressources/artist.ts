@@ -3,7 +3,7 @@ import type { ApiClient } from "../model";
 
 const ApiRessourcePath = '/artists';
 
-export default class User {
+export default class Artist {
   apiClient: ApiClient;
 
   constructor(apiClient: ApiClient) {
