@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Playlist;
 use App\Entity\User;
+use App\Enum\ApiReusableRoute;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -20,6 +21,10 @@ class UserFilesProcessor implements ProcessorInterface
     {
         if (!$data instanceof User) {
             throw new \InvalidArgumentException(\sprintf('Data must be an instance of %s', User::class));
+        }
+
+        if (!ApiReusableRoute::UPDATE_USER_FILES->value === $operation->getName()) {
+            throw new \LogicException(sprintf('Operation "%s" is not supported by %s', $operation->getName(), self::class));
         }
 
         $files = $this->requestStack->getCurrentRequest()->files->all();

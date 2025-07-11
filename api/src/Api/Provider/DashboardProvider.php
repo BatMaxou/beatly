@@ -5,6 +5,7 @@ namespace App\Api\Provider;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Api\Model\Dashboard;
+use App\Enum\ApiReusableRoute;
 use App\Repository\CategoryRepository;
 use App\Repository\LastListenedRepository;
 use App\Repository\MusicRepository;
@@ -20,9 +21,13 @@ class DashboardProvider implements ProviderInterface
     ) {
     }
 
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null {
-        $currentUser = $this->security->getUser();
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+    {
+        if (!ApiReusableRoute::GET_DASHBOARD->value === $operation->getName()) {
+            throw new \LogicException(sprintf('Operation "%s" is not supported by %s', $operation->getName(), self::class));
+        }
 
+        $currentUser = $this->security->getUser();
         if (!$currentUser) {
             throw new \LogicException('User must be authenticated to access the dashboard.');
         }

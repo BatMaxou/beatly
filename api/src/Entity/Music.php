@@ -14,6 +14,7 @@ use App\Api\Processor\MusicFilesProcessor;
 use App\Domain\Command\File\MusicFilesCommand;
 use App\Entity\Interface\EmbeddableEntityInterface;
 use App\Entity\Interface\ListenableEntityInterface;
+use App\Enum\ApiReusableRoute;
 use App\Repository\MusicRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,13 +27,13 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ApiResource(
     operations: [
         new Post(
-            name: 'api_create_music',
+            name: ApiReusableRoute::CREATE_MUSIC->value,
             processor: MusicCreationProcessor::class,
             normalizationContext: ['groups' => ['music:read']],
             denormalizationContext: ['groups' => ['music:write']],
         ),
         new Post(
-            name: 'api_update_music_files',
+            name: ApiReusableRoute::UPDATE_MUSIC_FILES->value,
             uriTemplate: '/music/{id}/files',
             processor: MusicFilesProcessor::class,
             normalizationContext: ['groups' => ['music:read']],

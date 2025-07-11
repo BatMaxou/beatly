@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Api\Processor\AlbumFilesProcessor;
 use App\Entity\Interface\ListenableEntityInterface;
+use App\Enum\ApiReusableRoute;
 use App\Repository\AlbumRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,12 +24,12 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ApiResource(
     operations: [
         new Post(
-            name: 'api_create_album',
+            name: ApiReusableRoute::CREATE_ALBUM->value,
             normalizationContext: ['groups' => ['album:read']],
             denormalizationContext: ['groups' => ['album:write']],
         ),
         new Post(
-            name: 'api_update_album_files',
+            name: ApiReusableRoute::UPDATE_ALBUM_FILES->value,
             uriTemplate: '/albums/{id}/files',
             processor: AlbumFilesProcessor::class,
             normalizationContext: ['groups' => ['album:read']],
