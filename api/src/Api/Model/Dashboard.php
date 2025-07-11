@@ -5,13 +5,14 @@ namespace App\Api\Model;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use App\Api\Provider\DashboardProvider;
+use App\Enum\ApiReusableRoute;
 
 #[ApiResource(
     operations: [
         new Get(
             uriTemplate: '/dashboard',
             provider: DashboardProvider::class,
-            name: 'api_dashboard',
+            name: ApiReusableRoute::GET_DASHBOARD->value,
             normalizationContext: ['groups' => ['dashboard:read']],
         )
     ],

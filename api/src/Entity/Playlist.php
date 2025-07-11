@@ -39,7 +39,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             denormalizationContext: ['groups' => ['playlist:write']],
         ),
         new Post(
-            name: 'api_update_playlist_files',
+            name: ApiReusableRoute::UPDATE_PLAYLIST_FILES->value,
             uriTemplate: '/playlists/{id}/files',
             processor: PlaylistFilesProcessor::class,
             normalizationContext: ['groups' => ['playlist:read']],

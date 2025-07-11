@@ -15,6 +15,7 @@ use App\Domain\Command\RegisterCommand;
 use App\Domain\Command\ResetPasswordCommand;
 use App\Domain\Command\VerifyResetTokenCommand;
 use App\Entity\Reservation\SimpleReservation;
+use App\Enum\ApiReusableRoute;
 use App\Enum\RoleEnum;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -58,13 +59,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             input: VerifyResetTokenCommand::class,
         ),
         new Post(
-            name: 'api_update_user_files',
-            uriTemplate: '/users/{id}/files',
-            processor: UserFilesProcessor::class,
-            normalizationContext: ['groups' => ['playlist:read']],
-        ),
-        new Post(
-            name: 'api_update_user_files',
+            name: ApiReusableRoute::UPDATE_USER_FILES->value,
             uriTemplate: '/users/{id}/files',
             processor: UserFilesProcessor::class,
             normalizationContext: ['groups' => ['user:read']],
@@ -81,7 +76,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         new Get(
             uriTemplate: '/me',
             provider: MeProvider::class,
-            name: 'api_me',
+            name: ApiReusableRoute::ME->value,
             normalizationContext: ['groups' => ['user:read']]
         ),
         new GetCollection(

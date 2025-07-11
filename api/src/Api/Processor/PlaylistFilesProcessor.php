@@ -5,6 +5,7 @@ namespace App\Api\Processor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Playlist;
+use App\Enum\ApiReusableRoute;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -19,6 +20,10 @@ class PlaylistFilesProcessor implements ProcessorInterface
     {
         if (!$data instanceof Playlist) {
             throw new \InvalidArgumentException(\sprintf('Data must be an instance of %s', Playlist::class));
+        }
+
+        if (!ApiReusableRoute::UPDATE_PLAYLIST_FILES->value === $operation->getName()) {
+            throw new \LogicException(sprintf('Operation "%s" is not supported by %s', $operation->getName(), self::class));
         }
 
         $files = $this->requestStack->getCurrentRequest()->files->all();
