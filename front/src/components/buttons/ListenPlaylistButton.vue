@@ -21,15 +21,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["toggleFavorite"]);
-
 const isHovered = ref(false);
-
-const toggleFavorite = () => {
-  if (!props.disabled) {
-    emit("toggleFavorite");
-  }
-};
 
 // Classes dynamiques basées sur les props
 const buttonClasses = computed(() => {
@@ -72,7 +64,6 @@ const heartClasses = computed(() => {
 <template>
   <button
     :class="buttonClasses"
-    @click="toggleFavorite"
     @mouseenter="isHovered = true"
     @mouseleave="isHovered = false"
     type="button"

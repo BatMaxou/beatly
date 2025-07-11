@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SideBar from "@/components/sidebar/Sidebar.vue";
+import SideBar from "@/components/sidebar/SideBar.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "@/composables/useToast";
 import loadingIcon from "@/assets/icons/loading-light.svg";
@@ -38,7 +38,6 @@ if (authStore.loginSuccess) {
     <div
       :class="playerStore.isPlayerActive ? 'playingMinHeight z-20 flex' : 'min-h-screen z-20 flex'"
     >
-      <!-- Sidebar -->
       <SideBar class="fixed left-0 top-0 min-w-[250px] w-full max-w-[250px] z-20" />
 
       <!-- Emplacement du contenu de la page -->

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, computed } from "vue";
+import { defineProps, ref, computed } from "vue";
 import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
 import PlaylistTitleMenu from "../menus/PlaylistTitleMenu.vue";
 import defaultCover from "@/assets/images/default-cover.png";
@@ -28,8 +28,6 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["toggle-play"]);
-
 const musicInformations = computed(() => {
   return {
     title: props.music.music.title,
@@ -48,10 +46,6 @@ const handleMouseEnter = () => {
 
 const handleMouseLeave = () => {
   isHovered.value = false;
-};
-
-const handleRowClick = () => {
-  emit("toggle-play", props.music.position);
 };
 
 const textColor = computed(() => {
@@ -73,11 +67,7 @@ const textColor = computed(() => {
           v-if="isHovered"
           class="absolute inset-0 flex items-center justify-center bg-black/50 rounded"
         >
-          <MusicPlayButton
-            :musicId="musicInformations.position"
-            :isPlaying="isPlaying"
-            @toggle-play="$emit('toggle-play', musicInformations.position)"
-          />
+          <MusicPlayButton :musicId="musicInformations.position" :isPlaying="isPlaying" />
         </div>
       </div>
       <div class="flex flex-col">
