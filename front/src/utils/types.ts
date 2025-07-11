@@ -10,7 +10,7 @@ export enum PlaylistType {
   PLATFORM = "PlatformPlaylist",
 }
 
-export type User = {
+export interface User {
   name: string;
   email: string;
   roles: Role[];
@@ -18,9 +18,9 @@ export type User = {
   wallpaper?: string;
 };
 
-export type Artist = {
-  id: number;
-  name: string;
+export interface Artist extends User {
+  musics?: Music[];
+  albums?: Album[];
 };
 
 export type AlbumMusic = {
