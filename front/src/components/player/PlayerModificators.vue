@@ -1,33 +1,63 @@
 <script setup lang="ts">
-import volumeIcon from '@/assets/icons/volume-light.svg'
-import volumeOffIcon from '@/assets/icons/volume-off-light.svg'
-import { useVolumeRange } from '@/composables/useVolumeRange'
+import { ref, watch, computed } from "vue";
+import volumeIcon from "@/assets/icons/volume-light.svg";
+import volumeOffIcon from "@/assets/icons/volume-off-light.svg";
+import { usePlayerStore } from "@/stores/player";
 
-const {
-  volumeValue,
-  volumeBackground,
-  toggleMute,
-  isMuted
-} = useVolumeRange();
+const playerStore = usePlayerStore();
+
+// Fonctionnalités du volume
+const volumeValue = ref(playerStore.volume);
+
+watch(
+  () => playerStore.volume,
+  (newVolume) => {
+    if (!playerStore.isVolumeInteraction) {
+      volumeValue.value = newVolume;
+    }
+  },
+);
+
+watch(volumeValue, (newValue) => {
+  if (playerStore.isVolumeInteraction) {
+    playerStore.setVolume(newValue);
+    console.log("Bam j'envoie le volume");
+  }
+});
+
+const handleMute = () => {
+  playerStore.setMuted(!playerStore.muted);
+};
+
+const volumeBackground = computed(() => {
+  const percentage = volumeValue.value;
+  const activeColor = playerStore.isVolumeInteraction ? "#ffffffcc" : "#ffffff";
+  return `linear-gradient(90deg, ${activeColor} ${percentage}%, #ffffff2a ${percentage}%)`;
+});
 </script>
 
 <template>
-  <div v-if="!isMuted" class="volume-controls flex items-center gap-2">
-    <img :src="volumeIcon" alt="Volume Icon" class="w-8 h-8 cursor-pointer" @click="toggleMute" />
-    <input 
-      type="range" 
+  <div v-if="!playerStore.muted" class="volume-controls flex items-center gap-2">
+    <img :src="volumeIcon" alt="Volume Icon" class="w-8 h-8 cursor-pointer" @click="handleMute" />
+    <input
+      type="range"
       v-model="volumeValue"
       v-volume-range
-      name="volumeRange" 
-      min="0" 
-      max="100" 
-      id="volumeInputRange" 
+      name="volumeRange"
+      min="0"
+      max="100"
+      id="volumeInputRange"
       class="inputRange cursor-pointer"
       :style="{ background: volumeBackground }"
     />
   </div>
   <div v-else class="volume-controls">
-    <img :src="volumeOffIcon" alt="Volume Icon" class="w-8 h-8 cursor-pointer" @click="toggleMute" />
+    <img
+      :src="volumeOffIcon"
+      alt="Volume Icon"
+      class="w-8 h-8 cursor-pointer"
+      @click="handleMute"
+    />
   </div>
 </template>
 
