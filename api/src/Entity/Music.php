@@ -65,7 +65,7 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $coverName = null;
 
     #[Vich\UploadableField(mapping: 'music_cover', fileNameProperty: 'coverName')]

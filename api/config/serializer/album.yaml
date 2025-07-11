@@ -7,6 +7,7 @@ App\Entity\Album:
         - 'music:read'
         - 'dashboard:read'
         - 'playlist:read'
+        - 'artist:read'
     title:
       groups:
         - 'album:read'
@@ -17,14 +18,23 @@ App\Entity\Album:
         - 'playlist:read'
         - 'playlist:collection:read'
         - 'dashboard:read'
+        - 'artist:read'
+    artist:
+      groups:
+        - 'album:read'
+        - 'album:collection:read'
+        - 'playlist:read'
+        - 'dashboard:read'
     releaseDate:
       groups:
         - 'album:read'
         - 'album:write'
         - 'album:update'
+        - 'artist:read'
     coverName:
       groups:
         - 'album:read'
+        - 'artist:read'
     cover:
       groups:
         - 'album:write'

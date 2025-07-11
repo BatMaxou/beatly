@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Api\Processor\UserFilesProcessor;
 use App\Api\Provider\MeProvider;
@@ -30,12 +33,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[Vich\Uploadable]
 #[ApiResource(
     operations: [
-        new Get(
-            uriTemplate: '/me',
-            provider: MeProvider::class,
-            name: 'api_me',
-            normalizationContext: ['groups' => ['me:read']]
-        ),
         new Post(
             uriTemplate: '/register',
             name: 'api_register',
@@ -65,6 +62,34 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             uriTemplate: '/users/{id}/files',
             processor: UserFilesProcessor::class,
             normalizationContext: ['groups' => ['playlist:read']],
+        ),
+        new Post(
+            name: 'api_update_user_files',
+            uriTemplate: '/users/{id}/files',
+            processor: UserFilesProcessor::class,
+            normalizationContext: ['groups' => ['user:read']],
+        ),
+        new Patch(
+            name: 'api_update_user',
+            normalizationContext: ['groups' => ['user:read']],
+            denormalizationContext: ['groups' => ['user:update']],
+        ),
+        new Get(
+            name: 'api_get_user',
+            normalizationContext: ['groups' => ['user:read']],
+        ),
+        new Get(
+            uriTemplate: '/me',
+            provider: MeProvider::class,
+            name: 'api_me',
+            normalizationContext: ['groups' => ['user:read']]
+        ),
+        new GetCollection(
+            name: 'api_get_user_collection',
+            normalizationContext: ['groups' => ['user:collection:read']],
+        ),
+        new Delete(
+            name: 'api_delete_playlist',
         ),
     ],
 )]

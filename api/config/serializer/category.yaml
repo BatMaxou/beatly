@@ -4,8 +4,10 @@ App\Entity\Category:
       groups:
         - 'music:read'
         - 'dashboard:read'
+        - 'artist:read'
     name:
       groups:
         - 'music:read'
         - 'dashboard:read'
+        - 'artist:read'
 
