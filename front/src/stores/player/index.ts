@@ -1,10 +1,10 @@
-import type { Music } from '@/utils/types'
-import { defineStore } from 'pinia'
+import type { Music } from "@/utils/types";
+import { defineStore } from "pinia";
 
-export const usePlayerStore = defineStore('player', {
+export const usePlayerStore = defineStore("player", {
   state: () => ({
     currentMusic: null as Music | null,
-    volume: 100 as number,
+    volume: 50 as number,
     muted: false as boolean,
     isPlay: false as boolean,
     isPlayerActive: false as boolean,
@@ -14,32 +14,68 @@ export const usePlayerStore = defineStore('player', {
     isVolumeInteraction: false as boolean,
   }),
   actions: {
+    // Actions de stockage
     setCurrentMusic(music: Music | null) {
-      this.currentMusic = music
-    },
-    setVolume(volume: number) {
-      this.volume = volume
-    },
-    setMuted(muted: boolean) {
-      this.muted = muted
+      this.currentMusic = music;
     },
     setIsPlay(isPlay: boolean) {
-      this.isPlay = isPlay
+      this.isPlay = isPlay;
     },
     setIsPlayerActive(isPlayerActive: boolean) {
-      this.isPlayerActive = isPlayerActive
+      this.isPlayerActive = isPlayerActive;
     },
     setAudioPlayer(audio: HTMLAudioElement | null) {
-      this.audioPlayer = audio
+      this.audioPlayer = audio;
+      this.setVolume(50);
     },
     setDuration(duration: number) {
-      this.duration = duration
+      this.duration = duration;
     },
     setIsPlayerInteraction(isPlayerInteraction: boolean) {
-      this.isPlayerInteraction = isPlayerInteraction
+      this.isPlayerInteraction = isPlayerInteraction;
     },
     setIsVolumeInteraction(isVolumeInteraction: boolean) {
-      this.isVolumeInteraction = isVolumeInteraction
+      this.isVolumeInteraction = isVolumeInteraction;
     },
-  }
-})
+
+    // Actions de contrôle du lecteur
+    setVolume(volume: number) {
+      if (this.muted) {
+        this.setMuted(false);
+      }
+      this.volume = volume / 100;
+      if (this.audioPlayer) {
+        this.audioPlayer.volume = volume / 100;
+      }
+
+      this.volume = volume;
+    },
+    setMuted(muted: boolean) {
+      this.muted = muted;
+      if (this.audioPlayer) {
+        this.audioPlayer.volume = muted ? 0 : this.volume / 100;
+      }
+    },
+    playNextSong() {},
+    playPreviousSong() {},
+    setPause() {
+      this.audioPlayer?.pause();
+      this.setIsPlay(false);
+    },
+
+    setPlay() {
+      this.audioPlayer?.play();
+      this.setIsPlay(true);
+    },
+    setListen(music: Music) {
+      this.setIsPlayerActive(true);
+      this.setCurrentMusic(music);
+      this.setPlay();
+    },
+    setChangeCurrentTime(number: number) {
+      if (this.audioPlayer) {
+        this.audioPlayer.currentTime = number;
+      }
+    },
+  },
+});

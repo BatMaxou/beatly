@@ -2,7 +2,6 @@
 import { onBeforeMount, ref, onMounted } from "vue";
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
-import { useUserStore } from "@/stores/user";
 import PlaylistPlayable from "@/components/cards/PlaylistPlayableCard.vue";
 import AlbumPlayableCard from "@/components/cards/AlbumPlayableCard.vue";
 import albumDefaultIcon from "@/assets/icons/disc-dark.svg";
@@ -11,7 +10,6 @@ import arrowLeft from "@/assets/icons/arrow-left-light.svg";
 import arrowRight from "@/assets/icons/arrow-right-light.svg";
 
 const { apiClient } = useApiClient();
-const userStore = useUserStore();
 
 const recentlyListened = ref([]);
 const lastPlaylist = ref<Playlist[]>([]);

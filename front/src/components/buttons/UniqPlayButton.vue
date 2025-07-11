@@ -1,14 +1,24 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import playLight from "@/assets/icons/play-light.svg";
-import { usePlayer } from "@/composables/usePlayer";
+import { usePlayerStore } from "@/stores/player";
 
 const isRotating = ref(false);
-const { setListen } = usePlayer();
+const playerStore = usePlayerStore();
 
 const handleClick = () => {
   isRotating.value = true;
-  setListen({ id: 1, title: "Je suis à toi", artists: [{ id: 1, name: "Lomepal" }], cover: "https://placehold.co/80x80/png", categories: [{ id: 7, name: "Hip-Hop" }, { id: 9, name: "Rap" }], listeningsNumber: 1000 });
+  playerStore.setListen({
+    id: 1,
+    title: "Je suis à toi",
+    artists: [{ id: 1, name: "Lomepal" }],
+    cover: "https://placehold.co/80x80/png",
+    categories: [
+      { id: 7, name: "Hip-Hop", color: "blue" },
+      { id: 9, name: "Rap", color: "red" },
+    ],
+    listeningsNumber: 1000,
+  });
 
   // fetch (à implémenter plus tard)
   // fetch('/api/play', { method: 'POST' })

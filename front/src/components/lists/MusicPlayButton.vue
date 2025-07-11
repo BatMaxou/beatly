@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
-import playLight from '@/assets/icons/play-light.svg';
-import pauseLight from '@/assets/icons/pause-light.svg';
+import { defineProps } from "vue";
+import playLight from "@/assets/icons/play-light.svg";
+import pauseLight from "@/assets/icons/pause-light.svg";
 
-const props = defineProps({
+defineProps({
   isPlaying: {
     type: Boolean,
-    default: false
+    default: false,
   },
   musicId: {
     type: [Number, String],
-    required: true
-  }
+    required: true,
+  },
 });
-
 </script>
 
 <template>
@@ -22,8 +21,8 @@ const props = defineProps({
       :src="isPlaying ? pauseLight : playLight"
       :alt="isPlaying ? 'Pause' : 'Play'"
       class="play-icon"
-      :class="{ 'playing': isPlaying }"
-    >
+      :class="{ playing: isPlaying }"
+    />
   </div>
 </template>
 
