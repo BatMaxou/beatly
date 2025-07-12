@@ -10,8 +10,8 @@ FROM main as builder
 
 COPY ./front /app
 
-RUN npm i
-
+RUN npm install
+RUN npx tailwindcss -i src/assets/main.css -o src/assets/main-build.css
 RUN npm run build
 
 FROM main as dev

@@ -285,8 +285,8 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface
 
         return sprintf(
             '%s - %s - %s - %s',
-            md5($this->title),
             implode(' ', $categories),
+            md5($this->getMainArtist()?->getName() ?? ''),
             implode(' ', $artists),
             implode(' ', $albums)
         );
