@@ -21,7 +21,6 @@ watch(
 watch(volumeValue, (newValue) => {
   if (playerStore.isVolumeInteraction) {
     playerStore.setVolume(newValue);
-    console.log("Bam j'envoie le volume");
   }
 });
 

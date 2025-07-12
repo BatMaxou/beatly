@@ -26,15 +26,6 @@ const props = defineProps({
 const musicList = props.musicList;
 // Quand la clé popularity sera en place, si l'origin est top-titles, on trie par popularité
 // Quand le clé playlistIndex sera en place, si l'origin est playlist, on trie par index de la playlist
-const currentPlayingId = ref<number | null>(null);
-
-const togglePlay = (musicId: number) => {
-  if (currentPlayingId.value === musicId) {
-    currentPlayingId.value = null;
-  } else {
-    currentPlayingId.value = musicId;
-  }
-};
 </script>
 
 <template>
@@ -49,10 +40,8 @@ const togglePlay = (musicId: number) => {
       :music="music.music"
       :position="music.position"
       :index="index"
-      :isPlaying="currentPlayingId === music.position"
       :customStyles="props.customStyles"
       :theme="props.theme"
-      @toggle-play="togglePlay"
     />
   </div>
   <div
@@ -65,10 +54,8 @@ const togglePlay = (musicId: number) => {
       :key="music.id"
       :music="music"
       :index="index"
-      :isPlaying="currentPlayingId === music.id"
       :customStyles="props.customStyles"
       :theme="props.theme"
-      @toggle-play="togglePlay"
     />
   </div>
 

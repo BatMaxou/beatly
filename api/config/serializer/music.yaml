@@ -5,6 +5,7 @@ App\Entity\Music:
         - "music:read"
         - "playlist:read"
         - "artist:read"
+        - "album:read"
         - "recommendation:read"
     title:
       groups:

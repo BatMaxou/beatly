@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 export const usePlayerStore = defineStore("player", {
   state: () => ({
     currentMusic: null as Music | null,
+    musicFile: "" as string,
     volume: 50 as number,
     muted: false as boolean,
     isPlay: false as boolean,
@@ -17,6 +18,12 @@ export const usePlayerStore = defineStore("player", {
     // Actions de stockage
     setCurrentMusic(music: Music | null) {
       this.currentMusic = music;
+    },
+    setMusicFile(music: string) {
+      this.musicFile = music;
+      if (this.audioPlayer) {
+        this.audioPlayer.src = music || "";
+      }
     },
     setIsPlay(isPlay: boolean) {
       this.isPlay = isPlay;
@@ -67,9 +74,10 @@ export const usePlayerStore = defineStore("player", {
       this.audioPlayer?.play();
       this.setIsPlay(true);
     },
-    setListen(music: Music) {
+    setListen(music: Music, musicFile: string) {
       this.setIsPlayerActive(true);
       this.setCurrentMusic(music);
+      this.setMusicFile(musicFile);
       this.setPlay();
     },
     setChangeCurrentTime(number: number) {
