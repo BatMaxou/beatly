@@ -13,7 +13,7 @@ use App\Domain\Command\ListenCommand;
             name: 'api_listen',
             messenger: 'input',
             input: ListenCommand::class,
-        )
+        ),
     ],
 )]
 class Listen

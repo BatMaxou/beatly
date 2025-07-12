@@ -25,7 +25,7 @@ class ListenHandler
             return new JsonResponse(['error' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $isMusicLinked = $command->playlist !== null || $command->album !== null;
+        $isMusicLinked = null !== $command->playlist || null !== $command->album;
 
         $this->eventDispatcher->dispatch(new ListenedEvent($user, $command->music, $isMusicLinked));
 

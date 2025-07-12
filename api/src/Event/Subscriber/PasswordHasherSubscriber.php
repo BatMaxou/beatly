@@ -42,4 +42,3 @@ class PasswordHasherSubscriber
         return null !== $user->getPlainPassword() && null === $user->getPassword();
     }
 }
-

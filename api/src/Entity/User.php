@@ -14,7 +14,6 @@ use App\Domain\Command\ForgotPasswordCommand;
 use App\Domain\Command\RegisterCommand;
 use App\Domain\Command\ResetPasswordCommand;
 use App\Domain\Command\VerifyResetTokenCommand;
-use App\Entity\Reservation\SimpleReservation;
 use App\Enum\ApiReusableRoute;
 use App\Enum\RoleEnum;
 use App\Repository\UserRepository;
@@ -94,7 +93,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[DiscriminatorMap([
     'user' => User::class,
     'platform' => Platform::class,
-    'artist' => Artist::class
+    'artist' => Artist::class,
 ])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -366,4 +365,3 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 }
-

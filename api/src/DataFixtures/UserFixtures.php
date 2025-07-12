@@ -29,7 +29,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         'Alternative Rock', 'Reggae Roots', 'Latin Hits', 'K-Pop Rising', 'Oldies but Goodies',
         'Songs to Sing in the Car', 'Rainy Day Playlist', 'Happy Hits', 'Sad Songs',
         'Party Mix', 'Love Songs', 'Breakup Playlist', 'Motivation Station',
-        'Deep Focus', 'Sleep Sounds', 'Morning Motivation', 'Evening Chill'
+        'Deep Focus', 'Sleep Sounds', 'Morning Motivation', 'Evening Chill',
     ];
 
     /** @var Music[] */
@@ -96,7 +96,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             if (!$playlist instanceof Playlist) {
                 throw new \LogicException('Entity Playlist not found');
             }
-            
+
             $this->manager->persist($playlist);
             $user->addPlaylist($playlist);
         }
@@ -135,7 +135,6 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     {
         $this->createUsers($count, $this->createBannedUser(...));
     }
-
 
     private function createBannedUser(): User
     {

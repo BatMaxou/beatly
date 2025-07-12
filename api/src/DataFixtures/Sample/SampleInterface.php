@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures\Sample;
 
-interface SampleInterface {
+interface SampleInterface
+{
     public function getData(): array;
 }
