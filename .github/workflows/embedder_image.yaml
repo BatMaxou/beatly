@@ -3,7 +3,8 @@ name: Embedder docker image
 on:
   push:
     branches:
-      - feat/ci
+      - main
+      - develop
     paths:
       - 'embedder/**'
       - '.devops/python/**'

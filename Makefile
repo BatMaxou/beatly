@@ -111,7 +111,7 @@ down-prod:
 .PHONY: down-prod
 
 pull-prod:
-	@git pull
+	@git pull -fr
 	@REGISTRY_REPOSITORY_PREFIX=$(REGISTRY_REPOSITORY_PREFIX) docker compose -f compose.prod.yaml pull $(ARGS)
 .PHONY: pull-prod
 

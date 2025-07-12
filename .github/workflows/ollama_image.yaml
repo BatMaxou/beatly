@@ -3,7 +3,8 @@ name: Ollama docker image
 on:
   push:
     branches:
-      - feat/ci
+      - main
+      - develop
     paths:
       - '.devops/ollama/**'
 

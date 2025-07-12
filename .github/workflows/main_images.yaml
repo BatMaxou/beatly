@@ -3,7 +3,8 @@ name: Main docker images
 on:
   push:
     branches:
-      - feat/ci
+      - main
+      - develop
     paths:
       - 'front/**'
       - 'api/**'
