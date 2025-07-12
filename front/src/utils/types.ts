@@ -16,17 +16,17 @@ export interface User {
   roles: Role[];
   avatar?: string;
   wallpaper?: string;
-};
+}
 
 export interface Artist extends User {
   musics?: Music[];
   featuredMusics?: Music[];
   albums?: Album[];
-};
+}
 
 export type AlbumMusic = {
   id: number;
-  music: Music|string;
+  music: Music | string;
   position: number;
   addedAt: string;
 };
@@ -64,8 +64,8 @@ export type Music = {
 
 export type PlaylistMusic = {
   id: number;
-  music: Music|string;
-  addedAt: string;
+  music: Music | string;
+  addedAt: string | null;
 };
 
 export type Playlist = {
@@ -74,27 +74,27 @@ export type Playlist = {
   musics: PlaylistMusic[];
   cover?: string;
   wallpaper?: string;
-  '@type'?: PlaylistType;
+  "@type"?: PlaylistType;
 };
 
 export type Listen = {
-  music: string,
-  playlist?: string,
-  album?: string,
-}
+  music: string;
+  playlist?: string;
+  album?: string;
+};
 
 export type LastListened = {
-  target: Music|Playlist|Album,
-  listenedAt: string,
-}
+  target: Music | Playlist | Album;
+  listenedAt: string;
+};
 
 export type Dashboard = {
   lastListened: LastListened[];
   mostPopularCategories: Category[];
   mostLikedMusics: Music[];
   mostListenedMusics: Music[];
-}
+};
 
 export type Recommendation = {
   recommendations: Music[];
-}
+};

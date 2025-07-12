@@ -2,11 +2,11 @@
 import { defineProps, ref } from "vue";
 import MusicListItem from "@/components/lists/MusicListItem.vue";
 import PlaylistMusicListItem from "@/components/lists/PlaylistMusicListItem.vue";
-import type { PlaylistMusic } from "@/utils/types";
+import type { PlaylistMusic, AlbumMusic } from "@/utils/types";
 
 const props = defineProps({
   musicList: {
-    type: Array as () => PlaylistMusic[],
+    type: Array as () => PlaylistMusic[] | AlbumMusic[],
     required: true,
   },
   customStyles: {
@@ -55,7 +55,11 @@ const togglePlay = (musicId: number) => {
       @toggle-play="togglePlay"
     />
   </div>
-  <div v-if="musicList.length > 0 && origin === 'playlist'" class="flex flex-col" :style="props.customStyles.musicList">
+  <div
+    v-if="musicList.length > 0 && (origin === 'playlist' || origin === 'top-titles')"
+    class="flex flex-col"
+    :style="props.customStyles.musicList"
+  >
     <PlaylistMusicListItem
       v-for="(music, index) in musicList"
       :key="music.id"

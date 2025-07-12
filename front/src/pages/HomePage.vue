@@ -3,7 +3,6 @@ import { onBeforeMount, ref, onMounted } from "vue";
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
 import PlaylistPlayable from "@/components/cards/PlaylistPlayableCard.vue";
-import AlbumPlayableCard from "@/components/cards/AlbumPlayableCard.vue";
 import albumDefaultIcon from "@/assets/icons/disc-dark.svg";
 import type { Playlist } from "@/utils/types";
 import arrowLeft from "@/assets/icons/arrow-left-light.svg";
@@ -113,12 +112,6 @@ onMounted(() => {
 
     <div v-if="recommendationList.length > 0">
       <h2 class="ps-10 text-white text-3xl font-bold mb-4">D'après vos écoutes...</h2>
-      <AlbumPlayableCard
-        :albumCover="albumDefaultIcon"
-        albumName="Mon album préféré !"
-        artistName="Lomepal"
-        releaseYear="2017"
-      />
     </div>
 
     <div v-if="hitsList.length > 0">

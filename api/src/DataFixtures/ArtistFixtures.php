@@ -121,7 +121,8 @@ class ArtistFixtures extends Fixture
 
                     $music = (new Music())
                         ->setTitle($songTitle)
-                        ->setFile($musicFile);
+                        ->setFile($musicFile)
+                        ->setListeningsNumber($this->faker->numberBetween(50000, 1000000));
 
                     if ($this->faker->boolean(10)) {
                         $music->setCoverName($this->createCover('music'));

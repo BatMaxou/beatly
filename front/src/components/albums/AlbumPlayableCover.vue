@@ -11,6 +11,10 @@ defineProps({
     type: String,
     required: true,
   },
+  isPlayable: {
+    type: Boolean,
+    default: true,
+  },
 });
 </script>
 
@@ -22,6 +26,7 @@ defineProps({
       class="w-full block transition-transform duration-300 ease-in-out"
     />
     <div
+      v-if="isPlayable"
       class="absolute inset-0 bg-black/50 flex justify-center items-center opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
     >
       <UniqPlayPauseButton />
