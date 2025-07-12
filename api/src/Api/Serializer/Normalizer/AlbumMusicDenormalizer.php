@@ -3,7 +3,6 @@
 namespace App\Api\Serializer\Normalizer;
 
 use App\Entity\AlbumMusic;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -30,7 +29,7 @@ final class AlbumMusicDenormalizer implements DenormalizerInterface, Denormalize
 
     public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
     {
-        return $type === AlbumMusic::class && false === ($context[self::ALREADY_CALLED] ?? false);
+        return AlbumMusic::class === $type && false === ($context[self::ALREADY_CALLED] ?? false);
     }
 
     public function getSupportedTypes(?string $format): array

@@ -15,7 +15,7 @@ use App\Enum\ApiReusableRoute;
             provider: RecommendationProvider::class,
             name: ApiReusableRoute::GET_RECOMMENDATIONS->value,
             normalizationContext: ['groups' => ['recommendation:read']],
-        )
+        ),
     ],
 )]
 class Recommendation
@@ -25,6 +25,6 @@ class Recommendation
      */
     public function __construct(
         public array $recommendations = [],
-    ){
+    ) {
     }
 }

@@ -15,9 +15,10 @@ class VerifyResetTokenHandler
     ) {
     }
 
-    public function __invoke(VerifyResetTokenCommand $command): Response {
+    public function __invoke(VerifyResetTokenCommand $command): Response
+    {
         $user = $this->userRepository->findOneBy(['resetToken' => $command->token]);
-        
+
         if (!$user) {
             return new JsonResponse(['result' => false], Response::HTTP_OK);
         }

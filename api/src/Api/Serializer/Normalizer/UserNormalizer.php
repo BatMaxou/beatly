@@ -2,7 +2,6 @@
 
 namespace App\Api\Serializer\Normalizer;
 
-use App\Entity\Playlist;
 use App\Entity\User;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;

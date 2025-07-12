@@ -48,4 +48,3 @@ class Mailer
         $this->mailer->send($template);
     }
 }
-

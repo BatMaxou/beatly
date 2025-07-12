@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @extends LastListened<Album>
- */ 
+ */
 #[ORM\Entity(repositoryClass: LastAlbumListenedRepository::class)]
 class LastAlbumListened extends LastListened
 {

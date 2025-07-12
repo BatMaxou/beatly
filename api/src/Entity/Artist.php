@@ -26,117 +26,117 @@ use Doctrine\ORM\Mapping as ORM;
 )]
 class Artist extends User
 {
-  /**
-   * @var Collection<int, Music>
-   */
-  #[ORM\ManyToMany(targetEntity: Music::class, mappedBy: 'artists')]
-  private Collection $featuredMusics;
+    /**
+     * @var Collection<int, Music>
+     */
+    #[ORM\ManyToMany(targetEntity: Music::class, mappedBy: 'artists')]
+    private Collection $featuredMusics;
 
-  /**
-   * @var Collection<int, Album>
-   */
-  #[ORM\OneToMany(targetEntity: Album::class, mappedBy: 'artist', orphanRemoval: true)]
-  private Collection $albums;
+    /**
+     * @var Collection<int, Album>
+     */
+    #[ORM\OneToMany(targetEntity: Album::class, mappedBy: 'artist', orphanRemoval: true)]
+    private Collection $albums;
 
-  /**
-   * @var Collection<int, Music>
-   */
-  #[ORM\OneToMany(targetEntity: Music::class, mappedBy: 'mainArtist', orphanRemoval: true)]
-  private Collection $musics;
+    /**
+     * @var Collection<int, Music>
+     */
+    #[ORM\OneToMany(targetEntity: Music::class, mappedBy: 'mainArtist', orphanRemoval: true)]
+    private Collection $musics;
 
-  public function __construct()
-  {
-    parent::__construct();
-    $this->addRole(RoleEnum::ARTIST);
-    $this->featuredMusics = new ArrayCollection();
-    $this->albums = new ArrayCollection();
-    $this->musics = new ArrayCollection();
-  }
+    public function __construct()
+    {
+        parent::__construct();
+        $this->addRole(RoleEnum::ARTIST);
+        $this->featuredMusics = new ArrayCollection();
+        $this->albums = new ArrayCollection();
+        $this->musics = new ArrayCollection();
+    }
 
-  /**
-   * @return Collection<int, Music>
-   */
-  public function getFeaturedMusics(): Collection
-  {
-      return $this->featuredMusics;
-  }
+    /**
+     * @return Collection<int, Music>
+     */
+    public function getFeaturedMusics(): Collection
+    {
+        return $this->featuredMusics;
+    }
 
-  public function addFeaturedMusic(Music $music): static
-  {
-      if (!$this->featuredMusics->contains($music)) {
-          $this->featuredMusics->add($music);
-          $music->addArtist($this);
-      }
+    public function addFeaturedMusic(Music $music): static
+    {
+        if (!$this->featuredMusics->contains($music)) {
+            $this->featuredMusics->add($music);
+            $music->addArtist($this);
+        }
 
-      return $this;
-  }
+        return $this;
+    }
 
-  public function removeFeaturedMusic(Music $music): static
-  {
-      if ($this->featuredMusics->removeElement($music)) {
-          $music->removeArtist($this);
-      }
+    public function removeFeaturedMusic(Music $music): static
+    {
+        if ($this->featuredMusics->removeElement($music)) {
+            $music->removeArtist($this);
+        }
 
-      return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * @return Collection<int, Album>
-   */
-  public function getAlbums(): Collection
-  {
-      return $this->albums;
-  }
+    /**
+     * @return Collection<int, Album>
+     */
+    public function getAlbums(): Collection
+    {
+        return $this->albums;
+    }
 
-  public function addAlbum(Album $album): static
-  {
-      if (!$this->albums->contains($album)) {
-          $this->albums->add($album);
-          $album->setArtist($this);
-      }
+    public function addAlbum(Album $album): static
+    {
+        if (!$this->albums->contains($album)) {
+            $this->albums->add($album);
+            $album->setArtist($this);
+        }
 
-      return $this;
-  }
+        return $this;
+    }
 
-  public function removeAlbum(Album $album): static
-  {
-      if ($this->albums->removeElement($album)) {
-          // set the owning side to null (unless already changed)
-          if ($album->getArtist() === $this) {
-              $album->setArtist(null);
-          }
-      }
+    public function removeAlbum(Album $album): static
+    {
+        if ($this->albums->removeElement($album)) {
+            // set the owning side to null (unless already changed)
+            if ($album->getArtist() === $this) {
+                $album->setArtist(null);
+            }
+        }
 
-      return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * @return Collection<int, Music>
-   */
-  public function getMusics(): Collection
-  {
-      return $this->musics;
-  }
+    /**
+     * @return Collection<int, Music>
+     */
+    public function getMusics(): Collection
+    {
+        return $this->musics;
+    }
 
-  public function addMusic(Music $music): static
-  {
-      if (!$this->musics->contains($music)) {
-          $this->musics->add($music);
-          $music->setMainArtist($this);
-      }
+    public function addMusic(Music $music): static
+    {
+        if (!$this->musics->contains($music)) {
+            $this->musics->add($music);
+            $music->setMainArtist($this);
+        }
 
-      return $this;
-  }
+        return $this;
+    }
 
-  public function removeMusic(Music $music): static
-  {
-      if ($this->musics->removeElement($music)) {
-          // set the owning side to null (unless already changed)
-          if ($music->getMainArtist() === $this) {
-              $music->setMainArtist(null);
-          }
-      }
+    public function removeMusic(Music $music): static
+    {
+        if ($this->musics->removeElement($music)) {
+            // set the owning side to null (unless already changed)
+            if ($music->getMainArtist() === $this) {
+                $music->setMainArtist(null);
+            }
+        }
 
-      return $this;
-  }
+        return $this;
+    }
 }

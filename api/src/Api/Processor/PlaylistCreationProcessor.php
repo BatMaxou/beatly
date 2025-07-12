@@ -2,7 +2,6 @@
 
 namespace App\Api\Processor;
 
-use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Playlist;
@@ -17,7 +16,8 @@ class PlaylistCreationProcessor implements ProcessorInterface
         private readonly Security $security,
         private readonly RequestStack $requestStack,
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Playlist
     {

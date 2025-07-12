@@ -22,7 +22,7 @@ class OllamaClient
                 'prompt' => $prompt,
                 'stream' => false,
                 'model' => 'llama3.2',
-            ]
+            ],
         ]);
 
         $data = $response->toArray();
@@ -30,4 +30,3 @@ class OllamaClient
         return $data['response'] ?? '';
     }
 }
-

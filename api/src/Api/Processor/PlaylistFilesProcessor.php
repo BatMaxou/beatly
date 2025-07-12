@@ -14,7 +14,8 @@ class PlaylistFilesProcessor implements ProcessorInterface
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Playlist
     {
@@ -44,4 +45,3 @@ class PlaylistFilesProcessor implements ProcessorInterface
         return $data;
     }
 }
-

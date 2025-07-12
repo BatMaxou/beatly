@@ -4,11 +4,8 @@ namespace App\Api\Provider;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
-use App\Api\Model\Dashboard;
 use App\Api\Model\Recommendation;
 use App\Enum\ApiReusableRoute;
-use App\Repository\CategoryRepository;
-use App\Repository\LastListenedRepository;
 use App\Repository\LastMusicListenedRepository;
 use App\Repository\MusicRepository;
 use App\Service\Client\EmbedderClient;
@@ -48,7 +45,7 @@ class RecommendationProvider implements ProviderInterface
         }
 
         $qdrantRecommendations = $this->qdrantClient->recommend(array_map(
-            fn($lastMusic) => $lastMusic->getTarget()->getId(),
+            fn ($lastMusic) => $lastMusic->getTarget()->getId(),
             $lastMusicsListened
         ), 20);
 
@@ -65,9 +62,10 @@ class RecommendationProvider implements ProviderInterface
         return new Recommendation($recommendations);
     }
 
-    private function buildReferences(array $lastMusicsListened): array {
+    private function buildReferences(array $lastMusicsListened): array
+    {
         return array_map(
-            fn($item) => \sprintf(
+            fn ($item) => \sprintf(
                 '%s by %s (id: %s)',
                 $item->getTarget()->getTitle(),
                 $item->getTarget()->getArtists()->first() ? $item->getTarget()->getArtists()->first()->getName() : 'Unknown',
@@ -77,10 +75,11 @@ class RecommendationProvider implements ProviderInterface
         );
     }
 
-    private function buildCatalog(array $items): array {
+    private function buildCatalog(array $items): array
+    {
         return array_map(
-            fn($item) => \sprintf(
-                "- %s by %s (id: %s)",
+            fn ($item) => \sprintf(
+                '- %s by %s (id: %s)',
                 $item['payload']['title'],
                 $item['payload']['artist'] ?? 'Unknown',
                 $item['id'],
@@ -89,7 +88,8 @@ class RecommendationProvider implements ProviderInterface
         );
     }
 
-    private function buildPrompt(array $references, array $catalog): string {
+    private function buildPrompt(array $references, array $catalog): string
+    {
         return $this->promptBuilder->build(
             PromptEnum::MUSIC_RECOMMENDATIONS,
             [

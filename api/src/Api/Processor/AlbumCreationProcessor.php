@@ -2,12 +2,10 @@
 
 namespace App\Api\Processor;
 
-use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Album;
 use App\Entity\Artist;
-use App\Entity\Playlist;
 use App\Enum\ApiReusableRoute;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -19,7 +17,8 @@ class AlbumCreationProcessor implements ProcessorInterface
         private readonly Security $security,
         private readonly RequestStack $requestStack,
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Album
     {

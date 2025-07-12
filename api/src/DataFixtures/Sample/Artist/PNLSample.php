@@ -17,24 +17,23 @@ class PNLSample implements SampleInterface
                     'DA' => [CategoryEnum::HIP_HOP],
                     'Oh lala' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B],
                     'Bené' => [CategoryEnum::HIP_HOP, CategoryEnum::TRAP],
-                    'Naha' => [CategoryEnum::HIP_HOP, CategoryEnum::ALTERNATIVE]
+                    'Naha' => [CategoryEnum::HIP_HOP, CategoryEnum::ALTERNATIVE],
                 ],
                 'Deux frères' => [
                     'Au DD' => [CategoryEnum::HIP_HOP, CategoryEnum::TRAP],
                     'Blanka' => [CategoryEnum::HIP_HOP, CategoryEnum::ELECTRONIC],
                     'Chang' => [CategoryEnum::HIP_HOP, CategoryEnum::ALTERNATIVE],
                     'Celsius' => [CategoryEnum::HIP_HOP, CategoryEnum::TRAP],
-                    'Mowgli II' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B]
+                    'Mowgli II' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B],
                 ],
                 'Le Monde Chico' => [
                     'Le monde chico' => [CategoryEnum::HIP_HOP],
                     'Loin des hommes' => [CategoryEnum::HIP_HOP, CategoryEnum::ALTERNATIVE],
                     'Humain' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B],
                     'Plus tony que sosa' => [CategoryEnum::HIP_HOP, CategoryEnum::TRAP],
-                    'Sheita' => [CategoryEnum::HIP_HOP]
-                ]
-            ]
+                    'Sheita' => [CategoryEnum::HIP_HOP],
+                ],
+            ],
         ];
     }
 }
-

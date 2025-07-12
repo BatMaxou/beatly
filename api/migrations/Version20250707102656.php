@@ -17,14 +17,14 @@ final class Version20250707102656 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $this->addSql(<<<'SQL'
-            ALTER TABLE last_listened ADD listened_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)'
-        SQL);
+                ALTER TABLE last_listened ADD listened_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)'
+            SQL);
     }
 
     public function down(Schema $schema): void
     {
         $this->addSql(<<<'SQL'
-            ALTER TABLE last_listened DROP listened_at
-        SQL);
+                ALTER TABLE last_listened DROP listened_at
+            SQL);
     }
 }

@@ -19,13 +19,13 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class LastListenedRepository extends ServiceEntityRepository
 {
-    const MAPPING = [
+    public const MAPPING = [
         Music::class => LastMusicListened::class,
         Album::class => LastAlbumListened::class,
         Playlist::class => LastPlaylistListened::class,
     ];
 
-    const ATTR_MAPPING = [
+    public const ATTR_MAPPING = [
         Music::class => 'music',
         Album::class => 'album',
         Playlist::class => 'playlist',
@@ -72,7 +72,7 @@ class LastListenedRepository extends ServiceEntityRepository
         }
 
         $toDelete = array_slice($lastListened, 10);
-    
+
         $em = $this->getEntityManager();
         foreach ($toDelete as $last) {
             $em->remove($last);

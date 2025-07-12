@@ -27,12 +27,12 @@ use App\DataFixtures\Sample\Category\CategorySample;
 class SampleLoader
 {
     /**
-    * @return SampleInterface[]
-    */
-    public function load(SampleType $type): array 
+     * @return SampleInterface[]
+     */
+    public function load(SampleType $type): array
     {
         return match ($type) {
-            SampleType::ARTIST => $this->loadArtistSamples(), 
+            SampleType::ARTIST => $this->loadArtistSamples(),
             SampleType::CATEGORY => $this->loadCategorySamples(),
         };
     }
@@ -47,24 +47,24 @@ class SampleLoader
         return [
             new AngeleSample()->getData(),
             new ArianaGrandeSample()->getData(),
-            new ArcticMonkeysSample()->getData(), 
-            new AyaNakamuraSample()->getData(), 
-            new BillieEilishSample()->getData(), 
-            new BrunoMarsSample()->getData(), 
-            new CalvinHarrisSample()->getData(), 
-            new ColdplaySample()->getData(), 
-            new DrakeSample()->getData(), 
-            new DuaLipaSample()->getData(), 
-            new EdSheeranSample()->getData(), 
-            new ImagineDragonsSample()->getData(), 
-            new KendrickLamarSample()->getData(), 
-            new OrelsanSample()->getData(), 
-            new PNLSample()->getData(), 
-            new PostMaloneSample()->getData(), 
-            new RihannaSample()->getData(), 
-            new StromaeSample()->getData(), 
-            new TaylorSwiftSample()->getData(), 
-            new TheWeekndSample()->getData(), 
+            new ArcticMonkeysSample()->getData(),
+            new AyaNakamuraSample()->getData(),
+            new BillieEilishSample()->getData(),
+            new BrunoMarsSample()->getData(),
+            new CalvinHarrisSample()->getData(),
+            new ColdplaySample()->getData(),
+            new DrakeSample()->getData(),
+            new DuaLipaSample()->getData(),
+            new EdSheeranSample()->getData(),
+            new ImagineDragonsSample()->getData(),
+            new KendrickLamarSample()->getData(),
+            new OrelsanSample()->getData(),
+            new PNLSample()->getData(),
+            new PostMaloneSample()->getData(),
+            new RihannaSample()->getData(),
+            new StromaeSample()->getData(),
+            new TaylorSwiftSample()->getData(),
+            new TheWeekndSample()->getData(),
         ];
     }
 }

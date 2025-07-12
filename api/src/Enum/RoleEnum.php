@@ -9,4 +9,3 @@ enum RoleEnum: string
     case USER = 'ROLE_USER';
     case BANNED = 'ROLE_BANNED';
 }
-

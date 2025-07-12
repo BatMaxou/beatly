@@ -23,7 +23,7 @@ class Mp3Streamer
 
         $start = 0;
         $end = $fileSize - 1;
-        
+
         // Is range header supported
         $isRangeRequest = false;
         $rangeHeader = $request->headers->get('Range');
@@ -32,7 +32,7 @@ class Mp3Streamer
 
             if (preg_match('/bytes=(\d+)-(\d*)/', $rangeHeader, $matches)) {
                 $start = intval($matches[1]);
-                $end = $matches[2] !== '' ? intval($matches[2]) : $fileSize - 1;
+                $end = '' !== $matches[2] ? intval($matches[2]) : $fileSize - 1;
             }
         }
 
@@ -44,7 +44,7 @@ class Mp3Streamer
 
         $contentLength = $end - $start + 1;
 
-        $response = new StreamedResponse(function() use ($filePath, $start, $end) {
+        $response = new StreamedResponse(function () use ($filePath, $start, $end) {
             $this->outputFileRange($filePath, $start, $end);
         });
 
@@ -76,7 +76,7 @@ class Mp3Streamer
         while ($bytesRemaining > 0 && !feof($file)) {
             $chunkSize = min(self::CHUNK_SIZE, $bytesRemaining);
             $chunk = fread($file, $chunkSize);
-            if ($chunk === false) {
+            if (false === $chunk) {
                 break;
             }
 

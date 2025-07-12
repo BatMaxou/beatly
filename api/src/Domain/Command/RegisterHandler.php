@@ -4,7 +4,6 @@ namespace App\Domain\Command;
 
 use App\Entity\Artist;
 use App\Entity\User;
-use App\Enum\RoleEnum;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,7 +19,8 @@ class RegisterHandler
     ) {
     }
 
-    public function __invoke(RegisterCommand $command): Response {
+    public function __invoke(RegisterCommand $command): Response
+    {
         if ($this->userRepository->findOneBy(['email' => $command->email])) {
             return new JsonResponse(['error' => 'Email already exists'], Response::HTTP_CONFLICT);
         }
