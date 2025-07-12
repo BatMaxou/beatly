@@ -30,4 +30,4 @@ jobs:
         run: make front-vendor
 
       - name: Linter
-        run: make front-linter
+        run: make front-lint

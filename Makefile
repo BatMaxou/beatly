@@ -10,6 +10,12 @@ REGISTRY_USERNAME = batmaxou
 REGISTRY_PROJECT = beatly
 REGISTRY_REPOSITORY_PREFIX = $(REGISTRY_HOST)/${REGISTRY_USERNAME}/$(REGISTRY_PROJECT)
 
+# --- PHP CS FIXER CONFIG ---
+PHP_CS_FIXER_CONFIGURATION_FILE = ./.devops/lint/.php-cs-fixer.php
+PHP_FIXER_VERSION = 3-php8.4
+phpcsfixer = docker run --rm -v `pwd`:/code ghcr.io/php-cs-fixer/php-cs-fixer:${PHP_FIXER_VERSION}
+
+
 # --- DEV COMMANDS ---
 install: up vendor node-modules jwt uploads-dir database init-qdrant
 .PHONY: install
@@ -62,7 +68,16 @@ network:
 .PHONY: network
 
 # --- LINTERS ---
+fixcs:
+	@$(phpcsfixer) fix --config=$(PHP_CS_FIXER_CONFIGURATION_FILE)
+.PHONY: fixcs
+
+phpcs:
+	@$(phpcsfixer) fix --config=$(PHP_CS_FIXER_CONFIGURATION_FILE) --dry-run
+.PHONY: phpcs
+
 php-lint:
+	@${MAKE} phpcs
 .PHONY: php-lint
 
 front-lint:

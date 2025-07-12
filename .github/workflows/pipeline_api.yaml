@@ -30,4 +30,4 @@ jobs:
         run: make vendor
 
       - name: Linter
-        run: make php-linter
+        run: make php-lint
