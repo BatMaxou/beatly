@@ -11,14 +11,18 @@ REGISTRY_PROJECT = beatly
 REGISTRY_REPOSITORY_PREFIX = $(REGISTRY_HOST)/${REGISTRY_USERNAME}/$(REGISTRY_PROJECT)
 
 # --- DEV COMMANDS ---
-install: up vendor jwt
+install: up vendor node-modules jwt uploads-dir database init-qdrant
 .PHONY: install
+
+init-qdrant:
+	@docker compose exec php php bin/console app:init:qdrant
+.PHONY: init-qdrant
 
 vendor:
 	@docker compose exec php composer install
 .PHONY: vendor
 
-node_modules:
+node-modules:
 	@docker compose exec front npm install
 .PHONY: node_modules
 
