@@ -2,67 +2,70 @@ App\Entity\Music:
   attributes:
     id:
       groups:
-        - 'music:read'
-        - 'playlist:read'
-        - 'artist:read'
-        - 'recommendation:read'
+        - "music:read"
+        - "playlist:read"
+        - "artist:read"
+        - "recommendation:read"
     title:
       groups:
-        - 'music:read'
-        - 'music:write'
-        - 'music:update'
-        - 'album:read'
-        - 'playlist:read'
-        - 'dashboard:read'
-        - 'artist:read'
-        - 'recommendation:read'
+        - "music:read"
+        - "music:write"
+        - "music:update"
+        - "album:read"
+        - "playlist:read"
+        - "dashboard:read"
+        - "artist:read"
+        - "recommendation:read"
     coverName:
       groups:
-        - 'music:read'
-        - 'album:read'
-        - 'playlist:read'
-        - 'artist:read'
-        - 'recommendation:read'
+        - "music:read"
+        - "album:read"
+        - "playlist:read"
+        - "artist:read"
+        - "recommendation:read"
     cover:
       groups:
-        - 'music:write'
+        - "music:write"
     listeningsNumber:
       groups:
-        - 'music:read'
-        - 'album:read'
-        - 'artist:read'
-        - 'dashboard:read'
+        - "music:read"
+        - "album:read"
+        - "artist:read"
+        - "dashboard:read"
     file:
       groups:
-        - 'music:read'
-        - 'music:write'
-        - 'music:update'
-        - 'album:read'
-        - 'playlist:read'
-        - 'dashboard:read'
-        - 'artist:read'
-        - 'recommendation:read'
+        - "music:read"
+        - "music:write"
+        - "music:update"
+        - "album:read"
+        - "playlist:read"
+        - "dashboard:read"
+        - "artist:read"
+        - "recommendation:read"
     mainArtist:
       groups:
-        - 'music:read'
-        - 'album:read'
-        - 'playlist:read'
-        - 'recommendation:read'
+        - "music:read"
+        - "album:read"
+        - "playlist:read"
+        - "recommendation:read"
     artists:
       groups:
-        - 'music:read'
-        - 'album:read'
-        - 'playlist:read'
-        - 'recommendation:read'
+        - "music:read"
+        - "album:read"
+        - "playlist:read"
+        - "recommendation:read"
     albums:
       groups:
-        - 'music:read'
-        - 'playlist:read'
+        - "music:read"
+        - "playlist:read"
     categories:
       groups:
-        - 'music:read'
-        - 'music:write'
-        - 'music:update'
-        - 'album:read'
-        - 'artist:read'
-
+        - "music:read"
+        - "music:write"
+        - "music:update"
+        - "album:read"
+        - "artist:read"
+    addedAt:
+      groups:
+        - "artist:read"
+        - "music:read"

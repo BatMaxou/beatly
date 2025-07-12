@@ -16,14 +16,14 @@ defineProps({
     required: true,
   },
   releaseYear: {
-    type: String,
+    type: Number,
     required: true,
   },
 });
 </script>
 
 <template>
-  <div class="flex flex-wrap max-w-[160px] my-4">
+  <div class="flex flex-wrap max-w-[160px] min-w-[160px] my-4">
     <AlbumPlayableCover :albumCover="albumCover" :albumName="albumName" />
     <div class="w-full mt-2">
       <h4 class="font-medium text-sm truncate">{{ albumName }}</h4>
