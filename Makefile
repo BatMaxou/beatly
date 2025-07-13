@@ -58,9 +58,10 @@ uploads-dir:
 
 clear-uploads:
 	@rm -rf ./api/private/uploads/musics/*
-	@rm -rf ./api/public/uploads/musics/covers/*
-	@rm -rf ./api/public/uploads/albums/covers/*
-	@rm -rf ./api/public/uploads/albums/wallpapers/*
+	@rm -rf ./api/public/uploads/musics/*
+	@rm -rf ./api/public/uploads/albums/*
+	@rm -rf ./api/public/uploads/playlists/*
+	@rm -rf ./api/public/uploads/users/*
 .PHONY: clear-uploads
 
 network:

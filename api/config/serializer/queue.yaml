@@ -1,0 +1,16 @@
+App\Entity\Queue:
+  attributes:
+    queueItems:
+      groups:
+        - 'queue:read'
+
+App\Entity\QueueItem:
+  attributes:
+    music:
+      groups:
+        - 'queue:read'
+    position:
+      groups:
+        - 'queue:read'
+
+
