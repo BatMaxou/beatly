@@ -3,6 +3,8 @@
 namespace App\Domain\Command;
 
 use App\Entity\User;
+use App\Event\Event\AddMultipleNextToQueueEvent;
+use App\Event\Event\AddMultipleToQueueEvent;
 use App\Event\Event\AddNextToQueueEvent;
 use App\Event\Event\AddToQueueEvent;
 use App\Event\Event\ResetQueueEvent;
@@ -30,7 +32,12 @@ class AddToQueueHandler
             return new JsonResponse(['error' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
         }
 
-        if (null === $command->music && null === $command->playlist && null === $command->album) {
+        if (
+            null === $command->music
+            && null === $command->playlist
+            && null === $command->album
+            && null === $command->musics
+        ) {
             return new JsonResponse(['error' => 'No item to add to queue'], Response::HTTP_BAD_REQUEST);
         }
 
@@ -38,7 +45,7 @@ class AddToQueueHandler
             return new JsonResponse(['error' => 'Current position must be set when adding to queue as next'], Response::HTTP_BAD_REQUEST);
         }
 
-        if (null === $command->music) {
+        if (null === $command->music && null === $command->musics) {
             $this->eventDispatcher->dispatch(new ResetQueueEvent($user));
         }
 
@@ -46,6 +53,9 @@ class AddToQueueHandler
             null !== $command->music => $command->shouldBeNext
                 ? new AddNextToQueueEvent($user, $command->music, $command->currentPosition)
                 : new AddToQueueEvent($user, $command->music),
+            null !== $command->musics => $command->shouldBeNext
+                ? new AddMultipleNextToQueueEvent($user, $command->musics, $command->currentPosition)
+                : new AddMultipleToQueueEvent($user, $command->musics),
             null !== $command->playlist => new AddToQueueEvent($user, $command->playlist),
             null !== $command->album => new AddToQueueEvent($user, $command->album),
             default => throw new \InvalidArgumentException('No valid item to add to queue'),

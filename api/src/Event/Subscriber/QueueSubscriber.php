@@ -3,11 +3,14 @@
 namespace App\Event\Subscriber;
 
 use App\Entity\Album;
+use App\Entity\Interface\ListenableEntityInterface;
 use App\Entity\Music;
 use App\Entity\Playlist;
 use App\Entity\Queue;
 use App\Entity\QueueItem;
 use App\Entity\User;
+use App\Event\Event\AddMultipleNextToQueueEvent;
+use App\Event\Event\AddMultipleToQueueEvent;
 use App\Event\Event\AddNextToQueueEvent;
 use App\Event\Event\AddToQueueEvent;
 use App\Event\Event\ResetQueueEvent;
@@ -26,6 +29,8 @@ class QueueSubscriber implements EventSubscriberInterface
         return [
             AddToQueueEvent::class => 'onAdd',
             AddNextToQueueEvent::class => 'onAddNext',
+            AddMultipleToQueueEvent::class => 'onAddMultiple',
+            AddMultipleNextToQueueEvent::class => 'onAddMultipleNext',
             ResetQueueEvent::class => 'onReset',
         ];
     }
@@ -36,12 +41,7 @@ class QueueSubscriber implements EventSubscriberInterface
         $user = $event->user;
         $queue = $this->getQueue($user);
 
-        match (true) {
-            $added instanceof Music => $this->addMusicToQueue($queue, $added),
-            $added instanceof Playlist => $this->addPlaylistToQueue($queue, $added),
-            $added instanceof Album => $this->addAlbumToQueue($queue, $added),
-            default => throw new \InvalidArgumentException('Unsupported entity type for queue addition.'),
-        };
+        $this->addToQueue($queue, $added);
 
         $this->em->flush();
     }
@@ -51,9 +51,35 @@ class QueueSubscriber implements EventSubscriberInterface
         $user = $event->user;
         $queue = $this->getQueue($user);
 
-        $this->addNextMusicToQueue(
+        $this->addNextToQueue(
             $queue,
-            $event->music,
+            [$event->added],
+            $event->currentPosition
+        );
+
+        $this->em->flush();
+    }
+
+    public function onAddMultiple(AddMultipleToQueueEvent $event): void
+    {
+        $user = $event->user;
+        $queue = $this->getQueue($user);
+
+        foreach ($event->added as $added) {
+            $this->addToQueue($queue, $added);
+        }
+
+        $this->em->flush();
+    }
+
+    public function onAddMultipleNext(AddMultipleNextToQueueEvent $event): void
+    {
+        $user = $event->user;
+        $queue = $this->getQueue($user);
+
+        $this->addNextToQueue(
+            $queue,
+            $event->added,
             $event->currentPosition
         );
 
@@ -82,6 +108,16 @@ class QueueSubscriber implements EventSubscriberInterface
         $this->em->persist($queue);
 
         return $queue;
+    }
+
+    private function addToQueue(Queue $queue, ListenableEntityInterface $added): void
+    {
+        match (true) {
+            $added instanceof Music => $this->addMusicToQueue($queue, $added),
+            $added instanceof Playlist => $this->addPlaylistToQueue($queue, $added),
+            $added instanceof Album => $this->addAlbumToQueue($queue, $added),
+            default => throw new \InvalidArgumentException('Unsupported entity type for queue addition.'),
+        };
     }
 
     private function addMusicToQueue(Queue $queue, Music $music): void
@@ -119,18 +155,26 @@ class QueueSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function addNextMusicToQueue(Queue $queue, Music $music, int $currentPosition): void
+    /**
+     * @param Music[] $musics
+     */
+    private function addNextToQueue(Queue $queue, array $musics, int $currentPosition): void
     {
+        $nbToAdd = count($musics);
+        $startPosition = $currentPosition + 1;
         foreach ($queue->getQueueItems() as $item) {
             if ($item->getPosition() > $currentPosition) {
-                $item->setPosition($item->getPosition() + 1);
+                $item->setPosition($item->getPosition() + $nbToAdd);
             }
         }
 
-        $queue->addQueueItem(
-            (new QueueItem())
-            ->setMusic($music)
-            ->setPosition($currentPosition + 1)
-        );
+        foreach ($musics as $music) {
+            $queue->addQueueItem(
+                (new QueueItem())
+                ->setMusic($music)
+                ->setPosition($startPosition)
+            );
+            ++$startPosition;
+        }
     }
 }

@@ -110,6 +110,7 @@ export type Queue = {
 
 export type AddToQueue = {
   music?: string;
+  musics?: string[];
   playlist?: string;
   album?: string;
   shouldBeNext?: boolean;
