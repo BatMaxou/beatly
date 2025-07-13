@@ -17,4 +17,5 @@ enum ApiReusableRoute: string
 
     case GET_DASHBOARD = 'api_get_dashboard';
     case GET_RECOMMENDATIONS = 'api_get_recommendations';
+    case GET_QUEUE = 'api_get_queue';
 }

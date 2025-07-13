@@ -146,6 +146,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Playlist::class, mappedBy: 'creator')]
     private Collection $playlists;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Queue $queue = null;
+
     public function __construct()
     {
         $this->addRole(RoleEnum::USER);
@@ -361,6 +364,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $playlist->setCreator(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getQueue(): ?Queue
+    {
+        return $this->queue;
+    }
+
+    public function setQueue(Queue $queue): static
+    {
+        // set the owning side of the relation if necessary
+        if ($queue->getUser() !== $this) {
+            $queue->setUser($this);
+        }
+
+        $this->queue = $queue;
 
         return $this;
     }

@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Domain\Command;
+
+use App\Event\Event\ResetQueueEvent;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+
+#[AsMessageHandler]
+class ResetQueueHandler
+{
+    public function __construct(
+        private readonly Security $security,
+        private readonly EventDispatcherInterface $eventDispatcher,
+    ) {
+    }
+
+    public function __invoke(ResetQueueCommand $command): Response
+    {
+        $user = $this->security->getUser();
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $this->eventDispatcher->dispatch(new ResetQueueEvent($user));
+
+        return new Response(status: Response::HTTP_NO_CONTENT);
+    }
+}
