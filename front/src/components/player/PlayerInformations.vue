@@ -4,6 +4,7 @@ import { usePlayerStore } from "@/stores/player";
 import defaultCover from "@/assets/images/default-cover.png";
 
 const playerStore = usePlayerStore();
+const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 
 const currentMusic = computed(
   () =>
@@ -24,7 +25,10 @@ const currentMusic = computed(
 
 <template>
   <div class="flex flex-row items-center justify-start gap-4">
-    <img :src="currentMusic.cover ? currentMusic.cover : defaultCover" class="w-[40px] h-[40px]" />
+    <img
+      :src="currentMusic.cover ? ressourceUrl + currentMusic.cover : defaultCover"
+      class="w-[40px] h-[40px]"
+    />
     <div class="flex flex-col">
       <span class="text-md font-500">{{ currentMusic.title }}</span>
       <span class="text-sm text-gray-300">{{

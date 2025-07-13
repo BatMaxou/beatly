@@ -11,6 +11,7 @@ export enum PlaylistType {
 }
 
 export interface User {
+  id: number;
   name: string;
   email: string;
   roles: Role[];

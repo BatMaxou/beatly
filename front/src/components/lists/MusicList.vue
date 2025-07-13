@@ -52,7 +52,7 @@ const musicList = props.musicList;
     <PlaylistMusicListItem
       v-for="(music, index) in musicList"
       :key="music.id"
-      :music="music"
+      :music="music.music"
       :index="index"
       :customStyles="props.customStyles"
       :theme="props.theme"
