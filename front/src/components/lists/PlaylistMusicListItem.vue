@@ -22,7 +22,6 @@ const props = defineProps({
     default: "dark",
   },
 });
-console.log(props.music);
 const isClickedToPlay = ref(false);
 const isCurrentSongPlaying = ref(false);
 

@@ -3,7 +3,7 @@ import { onBeforeMount, ref, onMounted } from "vue";
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
 import PlaylistPlayable from "@/components/cards/PlaylistPlayableCard.vue";
-import albumDefaultIcon from "@/assets/icons/disc-dark.svg";
+import albumDefaultIcon from "@/assets/images/default-cover.png";
 import type { Playlist } from "@/utils/types";
 import arrowLeft from "@/assets/icons/arrow-left-light.svg";
 import arrowRight from "@/assets/icons/arrow-right-light.svg";
@@ -81,13 +81,14 @@ onMounted(() => {
       <h2 class="ps-10 text-white text-3xl font-bold mb-4">Dernières playlists</h2>
       <div class="relative">
         <div
-          class="flex flex-row justify-start gap-16 overflow-x-auto scrollbar-hide ps-10"
+          class="flex flex-row justify-start gap-16 overflow-x-auto scrollbar-hide px-10"
           ref="playlistSlider"
           @scroll="checkScrollEnd"
         >
           <PlaylistPlayable
             v-for="playlist in lastPlaylist"
             :key="playlist.id"
+            :playlist="playlist"
             :playlistId="playlist.id"
             :playlistCover="playlist.cover || albumDefaultIcon"
             :playlistName="playlist.title || 'Playlist sans nom'"
