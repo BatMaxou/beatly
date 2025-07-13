@@ -39,5 +39,6 @@ compose.override.yaml
 ###> Extra ###
 /.DS_Store/
 /.vscode/
+/.php-cs-fixer.cache
 ###< Extra ###
 

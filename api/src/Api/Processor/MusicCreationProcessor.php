@@ -15,7 +15,8 @@ class MusicCreationProcessor implements ProcessorInterface
     public function __construct(
         private readonly Security $security,
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Music
     {

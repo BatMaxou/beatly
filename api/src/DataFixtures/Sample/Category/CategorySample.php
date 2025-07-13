@@ -2,7 +2,6 @@
 
 namespace App\DataFixtures\Sample\Category;
 
-use App\DataFixtures\Sample\Category\CategoryEnum;
 use App\DataFixtures\Sample\SampleInterface;
 
 class CategorySample implements SampleInterface
@@ -25,16 +24,16 @@ class CategorySample implements SampleInterface
         CategoryEnum::BLUES->value => '#D2B4DE',
         CategoryEnum::TRAP->value => '#85D8CE',
         CategoryEnum::HOUSE->value => '#F9E79F',
-        CategoryEnum::TECHNO->value => '#AEB6BF'
+        CategoryEnum::TECHNO->value => '#AEB6BF',
     ];
 
-    public function getData(): array 
+    public function getData(): array
     {
         $categories = [];
         foreach (CategoryEnum::cases() as $category) {
             $categories[] = [
                 'name' => $category->value,
-                'color' => self::COLORS[$category->value] ?? '#FFFFFF', 
+                'color' => self::COLORS[$category->value] ?? '#FFFFFF',
             ];
         }
 

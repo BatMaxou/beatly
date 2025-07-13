@@ -14,7 +14,7 @@ use App\Enum\ApiReusableRoute;
             provider: DashboardProvider::class,
             name: ApiReusableRoute::GET_DASHBOARD->value,
             normalizationContext: ['groups' => ['dashboard:read']],
-        )
+        ),
     ],
 )]
 class Dashboard
@@ -24,6 +24,6 @@ class Dashboard
         public array $mostPopularCategories = [],
         public array $mostLikedMusics = [],
         public array $mostListenedMusics = [],
-    ){
+    ) {
     }
 }

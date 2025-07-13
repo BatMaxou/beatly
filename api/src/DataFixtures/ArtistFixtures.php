@@ -5,16 +5,14 @@ namespace App\DataFixtures;
 use App\DataFixtures\Faker\FakerFixtureTrait;
 use App\DataFixtures\Sample\SampleLoader;
 use App\DataFixtures\Sample\SampleType;
-use App\Entity\Artist;
 use App\Entity\Album;
 use App\Entity\AlbumMusic;
+use App\Entity\Artist;
+use App\Entity\Category;
 use App\Entity\Music;
 use App\Entity\MusicFile;
-use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ArtistFixtures extends Fixture
 {
@@ -63,7 +61,7 @@ class ArtistFixtures extends Fixture
     private function createArtists(): array
     {
         $artists = [];
-        
+
         foreach ($this->sampleLoader->load(SampleType::ARTIST) as $artistData) {
             $artistName = $artistData['name'];
             $artist = $this->createArtist($artistName);
@@ -77,7 +75,7 @@ class ArtistFixtures extends Fixture
     {
         $artist = (new Artist())
             ->setName($name)
-            ->setEmail(strtolower(str_replace(' ', '.', $name)) . '@music.com')
+            ->setEmail(strtolower(str_replace(' ', '.', $name)).'@music.com')
             ->setPassword('azerty');
 
         if ($this->faker->boolean(10)) {
@@ -129,7 +127,8 @@ class ArtistFixtures extends Fixture
                     }
 
                     $music->setMainArtist($artist);
-                    $music->addAlbum((new AlbumMusic())
+                    $music->addAlbum(
+                        (new AlbumMusic())
                         ->setAlbum($album)
                         ->setPosition($musicPosition)
                     );
@@ -141,7 +140,7 @@ class ArtistFixtures extends Fixture
                     }
 
                     $this->manager->persist($music);
-                    $musicPosition++;
+                    ++$musicPosition;
                 }
             }
         }

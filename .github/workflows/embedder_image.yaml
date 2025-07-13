@@ -1,0 +1,52 @@
+name: Embedder docker image
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'embedder/**'
+      - '.devops/python/**'
+
+env:
+  REGISTRY: ghcr.io
+  PROJECT_NAME: beatly
+
+jobs:
+  build-push-embedder-image:
+    name: Build and push embedder image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Registry
+        uses: ./.github/workflows/callables/registry
+        with:
+          token: ${{ secrets.IMAGE_TOKEN }}
+
+      - name: Build / Push embedder image
+        uses: ./.github/workflows/callables/build-push
+        with:
+          dockerfile: ./.devops/python/Dockerfile
+          image: embedder
+
+  deploy-embedder-image:
+    name: Deploy embedder image
+    runs-on: ubuntu-latest
+    needs: build-push-embedder-image
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy image
+        uses: ./.github/workflows/callables/deployment
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.PROD_HOST }}
+          user: ${{ secrets.PROD_USER }}
+          path: ${{ secrets.PROD_PATH }}
+          images: embedder

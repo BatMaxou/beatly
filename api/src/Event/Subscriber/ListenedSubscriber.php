@@ -55,4 +55,3 @@ class ListenedSubscriber implements EventSubscriberInterface
         $this->lastListenedRepository->create($listened, $user);
     }
 }
-

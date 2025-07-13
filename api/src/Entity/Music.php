@@ -8,10 +8,8 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Api\Processor\MusicCreationProcessor;
 use App\Api\Processor\MusicFilesProcessor;
-use App\Domain\Command\File\MusicFilesCommand;
 use App\Entity\Interface\EmbeddableEntityInterface;
 use App\Entity\Interface\ListenableEntityInterface;
 use App\Enum\ApiReusableRoute;
@@ -274,19 +272,19 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface
 
     public function listen(): void
     {
-        $this->listeningsNumber++;
+        ++$this->listeningsNumber;
     }
 
     public function prepareForEmbedding(): string
     {
-        $categories = $this->categories->map(fn(Category $category) => md5($category->getName()))->toArray();
-        $artists = $this->artists->map(fn(Artist $artist) => md5($artist->getName()))->toArray();
-        $albums = $this->albums->map(fn(AlbumMusic $album) => md5($album->getAlbum()->getTitle()))->toArray();
+        $categories = $this->categories->map(fn (Category $category) => md5($category->getName()))->toArray();
+        $artists = $this->artists->map(fn (Artist $artist) => md5($artist->getName()))->toArray();
+        $albums = $this->albums->map(fn (AlbumMusic $album) => md5($album->getAlbum()->getTitle()))->toArray();
 
         return sprintf(
             '%s - %s - %s - %s',
-            md5($this->title),
             implode(' ', $categories),
+            md5($this->getMainArtist()?->getName() ?? ''),
             implode(' ', $artists),
             implode(' ', $albums)
         );

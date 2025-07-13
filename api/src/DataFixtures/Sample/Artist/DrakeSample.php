@@ -17,30 +17,29 @@ class DrakeSample implements SampleInterface
                     'In My Feelings' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B],
                     'Nice For What' => [CategoryEnum::HIP_HOP],
                     'Nonstop' => [CategoryEnum::HIP_HOP, CategoryEnum::TRAP],
-                    'Mob Ties' => [CategoryEnum::HIP_HOP, CategoryEnum::TRAP]
+                    'Mob Ties' => [CategoryEnum::HIP_HOP, CategoryEnum::TRAP],
                 ],
                 'Views' => [
                     'Hotline Bling' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B],
                     'One Dance' => [CategoryEnum::HIP_HOP, CategoryEnum::ELECTRONIC, CategoryEnum::REGGAE],
                     'Too Good' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B],
                     'Controlla' => [CategoryEnum::HIP_HOP, CategoryEnum::REGGAE],
-                    'Child\'s Play' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B]
+                    'Child\'s Play' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B],
                 ],
                 'Take Care' => [
                     'Take Care' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B],
                     'Marvins Room' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B, CategoryEnum::SOUL],
                     'Headlines' => [CategoryEnum::HIP_HOP],
                     'Make Me Proud' => [CategoryEnum::HIP_HOP],
-                    'The Motto' => [CategoryEnum::HIP_HOP, CategoryEnum::TRAP]
+                    'The Motto' => [CategoryEnum::HIP_HOP, CategoryEnum::TRAP],
                 ],
                 'Certified Lover Boy' => [
                     'Way 2 Sexy' => [CategoryEnum::HIP_HOP, CategoryEnum::TRAP],
                     'Girls Want Girls' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B],
                     'Champagne Poetry' => [CategoryEnum::HIP_HOP, CategoryEnum::R_B],
-                    'Fair Trade' => [CategoryEnum::HIP_HOP]
-                ]
-            ]
+                    'Fair Trade' => [CategoryEnum::HIP_HOP],
+                ],
+            ],
         ];
     }
 }
-

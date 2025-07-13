@@ -99,3 +99,20 @@ export type Dashboard = {
 export type Recommendation = {
   recommendations: Music[];
 };
+
+export type QueueItem = {
+  music: Music;
+  position: number;
+};
+
+export type Queue = {
+  queueItems: QueueItem[];
+};
+
+export type AddToQueue = {
+  music?: string;
+  playlist?: string;
+  album?: string;
+  shouldBeNext?: boolean;
+  currentPosition?: number;
+}

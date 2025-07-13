@@ -19,7 +19,8 @@ class ResetPasswordHandler
     ) {
     }
 
-    public function __invoke(ResetPasswordCommand $command): Response {
+    public function __invoke(ResetPasswordCommand $command): Response
+    {
         $user = $this->userRepository->findOneBy(['resetToken' => $command->token]);
         if (!$user) {
             return new JsonResponse(['message' => 'Error during the process', 'result' => false], Response::HTTP_BAD_REQUEST);

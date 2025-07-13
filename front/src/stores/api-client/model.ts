@@ -6,6 +6,7 @@ import Album from "./ressources/album";
 import Playlist from "./ressources/playlist";
 import Category from "./ressources/category";import Dashboard from "./ressources/dashboard";
 import Listen from "./ressources/listen";
+import Queue from "./ressources/queue";
 import { eraseCookie, getCookie, setCookie } from "@/utils/cookies";
 import { apiBaseUrl } from "@/utils/tools";
 import type { User } from "@/utils/types";
@@ -30,6 +31,7 @@ export class ApiClient {
   artist: Artist;
   dashboard: Dashboard;
   listen: Listen;
+  queue: Queue;
   token: string | null;
 
   constructor() {
@@ -43,6 +45,7 @@ export class ApiClient {
     this.artist = new Artist(this);
     this.dashboard = new Dashboard(this);
     this.listen = new Listen(this);
+    this.queue = new Queue(this);
     this.token = getCookie("token");
   }
 
@@ -70,7 +73,7 @@ export class ApiClient {
       });
   }
 
-  async post<T>(url: string, body: object = {}, additionnalHeaders: HeadersInit = {}): Promise<T> {
+  async post<T>(url: string, body: object = {}, additionnalHeaders: HeadersInit = {}, raw: boolean = false): Promise<T> {
     const isFormData = body instanceof FormData;
 
     const headers: HeadersInit = isFormData
@@ -91,7 +94,7 @@ export class ApiClient {
         ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
       },
       body: isFormData ? body : JSON.stringify(body),
-    }).then((response) => response.json());
+    }).then((response) => raw ? response : response.json());
   }
 
   async patch<T>(url: string, body: object, additionnalHeaders: HeadersInit = {}): Promise<T> {

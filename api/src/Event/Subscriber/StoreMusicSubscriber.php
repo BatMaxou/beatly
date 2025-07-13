@@ -3,12 +3,10 @@
 namespace App\Event\Subscriber;
 
 use App\Entity\Music;
-use App\Entity\User;
 use App\Service\Client\EmbedderClient;
 use App\Service\Client\QdrantClient;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsEntityListener(event: Events::postPersist, method: 'upsert', entity: Music::class)]
 #[AsEntityListener(event: Events::postUpdate, method: 'upsert', entity: Music::class)]
@@ -38,4 +36,3 @@ class StoreMusicSubscriber
         $this->qdrantClient->deleteMusic($music->getId());
     }
 }
-
