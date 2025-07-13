@@ -50,6 +50,7 @@ export type Category = {
 export type MusicFile = {
   id: number;
   contentUrl: string;
+  position?: number;
 };
 
 export type Music = {
@@ -115,4 +116,4 @@ export type AddToQueue = {
   album?: string;
   shouldBeNext?: boolean;
   currentPosition?: number;
-}
+};

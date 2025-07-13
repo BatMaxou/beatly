@@ -1,10 +1,11 @@
-import type { Music } from "@/utils/types";
+import type { Music, Queue } from "@/utils/types";
 import { defineStore } from "pinia";
 
 export const usePlayerStore = defineStore("player", {
   state: () => ({
     currentMusic: null as Music | null,
     musicFile: "" as string,
+    position: 1 as number,
     volume: 50 as number,
     muted: false as boolean,
     isPlay: false as boolean,
@@ -13,11 +14,21 @@ export const usePlayerStore = defineStore("player", {
     duration: 0 as number,
     isPlayerInteraction: false as boolean,
     isVolumeInteraction: false as boolean,
+    queue: null as Queue | null,
+    queueOrigin: null as string | null,
+    queueFile: null as Array<{ file: string; musicId: number }> | null,
+    nextMusic: null as Music | null,
+    nextMusicFile: null as string | null,
+    previousMusic: null as Music | null,
+    previousMusicFile: null as string | null,
   }),
   actions: {
     // Actions de stockage
     setCurrentMusic(music: Music | null) {
       this.currentMusic = music;
+    },
+    setPosition(position: number) {
+      this.position = position;
     },
     setMusicFile(music: string) {
       this.musicFile = music;
@@ -44,6 +55,25 @@ export const usePlayerStore = defineStore("player", {
     setIsVolumeInteraction(isVolumeInteraction: boolean) {
       this.isVolumeInteraction = isVolumeInteraction;
     },
+    setQueue(queue: Queue | null, origin: string) {
+      this.queue = queue;
+      this.queueOrigin = origin;
+    },
+    setNextMusic(nextMusic: Music | null) {
+      this.nextMusic = nextMusic;
+    },
+    setNextMusicFile(nextMusicFile: string | null) {
+      this.nextMusicFile = nextMusicFile;
+    },
+    setPreviousMusic(previousMusic: Music | null) {
+      this.previousMusic = previousMusic;
+    },
+    setPreviousMusicFile(previousMusicFile: string | null) {
+      this.previousMusicFile = previousMusicFile;
+    },
+    setQueueFile(files: Array<{ file: string; musicId: number }> | null) {
+      this.queueFile = files;
+    },
 
     // Actions de contrôle du lecteur
     setVolume(volume: number) {
@@ -63,8 +93,6 @@ export const usePlayerStore = defineStore("player", {
         this.audioPlayer.volume = muted ? 0 : this.volume / 100;
       }
     },
-    playNextSong() {},
-    playPreviousSong() {},
     setPause() {
       this.audioPlayer?.pause();
       this.setIsPlay(false);
@@ -74,16 +102,21 @@ export const usePlayerStore = defineStore("player", {
       this.audioPlayer?.play();
       this.setIsPlay(true);
     },
-    setListen(music: Music, musicFile: string) {
+    setListen(music: Music, musicFile: string, position: number) {
+      this.setPause();
       this.setIsPlayerActive(true);
       this.setCurrentMusic(music);
       this.setMusicFile(musicFile);
+      this.setPosition(position);
       this.setPlay();
     },
     setChangeCurrentTime(number: number) {
       if (this.audioPlayer) {
         this.audioPlayer.currentTime = number;
       }
+    },
+    clearQueue() {
+      this.queue = null;
     },
   },
 });

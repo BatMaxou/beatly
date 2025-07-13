@@ -9,13 +9,17 @@ const props = defineProps({
     type: Array as () => PlaylistMusic[] | AlbumMusic[],
     required: true,
   },
+  parentId: {
+    type: String || null,
+    default: null,
+  },
   customStyles: {
     type: Object,
     default: () => ({}),
   },
   origin: {
     type: String,
-    default: null,
+    required: true,
   },
   theme: {
     type: String,
@@ -38,8 +42,10 @@ const musicList = props.musicList;
       v-for="(music, index) in musicList"
       :key="music?.position"
       :music="music.music"
-      :position="music.position"
+      :position="music?.position"
       :index="index"
+      :parentId="parentId"
+      :origin="origin"
       :customStyles="props.customStyles"
       :theme="props.theme"
     />

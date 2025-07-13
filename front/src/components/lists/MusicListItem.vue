@@ -9,6 +9,8 @@ const props = defineProps<{
   music: Music;
   index: number;
   position: number;
+  parentId?: string;
+  origin: string;
 }>();
 
 const isHovered = ref(false);
@@ -67,6 +69,9 @@ watch(
           v-if="isHovered || isCurrentSongPlaying"
           :music="music"
           :isClickedToPlay="isClickedToPlay"
+          :position="position"
+          :parentId="parentId"
+          :origin="origin"
           @update:isClickedToPlay="handlePlayStateChange"
         />
         <span v-else class="text-white font-medium">
