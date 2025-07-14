@@ -32,6 +32,15 @@ class QdrantClient
         }
     }
 
+    public function removeMusicCollection(): void
+    {
+        $response = $this->client->request('DELETE', sprintf('%s/collections/music_catalog', $this->baseUrl));
+
+        if (200 !== $response->getStatusCode()) {
+            throw new \RuntimeException('Failed to delete collection');
+        }
+    }
+
     public function upsertMusic(int $id, array $embedding, array $payload): ResponseInterface
     {
         if (384 !== count($embedding)) {

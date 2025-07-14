@@ -20,9 +20,27 @@ phpcsfixer = docker run --rm -v `pwd`:/code ghcr.io/php-cs-fixer/php-cs-fixer:${
 install: up vendor node-modules jwt uploads-dir database init-qdrant
 .PHONY: install
 
+fixtures:
+	@read -p "This action will delete all existing data, are you shure to continue? (y/n): " choice; \
+	if [ "$$choice" = "y" ]; then \
+		${MAKE} clear-uploads; \
+		${MAKE} uploads-dir; \
+		${MAKE} drop-qdrant; \
+		${MAKE} init-qdrant; \
+		${MAKE} database; \
+		docker compose exec php php bin/console doctrine:fixtures:load --no-interaction; \
+	else \
+		echo "Aborted"; \
+	fi
+.PHONY: fixtures
+
 init-qdrant:
 	@docker compose exec php php bin/console app:init:qdrant
 .PHONY: init-qdrant
+
+drop-qdrant:
+	@docker compose exec php php bin/console app:drop:qdrant
+.PHONY: drop-qdrant
 
 vendor:
 	@docker compose exec php composer install

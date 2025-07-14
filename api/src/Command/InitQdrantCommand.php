@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(name: 'app:init:qdrant', description: 'Initialize Qdrant collections')]
-class InitCommand extends Command
+class InitQdrantCommand extends Command
 {
     public function __construct(
         private readonly QdrantClient $qdrantClient,
