@@ -3,6 +3,7 @@
 namespace App\Api\Serializer\Normalizer;
 
 use App\Entity\Queue;
+use App\Entity\RandomQueue;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -35,13 +36,14 @@ final class QueueNormalizer implements NormalizerInterface, NormalizerAwareInter
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return $data instanceof Queue && false === ($context[self::ALREADY_CALLED] ?? false);
+        return ($data instanceof Queue || $data instanceof RandomQueue) && false === ($context[self::ALREADY_CALLED] ?? false);
     }
 
     public function getSupportedTypes(?string $format): array
     {
         return [
             Queue::class => false,
+            RandomQueue::class => false,
         ];
     }
 }

@@ -2,14 +2,14 @@
 
 namespace App\Event\Event;
 
-use App\Entity\Music;
+use App\Entity\Interface\ListenableEntityInterface;
 use App\Entity\User;
 
 class AddNextToQueueEvent extends AddToQueueEvent
 {
     public function __construct(
         User $user,
-        Music $added,
+        ListenableEntityInterface $added,
         int $currentPosition,
     ) {
         parent::__construct($user, $added, $currentPosition);

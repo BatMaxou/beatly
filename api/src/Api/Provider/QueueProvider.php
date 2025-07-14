@@ -4,9 +4,9 @@ namespace App\Api\Provider;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
-use App\Entity\Queue;
 use App\Entity\User;
 use App\Enum\ApiReusableRoute;
+use App\Service\QueueManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -15,6 +15,7 @@ class QueueProvider implements ProviderInterface
     public function __construct(
         private readonly Security $security,
         private readonly EntityManagerInterface $em,
+        private readonly QueueManager $queueManager,
     ) {
     }
 
@@ -29,14 +30,13 @@ class QueueProvider implements ProviderInterface
             throw new \LogicException('User must be authenticated to create a playlist');
         }
 
-        $queue = $user->getQueue();
-        if (!$queue) {
-            $queue = new Queue();
-            $user->setQueue($queue);
-
-            $this->em->persist($queue);
-            $this->em->flush();
+        $randomQueue = $user->getRandomQueue();
+        if ($randomQueue) {
+            return $randomQueue;
         }
+
+        $this->queueManager->getQueue($user);
+        $this->em->flush();
 
         return $user->getQueue();
     }

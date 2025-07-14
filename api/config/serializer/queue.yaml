@@ -1,4 +1,4 @@
-App\Entity\Queue:
+App\Entity\QueueBase:
   attributes:
     queueItems:
       groups:

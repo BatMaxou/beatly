@@ -7,7 +7,6 @@ use App\Event\Event\AddMultipleNextToQueueEvent;
 use App\Event\Event\AddMultipleToQueueEvent;
 use App\Event\Event\AddNextToQueueEvent;
 use App\Event\Event\AddToQueueEvent;
-use App\Event\Event\ResetQueueEvent;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -41,28 +40,30 @@ class AddToQueueHandler
             return new JsonResponse(['error' => 'No item to add to queue'], Response::HTTP_BAD_REQUEST);
         }
 
-        if ($command->shouldBeNext && null === $command->currentPosition) {
+        $shouldBeNext = $command->shouldBeNext;
+        $currentPosition = $command->currentPosition;
+        if ($shouldBeNext && null === $currentPosition) {
             return new JsonResponse(['error' => 'Current position must be set when adding to queue as next'], Response::HTTP_BAD_REQUEST);
         }
 
-        if (null === $command->music && null === $command->musics) {
-            $this->eventDispatcher->dispatch(new ResetQueueEvent($user));
-        }
-
         $this->eventDispatcher->dispatch(match (true) {
-            null !== $command->music => $command->shouldBeNext
-                ? new AddNextToQueueEvent($user, $command->music, $command->currentPosition)
-                : new AddToQueueEvent($user, $command->music),
-            null !== $command->musics => $command->shouldBeNext
-                ? new AddMultipleNextToQueueEvent($user, $command->musics, $command->currentPosition)
-                : new AddMultipleToQueueEvent($user, $command->musics),
-            null !== $command->playlist => new AddToQueueEvent($user, $command->playlist),
-            null !== $command->album => new AddToQueueEvent($user, $command->album),
+            null !== $command->music => $shouldBeNext
+                ? new AddNextToQueueEvent($user, $command->music, $currentPosition)
+                : new AddToQueueEvent($user, $command->music, $currentPosition),
+            null !== $command->musics => $shouldBeNext
+                ? new AddMultipleNextToQueueEvent($user, $command->musics, $currentPosition)
+                : new AddMultipleToQueueEvent($user, $command->musics, $currentPosition),
+            null !== $command->playlist => $shouldBeNext
+                ? new AddNextToQueueEvent($user, $command->playlist, $currentPosition)
+                : new AddToQueueEvent($user, $command->playlist, $currentPosition),
+            null !== $command->album => $shouldBeNext
+                ? new AddNextToQueueEvent($user, $command->album, $currentPosition)
+                : new AddToQueueEvent($user, $command->album, $currentPosition),
             default => throw new \InvalidArgumentException('No valid item to add to queue'),
         });
 
         return new JsonResponse(
-            $this->serializer->serialize($user->getQueue(), 'json', ['groups' => ['queue:read']]),
+            $this->serializer->serialize($user->getRandomQueue() ?? $user->getQueue(), 'json', ['groups' => ['queue:read']]),
             Response::HTTP_CREATED,
             [],
             true,

@@ -28,7 +28,7 @@ class ListenedSubscriber implements EventSubscriberInterface
     public function onListened(ListenedEvent $event): void
     {
         $listened = $event->listened;
-        $user = $event->user;
+        $user = $event->getUser();
 
         match (true) {
             $listened instanceof Music => $this->handleMusic($listened, $user, $event->isLinked),

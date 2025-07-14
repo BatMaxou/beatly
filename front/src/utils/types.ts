@@ -116,3 +116,7 @@ export type AddToQueue = {
   shouldBeNext?: boolean;
   currentPosition?: number;
 }
+
+export type GenerateRandomQueue = {
+  currentPosition: number;
+}
