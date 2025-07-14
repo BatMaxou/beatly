@@ -35,7 +35,7 @@ onMounted(async () => {
       }
       loading.value = false;
     } catch (error) {
-      console.error('Erreur lors du chargement de la playlist:', error);
+      console.error("Erreur lors du chargement de la playlist:", error);
       loading.value = false;
     }
   }
@@ -45,32 +45,55 @@ onMounted(async () => {
 <template>
   <InAppLayout :loading="loading" padding="p-0">
     <div v-if="playlist">
-      <div :style="{ backgroundImage: playlist.wallpaper ? `url(${ressourceUrl + playlist.wallpaper})` : `url(${defaultWallpaper})` }" class="bg-cover bg-center object-cover relative playlistBackground z-2">
+      <div
+        :style="{
+          backgroundImage: playlist.wallpaper
+            ? `url(${ressourceUrl + playlist.wallpaper})`
+            : `url(${defaultWallpaper})`,
+        }"
+        class="bg-cover bg-center object-cover relative playlistBackground z-2"
+      >
         <div class="relative flex flex-row justify-start items-between gap-4 pt-24 ps-16 mb-6 z-10">
-          <img :src="playlist.cover ? ressourceUrl + playlist.cover : defaultCover" alt="Playlist Cover" class="w-[200px] h-[200px] object-cover" />
+          <img
+            :src="playlist.cover ? ressourceUrl + playlist.cover : defaultCover"
+            alt="Playlist Cover"
+            class="w-[200px] h-[200px] object-cover"
+          />
           <div class="flex flex-col items-start justify-end mb-4">
-              <span class="mb-8">Playlist</span>
-              <p class="text-white text-4xl font-bold">{{ playlist?.title }}</p>
-              <p class="text-md font-bold">
-                <span class="font-bold">{{ playlist['@type'] === "Playlist" ? 'Beatly' : 'Vous' }}</span>
-                <span class="text-lg front-bold "> • </span>
-                <span class="">{{ playlist.musics.length }} titre{{ playlist.musics.length > 1 ? 's' : '' }}</span>
-              </p>
-            </div>
-        </div>
-      </div>      
-      <div v-if="playlist" class="text-white px-10">
-        <div class="space-y-2">
-          <MusicList :musicList="playlist.musics" :origin="`playlist`" :theme="`light`" />
+            <span class="mb-8">Playlist</span>
+            <p class="text-white text-4xl font-bold">{{ playlist?.title }}</p>
+            <p class="text-md font-bold">
+              <span class="font-bold">{{
+                playlist["@type"] === "Playlist" ? "Beatly" : "Vous"
+              }}</span>
+              <span class="text-lg front-bold"> • </span>
+              <span class=""
+                >{{ playlist.musics.length }} titre{{ playlist.musics.length > 1 ? "s" : "" }}</span
+              >
+            </p>
+          </div>
         </div>
       </div>
-      
+      <div v-if="playlist" class="text-white px-10">
+        <div class="space-y-2">
+          <MusicList
+            :musicList="playlist.musics"
+            :origin="`playlist`"
+            :parentId="playlist['@id']"
+            :theme="`light`"
+          />
+        </div>
+      </div>
+
       <div v-else class="text-white">
         <p class="text-lg">Chargement de la playlist...</p>
         <p class="text-gray-400">ID: {{ playlistId }}</p>
       </div>
     </div>
-    <div v-else class="absolute inset-0 flex flex-col justify-center items-center gap-2 text-white text-center">
+    <div
+      v-else
+      class="absolute inset-0 flex flex-col justify-center items-center gap-2 text-white text-center"
+    >
       <p class="text-2xl">Oups...</p>
       <p class="text-lg">Nous ne parvenons pas à trouver cette playlist.</p>
       <LandingButton
@@ -85,7 +108,7 @@ onMounted(async () => {
 
 <style scoped>
 .playlistBackground::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;

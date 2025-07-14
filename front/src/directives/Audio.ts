@@ -1,3 +1,4 @@
+import { usePlayerPreparation } from "@/composables/usePlayerPreparation";
 import { usePlayerStore } from "@/stores/player";
 
 interface ExtendedHTMLAudioElement extends HTMLAudioElement {
@@ -12,6 +13,7 @@ export default {
     }
 
     const playerStore = usePlayerStore();
+    const { playNextSong } = usePlayerPreparation();
     const extendedEl = el as ExtendedHTMLAudioElement;
 
     el.controls = true;
@@ -71,10 +73,15 @@ export default {
       }
     };
 
+    const handleEnded = () => {
+      playNextSong();
+    };
+
     el.addEventListener("loadedmetadata", handleLoadedMetadata);
     el.addEventListener("timeupdate", handleTimeUpdate);
     el.addEventListener("durationchange", handleDurationChange);
     el.addEventListener("canplay", handleCanPlay);
+    el.addEventListener("ended", handleEnded);
 
     extendedEl._audioDirectiveCleanup = () => {
       range?.removeEventListener("mousedown", handleInteractionStart);
@@ -88,6 +95,7 @@ export default {
       el.removeEventListener("timeupdate", handleTimeUpdate);
       el.removeEventListener("durationchange", handleDurationChange);
       el.removeEventListener("canplay", handleCanPlay);
+      el.removeEventListener("ended", handleEnded);
     };
   },
 

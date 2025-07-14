@@ -11,6 +11,7 @@ export enum PlaylistType {
 }
 
 export interface User {
+  id: number;
   name: string;
   email: string;
   roles: Role[];
@@ -19,6 +20,7 @@ export interface User {
 }
 
 export interface Artist extends User {
+  "@id": string;
   musics?: Music[];
   featuredMusics?: Music[];
   albums?: Album[];
@@ -26,18 +28,20 @@ export interface Artist extends User {
 
 export type AlbumMusic = {
   id: number;
-  music: Music | string;
+  music: Music;
   position: number;
   addedAt: string;
 };
 
 export type Album = {
+  "@id": string;
   id: number;
   title: string;
   releaseDate: string;
   musics: AlbumMusic[];
   cover?: string;
   wallpaper?: string;
+  artists: Artist[];
 };
 
 export type Category = {
@@ -49,9 +53,11 @@ export type Category = {
 export type MusicFile = {
   id: number;
   contentUrl: string;
+  position?: number;
 };
 
 export type Music = {
+  "@id": string;
   id: number;
   title: string;
   mainArtist: Artist;
@@ -64,7 +70,7 @@ export type Music = {
 
 export type PlaylistMusic = {
   id: number;
-  music: Music | string;
+  music: Music;
   addedAt: string | null;
 };
 
@@ -75,6 +81,7 @@ export type Playlist = {
   cover?: string;
   wallpaper?: string;
   "@type"?: PlaylistType;
+  "@id": string;
 };
 
 export type Listen = {
@@ -115,8 +122,8 @@ export type AddToQueue = {
   album?: string;
   shouldBeNext?: boolean;
   currentPosition?: number;
-}
+};
 
 export type GenerateRandomQueue = {
   currentPosition: number;
-}
+};

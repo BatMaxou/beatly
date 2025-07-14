@@ -79,7 +79,7 @@ onMounted(() => {
           ref="playerElement"
           v-audio
           class="hidden pointer-events-none"
-          src="https://cdn.freesound.org/previews/815/815526_5674468-lq.mp3"
+          src=""
           controls
           preload="auto"
           @audio-timeupdate="handleAudioTimeUpdate"

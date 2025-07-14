@@ -26,6 +26,7 @@ const artistId = route.params.id as string;
 const albumSlider = ref<HTMLElement | null>(null);
 const showNextButton = ref(false);
 const showPrevButton = ref(false);
+const isClickedToPlay = ref(false);
 
 const handleBack = () => {
   router.go(-1);
@@ -57,6 +58,30 @@ function checkScrollEnd() {
   }
 }
 
+const handlePlayAlbum = (event: Event) => {
+  const target = event.target as HTMLElement;
+  const isButtonPlayClick = target.closest("[data-play]");
+
+  if (!isButtonPlayClick) {
+    if (target.closest("[data-lastAlbum]")) {
+      router.push({ name: "Album", params: { id: lastAlbum.value?.id.toString() } });
+      return;
+    } else if (target.closest("[data-album]")) {
+      const albumElement = target.closest("[data-album]");
+      const albumId = albumElement?.getAttribute("data-album-id");
+      if (albumId) {
+        router.push({ name: "Album", params: { id: albumId } });
+      }
+    }
+  } else {
+    isClickedToPlay.value = true;
+  }
+};
+
+const handlePlayStateChange = (newState: boolean) => {
+  isClickedToPlay.value = newState;
+};
+
 onMounted(async () => {
   if (artistId) {
     loading.value = true;
@@ -66,10 +91,19 @@ onMounted(async () => {
         artist.value = response;
 
         if (response.musics) {
+          // @ts-expect-error Le tableau est modifié pour inclure l'artiste actuel afin de faire fonctionner les informations du player
           bestListenedSongList.value = response.musics
             .sort((a, b) => (b.listeningsNumber || 0) - (a.listeningsNumber || 0))
             .slice(0, 5)
-            .map((music) => ({ music: music }));
+            .map((music) => ({
+              music: {
+                ...music,
+                mainArtist: {
+                  ...music.mainArtist,
+                  name: artist.value?.name,
+                },
+              },
+            }));
         }
 
         if (response.albums) {
@@ -125,20 +159,22 @@ onMounted(async () => {
           <div v-if="lastAlbum" class="flex-shrink-0 xl:w-1/3">
             <h2 class="text-2xl lg:text-3xl font-bold mb-6">Dernière sortie</h2>
             <div class="rounded-lg bg-[#400a52]/90 p-6 lg:p-8">
-              <div class="flex flex-row flex-wrap gap-4">
+              <div class="flex flex-row flex-wrap gap-4" @click="handlePlayAlbum">
                 <div class="flex-shrink-0 xl:self-center">
                   <AlbumPlayableCover
                     :isPlayable="false"
                     :albumCover="lastAlbum.cover ? ressourceUrl + lastAlbum.cover : defaultCover"
-                    :albumName="lastAlbum.title"
-                    :theme="`light`"
-                    class="w-full max-w-[200px] mx-auto sm:mx-0"
+                    :album="lastAlbum"
+                    class="w-full max-w-[200px] mx-auto sm:mx-0 cursor-pointer"
+                    data-lastAlbum
                   />
                 </div>
                 <div class="flex-1 flex flex-row justify-between items-end">
-                  <div class="text-center sm:text-left lg:text-center w-fit">
-                    <p class="text-lg lg:text-xl font-bold mb-2">{{ lastAlbum.title }}</p>
-                    <p class="text-sm text-white/70">
+                  <div class="text-left w-fit" data-lastAlbum>
+                    <p class="text-lg lg:text-xl font-bold mb-2 cursor-pointer">
+                      {{ lastAlbum.title }}
+                    </p>
+                    <p class="text-sm text-white/70 cursor-pointer">
                       {{
                         lastAlbum.releaseDate
                           ? new Date(lastAlbum.releaseDate).toLocaleDateString("fr-FR", {
@@ -154,13 +190,16 @@ onMounted(async () => {
                     class="flex justify-center sm:justify-start lg:justify-center xl:self-start w-fit h-fit"
                   >
                     <div
-                      class="bg-black/50 opacity-90 hover:bg-black/60 hover:opacity-100 transition-all rounded-full p-4 h-fit"
+                      class="bg-black/50 opacity-90 hover:bg-black/60 hover:opacity-100 transition-all rounded-full p-4 h-fit cursor-pointer"
+                      data-play
                     >
                       <UniqPlayButton
                         :musicId="lastAlbum.id"
-                        :isPlaying="false"
+                        origin="album"
+                        :parentId="lastAlbum['@id']"
                         class="w-6 h-6 lg:w-6 lg:h-6"
-                        :theme="`light`"
+                        :isClickedToPlay="isClickedToPlay"
+                        @update:isClickedToPlay="handlePlayStateChange"
                       />
                     </div>
                   </div>
@@ -176,7 +215,7 @@ onMounted(async () => {
               <MusicList
                 :musicList="bestListenedSongList"
                 :origin="`top-titles`"
-                :theme="`light`"
+                :parentId="artist['@id']"
               />
             </div>
           </div>
@@ -193,13 +232,14 @@ onMounted(async () => {
             @scroll="checkScrollEnd"
           >
             <AlbumPlayableCard
-              v-for="album in artist.albums"
+              v-for="(album, index) in artist.albums"
               :key="album.id"
-              :albumCover="album.cover ? ressourceUrl + album.cover : defaultCover"
-              :albumName="album.title"
+              :index="index"
+              :album="album"
               :artistName="artist.name"
               :releaseYear="new Date(album.releaseDate).getFullYear()"
-              :theme="`light`"
+              @click="handlePlayAlbum"
+              data-album
             />
           </div>
           <button

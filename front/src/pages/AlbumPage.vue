@@ -38,7 +38,7 @@ onMounted(async () => {
       }
       loading.value = false;
     } catch (error) {
-      console.error('Erreur lors du chargement de la album:', error);
+      console.error("Erreur lors du chargement de l'album:", error);
       loading.value = false;
     }
   }
@@ -48,33 +48,50 @@ onMounted(async () => {
 <template>
   <InAppLayout :loading="loading" padding="p-0">
     <div v-if="album">
-      <div :style="{ backgroundImage: album.wallpaper ? `url(${ressourceUrl + album.wallpaper})` : `url(${defaultWallpaper})` }" class="bg-cover bg-center object-cover flex flex-row justify-between items-end relative albumBackground mb-6 z-2">
+      <div
+        :style="{
+          backgroundImage: album.wallpaper
+            ? `url(${ressourceUrl + album.wallpaper})`
+            : `url(${defaultWallpaper})`,
+        }"
+        class="bg-cover bg-center object-cover flex flex-row justify-between items-end relative albumBackground mb-6 z-2"
+      >
         <div class="relative flex flex-row justify-start items-between gap-4 pt-24 ps-16 z-10">
-          <img :src="album.cover ? ressourceUrl + album.cover : defaultCover" alt="Album Cover" class="w-[200px] h-[200px] object-cover" />
+          <img
+            :src="album.cover ? ressourceUrl + album.cover : defaultCover"
+            alt="Album Cover"
+            class="w-[200px] h-[200px] object-cover"
+          />
           <div class="flex flex-col items-start justify-end mb-4">
-              <span class="mb-8">Album</span>
-              <p class="text-white text-4xl font-bold">{{ album?.title }}</p>
-              <p class="text-md font-bold">
-                <!-- <span class="font-bold" v-for="artist in album.artists" :key="artist.id">{{ artist.name }}</span> -->
-                <span class="">{{ releaseYear }}</span>
-                <span class="text-lg front-bold "> • </span>
-                <span class="">{{ album.musics.length }} titre{{ album.musics.length > 1 ? 's' : '' }}</span>
-              </p>
-            </div>
+            <span class="mb-8">Album</span>
+            <p class="text-white text-4xl font-bold">{{ album?.title }}</p>
+            <p class="text-md font-bold">
+              <!-- <span class="font-bold" v-for="artist in album.artists" :key="artist.id">{{ artist.name }}</span> -->
+              <span class="">{{ releaseYear }}</span>
+              <span class="text-lg front-bold"> • </span>
+              <span class=""
+                >{{ album.musics.length }} titre{{ album.musics.length > 1 ? "s" : "" }}</span
+              >
+            </p>
+          </div>
         </div>
-        <AlbumMenu
-          :albumId="album.id"
-          position="bottom-right"
-          class="me-16 mb-16 h-full z-10"
-        />
-      </div>      
+        <AlbumMenu :albumId="album.id" position="bottom-right" class="me-16 mb-16 h-full z-10" />
+      </div>
       <div v-if="album" class="text-white px-10">
         <div class="space-y-2">
-          <MusicList :musicList="album.musics" :origin="`album`" :theme="`light`" />
+          <MusicList
+            :musicList="album.musics"
+            :origin="`album`"
+            :parentId="album['@id']"
+            :theme="`light`"
+          />
         </div>
       </div>
     </div>
-    <div v-else class="absolute inset-0 flex flex-col justify-center items-center gap-2 text-white text-center">
+    <div
+      v-else
+      class="absolute inset-0 flex flex-col justify-center items-center gap-2 text-white text-center"
+    >
       <p class="text-2xl">Oups...</p>
       <p class="text-lg">Nous ne parvenons pas à trouver cette album.</p>
       <LandingButton
@@ -89,7 +106,7 @@ onMounted(async () => {
 
 <style scoped>
 .albumBackground::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
