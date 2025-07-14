@@ -6,26 +6,19 @@ import defaultCover from "@/assets/images/default-cover.png";
 import { usePlayerStore } from "@/stores/player";
 import type { Music } from "@/utils/types";
 
-const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
-const playerStore = usePlayerStore();
-const props = defineProps({
-  music: {
-    type: Object as () => Music,
-    required: true,
-  },
-  index: {
-    type: Number,
-    required: true,
-  },
-  theme: {
-    type: String,
-    default: "dark",
-  },
-});
-const isClickedToPlay = ref(false);
-const isCurrentSongPlaying = ref(false);
+const props = defineProps<{
+  music: Music;
+  index: number;
+  position: number;
+  parentId?: string;
+  origin: string;
+}>();
 
 const isHovered = ref(false);
+const isClickedToPlay = ref(false);
+const isCurrentSongPlaying = ref(false);
+const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
+const playerStore = usePlayerStore();
 
 const handleMouseEnter = () => {
   isHovered.value = true;
@@ -52,9 +45,12 @@ const handlePlayStateChange = (newState: boolean) => {
 };
 watch(
   () => playerStore.currentMusic,
-  (newVal: any, oldVal: any) => {
+  (newVal: Music | null, oldVal: Music | null) => {
     if (newVal !== oldVal) {
-      if (props.music.id === newVal.id) {
+      if (
+        props.position === playerStore.position &&
+        (!playerStore.queueParent || props.parentId === playerStore.queueParent)
+      ) {
         isCurrentSongPlaying.value = true;
       } else {
         isCurrentSongPlaying.value = false;
@@ -62,9 +58,6 @@ watch(
     }
   },
 );
-const textColor = computed(() => {
-  return props.theme === "dark" ? "text-black" : "text-white";
-});
 </script>
 
 <template>
@@ -88,13 +81,16 @@ const textColor = computed(() => {
           <MusicPlayButton
             :music="music"
             :isClickedToPlay="isClickedToPlay"
+            :position="position"
+            :parentId="parentId"
+            :origin="origin"
             @update:isClickedToPlay="handlePlayStateChange"
           />
         </div>
       </div>
       <div class="flex flex-col">
-        <span class="font-medium" :class="textColor">{{ music.title }}</span>
-        <p class="font-medium" :class="textColor">
+        <span class="font-medium text-white">{{ music.title }}</span>
+        <p class="font-medium text-white">
           <span v-for="artist in music.artists" :key="artist.id" class="text-white/70 text-sm">
             {{ artist.name }}
           </span>

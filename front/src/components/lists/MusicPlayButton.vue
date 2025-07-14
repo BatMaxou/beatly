@@ -72,8 +72,8 @@ watch(
           });
         }
 
-        if (!playerStore.queueOrigin || origin !== playerStore.queueOrigin) {
-          playerStore.setQueue(await getQueue(origin), origin);
+        if (!playerStore.queueParent || parentId !== playerStore.queueParent) {
+          playerStore.setQueue(await getQueue(origin), parentId);
           playerStore.setQueueFile(await loadQueueFile());
         }
 

@@ -5,7 +5,7 @@ export const usePlayerStore = defineStore("player", {
   state: () => ({
     currentMusic: null as Music | null,
     musicFile: "" as string,
-    position: 1 as number,
+    position: -1 as number,
     volume: 50 as number,
     muted: false as boolean,
     isPlay: false as boolean,
@@ -15,7 +15,7 @@ export const usePlayerStore = defineStore("player", {
     isPlayerInteraction: false as boolean,
     isVolumeInteraction: false as boolean,
     queue: null as Queue | null,
-    queueOrigin: null as string | null,
+    queueParent: null as string | null,
     queueFile: null as Array<{ file: string; musicId: number }> | null,
     nextMusic: null as Music | null,
     nextMusicFile: null as string | null,
@@ -57,7 +57,7 @@ export const usePlayerStore = defineStore("player", {
     },
     setQueue(queue: Queue | null, origin: string) {
       this.queue = queue;
-      this.queueOrigin = origin;
+      this.queueParent = origin;
     },
     setNextMusic(nextMusic: Music | null) {
       this.nextMusic = nextMusic;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref } from "vue";
+import { defineProps } from "vue";
 import MusicListItem from "@/components/lists/MusicListItem.vue";
 import PlaylistMusicListItem from "@/components/lists/PlaylistMusicListItem.vue";
 import type { PlaylistMusic, AlbumMusic } from "@/utils/types";
@@ -60,6 +60,9 @@ const musicList = props.musicList;
       :key="music.id"
       :music="music.music"
       :index="index"
+      :position="index + 1"
+      :parentId="parentId"
+      :origin="origin"
       :customStyles="props.customStyles"
       :theme="props.theme"
     />

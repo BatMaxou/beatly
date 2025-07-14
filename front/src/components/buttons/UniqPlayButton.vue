@@ -65,7 +65,6 @@ watch(
       }
       resetPlayState();
     }
-    console.log("je suis la");
   },
   { immediate: true },
 );

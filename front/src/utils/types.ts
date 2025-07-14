@@ -66,7 +66,7 @@ export type Music = {
 
 export type PlaylistMusic = {
   id: number;
-  music: Music | string;
+  music: Music;
   addedAt: string | null;
 };
 
