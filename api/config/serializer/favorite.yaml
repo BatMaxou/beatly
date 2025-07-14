@@ -1,0 +1,23 @@
+App\Api\Model\Favorite:
+  attributes:
+    musics:
+      groups:
+        - 'favorite:all:read'
+        - 'favorite:musics:read'
+    playlists:
+      groups:
+        - 'favorite:all:read'
+        - 'favorite:playlists:read'
+    albums:
+      groups:
+        - 'favorite:all:read'
+        - 'favorite:albums:read'
+
+App\Entity\Favorite:
+  attributes:
+    target:
+      groups:
+        - 'favorite:read'
+    addedAt:
+      groups:
+        - 'favorite:read'

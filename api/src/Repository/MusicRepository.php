@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Favorite;
+use App\Entity\FavoriteMusic;
 use App\Entity\Music;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,7 +20,7 @@ class MusicRepository extends ServiceEntityRepository
     public function findMostLiked(int $limit = 10): array
     {
         return $this->createQueryBuilder('music')
-            ->innerJoin(Favorite::class, 'favorite', 'WITH', 'favorite.music = music')
+            ->innerJoin(FavoriteMusic::class, 'favorite', 'WITH', 'favorite.music = music')
             ->groupBy('music.id')
             ->orderBy('COUNT(favorite.id)', 'DESC')
             ->setMaxResults($limit)

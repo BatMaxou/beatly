@@ -2,11 +2,25 @@
 
 namespace App\Entity;
 
+use App\Entity\Interface\LikableEntityInterface;
 use App\Repository\FavoriteRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
+use Doctrine\ORM\Mapping\InheritanceType;
 
+/**
+ * @template T of FavoriteMusic|FavoritePlaylist|FavoriteAlbum
+ */
 #[ORM\Entity(repositoryClass: FavoriteRepository::class)]
-class Favorite
+#[InheritanceType('JOINED')]
+#[DiscriminatorColumn(name: 'discr', type: 'string')]
+#[DiscriminatorMap([
+    'music' => FavoriteMusic::class,
+    'playlist' => FavoritePlaylist::class,
+    'album' => FavoriteAlbum::class,
+])]
+abstract class Favorite
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,9 +31,13 @@ class Favorite
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Music $music = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $addedAt = null;
+
+    public function __construct()
+    {
+        $this->addedAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -38,15 +56,18 @@ class Favorite
         return $this;
     }
 
-    public function getMusic(): ?Music
+    public function getAddedAt(): ?\DateTimeImmutable
     {
-        return $this->music;
+        return $this->addedAt;
     }
 
-    public function setMusic(?Music $music): static
-    {
-        $this->music = $music;
+    /**
+     * @return T|null
+     */
+    abstract public function getTarget(): ?LikableEntityInterface;
 
-        return $this;
-    }
+    /**
+     * @param T $target
+     */
+    abstract public function setTarget(LikableEntityInterface $target): static;
 }

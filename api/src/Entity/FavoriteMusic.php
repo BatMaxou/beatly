@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Entity\Interface\ListenableEntityInterface;
-use App\Repository\LastMusicListenedRepository;
+use App\Entity\Interface\LikableEntityInterface;
+use App\Repository\FavoriteMusicRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @extends LastListened<Music>
+ * @extends Favorite<Music>
  */
-#[ORM\Entity(repositoryClass: LastMusicListenedRepository::class)]
-class LastMusicListened extends LastListened
+#[ORM\Entity(repositoryClass: FavoriteMusicRepository::class)]
+class FavoriteMusic extends Favorite
 {
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -24,7 +24,7 @@ class LastMusicListened extends LastListened
     /**
      * @param Music|null $music
      */
-    public function setTarget(?ListenableEntityInterface $music): static
+    public function setTarget(?LikableEntityInterface $music): static
     {
         $this->music = $music;
 
