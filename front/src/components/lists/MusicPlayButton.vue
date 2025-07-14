@@ -2,7 +2,7 @@
 import { defineProps, defineEmits, watch } from "vue";
 import playLight from "@/assets/icons/play-light.svg";
 import pauseLight from "@/assets/icons/pause-light.svg";
-import type { Album, Music } from "@/utils/types";
+import type { Music } from "@/utils/types";
 import { usePlayerStore } from "@/stores/player";
 import { useApiClient } from "@/stores/api-client";
 import { streamToAudioUrl } from "@/utils/stream";
@@ -15,7 +15,7 @@ const { showError } = useToast();
 const { storeAdjacentMusicInQueue, loadQueueFile } = usePlayerPreparation();
 const emit = defineEmits(["update:isClickedToPlay"]);
 
-const { music, position, origin, isClickedToPlay, parentId } = defineProps({
+const { music, position, origin, isClickedToPlay, parentId, musics } = defineProps({
   music: {
     type: Object as () => Music,
     required: true,
@@ -36,7 +36,12 @@ const { music, position, origin, isClickedToPlay, parentId } = defineProps({
     type: Boolean,
     default: false,
   },
+  musics: {
+    type: Array as () => { music: Music }[] | null,
+    default: null,
+  },
 });
+console.log(music);
 
 const resetPlayState = () => {
   emit("update:isClickedToPlay", false);
@@ -47,10 +52,13 @@ const addQueue = async (origin: string) => {
     return await apiClient.queue.add({ album: parentId, currentPosition: position });
   } else if (origin === "playlist") {
     return await apiClient.queue.add({ playlist: parentId, currentPosition: position });
+  } else if (origin === "top-titles" && musics) {
+    const musicIds = musics
+      .map((music) => music.music["@id"])
+      .filter((id) => id !== undefined && id !== null);
+
+    return apiClient.queue.add({ musics: musicIds, currentPosition: position });
   }
-  // else if (origin === "top-titles") {
-  //   return apiClient.queue.add({ topTitles: true, currentPosition: position });
-  // }
   return Promise.reject(new Error("Invalid origin"));
 };
 
@@ -73,6 +81,7 @@ watch(
         }
 
         if (!playerStore.queueParent || parentId !== playerStore.queueParent) {
+          playerStore.clearQueue();
           playerStore.setQueue(await addQueue(origin), parentId);
           playerStore.setQueueFile(await loadQueueFile());
         }

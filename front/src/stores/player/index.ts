@@ -1,5 +1,6 @@
 import type { Music, Queue } from "@/utils/types";
 import { defineStore } from "pinia";
+import { useApiClient } from "../api-client";
 
 export const usePlayerStore = defineStore("player", {
   state: () => ({
@@ -115,8 +116,11 @@ export const usePlayerStore = defineStore("player", {
         this.audioPlayer.currentTime = number;
       }
     },
-    clearQueue() {
+    async clearQueue() {
+      const { apiClient } = useApiClient();
+      await apiClient.queue.reset();
       this.queue = null;
+      this.queueParent = null;
     },
   },
 });

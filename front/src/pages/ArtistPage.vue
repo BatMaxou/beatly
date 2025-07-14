@@ -91,10 +91,19 @@ onMounted(async () => {
         artist.value = response;
 
         if (response.musics) {
+          // @ts-ignore
           bestListenedSongList.value = response.musics
             .sort((a, b) => (b.listeningsNumber || 0) - (a.listeningsNumber || 0))
             .slice(0, 5)
-            .map((music) => ({ music: music }));
+            .map((music) => ({
+              music: {
+                ...music,
+                mainArtist: {
+                  ...music.mainArtist,
+                  name: artist.value?.name,
+                },
+              },
+            }));
         }
 
         if (response.albums) {
@@ -155,8 +164,7 @@ onMounted(async () => {
                   <AlbumPlayableCover
                     :isPlayable="false"
                     :albumCover="lastAlbum.cover ? ressourceUrl + lastAlbum.cover : defaultCover"
-                    :albumName="lastAlbum.title"
-                    :theme="`light`"
+                    :album="lastAlbum"
                     class="w-full max-w-[200px] mx-auto sm:mx-0 cursor-pointer"
                     data-lastAlbum
                   />
@@ -207,7 +215,7 @@ onMounted(async () => {
               <MusicList
                 :musicList="bestListenedSongList"
                 :origin="`top-titles`"
-                :theme="`light`"
+                :parentId="artist['@id']"
               />
             </div>
           </div>

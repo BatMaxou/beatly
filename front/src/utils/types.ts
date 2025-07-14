@@ -20,6 +20,7 @@ export interface User {
 }
 
 export interface Artist extends User {
+  "@id": string;
   musics?: Music[];
   featuredMusics?: Music[];
   albums?: Album[];
@@ -27,7 +28,7 @@ export interface Artist extends User {
 
 export type AlbumMusic = {
   id: number;
-  music: Music | string;
+  music: Music;
   position: number;
   addedAt: string;
 };
@@ -56,6 +57,7 @@ export type MusicFile = {
 };
 
 export type Music = {
+  "@id": string;
   id: number;
   title: string;
   mainArtist: Artist;

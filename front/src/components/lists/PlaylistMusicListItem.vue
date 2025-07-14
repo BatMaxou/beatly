@@ -12,6 +12,7 @@ const props = defineProps<{
   position: number;
   parentId?: string;
   origin: string;
+  musics: { music: Music }[] | null;
 }>();
 
 const isHovered = ref(false);
@@ -92,6 +93,7 @@ onMounted(() => {
             :isClickedToPlay="isClickedToPlay"
             :position="position"
             :parentId="parentId"
+            :musics="origin === 'top-titles' ? musics : null"
             :origin="origin"
             @update:isClickedToPlay="handlePlayStateChange"
           />
@@ -100,7 +102,12 @@ onMounted(() => {
       <div class="flex flex-col">
         <span class="font-medium text-white">{{ music.title }}</span>
         <p class="font-medium text-white">
-          <span v-for="artist in music.artists" :key="artist.id" class="text-white/70 text-sm">
+          <span
+            v-if="origin === 'playlist'"
+            v-for="artist in music.artists"
+            :key="artist.id"
+            class="text-white/70 text-sm"
+          >
             {{ artist.name }}
           </span>
         </p>

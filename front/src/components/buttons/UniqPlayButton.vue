@@ -47,6 +47,7 @@ watch(
   async (newVal) => {
     if (newVal && parentId !== playerStore.queueParent) {
       if (parentId) {
+        playerStore.clearQueue();
         const queue = await addQueue(origin);
         if (queue) {
           playerStore.setQueue(queue, parentId);
@@ -71,8 +72,6 @@ watch(
               }
             });
           }
-        }
-        if (!playerStore.queueParent || parentId !== playerStore.queueParent) {
         }
 
         storeAdjacentMusicInQueue();
