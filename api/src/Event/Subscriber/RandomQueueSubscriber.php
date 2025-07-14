@@ -46,7 +46,7 @@ class RandomQueueSubscriber implements EventSubscriberInterface
         }
 
         $queue = $this->queueManager->getQueue($user);
-        $this->queueManager->randomizeQueueAfterPosition($queue, $currentPosition);
+        $this->queueManager->randomizeQueue($queue, $currentPosition);
     }
 
     public function onAdd(AddToQueueEvent $event): void

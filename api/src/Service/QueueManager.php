@@ -175,7 +175,7 @@ class QueueManager
         );
     }
 
-    public function randomizeQueueAfterPosition(Queue $queue, int $currentPosition): void
+    public function randomizeQueue(Queue $queue, int $currentPosition): void
     {
         $toAdd = [];
         $randomQueue = new RandomQueue();
@@ -186,7 +186,7 @@ class QueueManager
                     ->setMusic($item->getMusic())
                     ->setPosition(1)
                 );
-            } elseif ($item->getPosition() > $currentPosition) {
+            } else {
                 $toAdd[] = $item->getMusic();
             }
         }
