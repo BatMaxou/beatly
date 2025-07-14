@@ -149,6 +149,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Queue $queue = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?RandomQueue $randomQueue = null;
+
     public function __construct()
     {
         $this->addRole(RoleEnum::USER);
@@ -381,6 +384,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->queue = $queue;
+
+        return $this;
+    }
+
+    public function getRandomQueue(): ?RandomQueue
+    {
+        return $this->randomQueue;
+    }
+
+    public function setRandomQueue(RandomQueue $randomQueue): static
+    {
+        // set the owning side of the relation if necessary
+        if ($randomQueue->getUser() !== $this) {
+            $randomQueue->setUser($this);
+        }
+
+        $this->randomQueue = $randomQueue;
 
         return $this;
     }

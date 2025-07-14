@@ -8,7 +8,7 @@ use App\Entity\User;
 class ListenedEvent extends AbstractUserAwareEvent
 {
     public function __construct(
-        public User $user,
+        User $user,
         public ListenableEntityInterface $listened,
         public bool $isLinked = false,
     ) {

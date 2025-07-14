@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\QueueRepository;
+use App\Repository\RandomQueueRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: QueueRepository::class)]
-class Queue extends QueueBase
+#[ORM\Entity(repositoryClass: RandomQueueRepository::class)]
+class RandomQueue extends QueueBase
 {
-    #[ORM\OneToOne(inversedBy: 'queue')]
+    #[ORM\OneToOne(inversedBy: 'randomQueue')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 

@@ -22,7 +22,7 @@ class QueueItem
 
     #[ORM\ManyToOne(inversedBy: 'queueItems')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Queue $queue = null;
+    private ?QueueBase $queue = null;
 
     public function getId(): ?int
     {
@@ -53,12 +53,12 @@ class QueueItem
         return $this;
     }
 
-    public function getQueue(): ?Queue
+    public function getQueue(): ?QueueBase
     {
         return $this->queue;
     }
 
-    public function setQueue(?Queue $queue): static
+    public function setQueue(?QueueBase $queue): static
     {
         $this->queue = $queue;
 
