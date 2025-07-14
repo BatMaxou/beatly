@@ -44,6 +44,12 @@ jwt:
 	@docker compose exec php php bin/console lexik:jwt:generate-keypair
 .PHONY: jwt
 
+database:
+	@docker compose exec php php bin/console doctrine:database:drop --if-exists --force
+	@docker compose exec php php bin/console doctrine:database:create --if-not-exists
+	@docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
+.PHONY: database
+
 uploads-dir:
 	@mkdir -p ./api/private/uploads/musics
 	@mkdir -p ./api/public/uploads/musics/covers

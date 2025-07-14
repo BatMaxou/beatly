@@ -1,7 +1,10 @@
-import type { AddToQueue, Queue as QueueType } from "@/utils/types";
+import type { AddToQueue, GenerateRandomQueue, Queue as QueueType } from "@/utils/types";
 import type { ApiClient } from "../model";
 
-const ApiRessourcePath = '/queue';
+enum ApiRessourcePath {
+  QUEUE = '/queue',
+  RANDOM = '/queue/random',
+}
 
 export default class Queue {
   apiClient: ApiClient;
@@ -11,15 +14,24 @@ export default class Queue {
   }
 
   async get(): Promise<QueueType> {
-    return this.apiClient.get<QueueType>(ApiRessourcePath);
+    return this.apiClient.get<QueueType>(ApiRessourcePath.QUEUE);
   }
 
   async add(data: AddToQueue): Promise<QueueType> {
-    return this.apiClient.post<QueueType>(`${ApiRessourcePath}/add`, data);
+    return this.apiClient.post<QueueType>(`${ApiRessourcePath.QUEUE}/add`, data, { Accept: 'application/ld+json' });
   }
 
   async reset(): Promise<boolean> {
-    return this.apiClient.post<Response>(`${ApiRessourcePath}/reset`, {})
+    return this.apiClient.post<Response>(`${ApiRessourcePath.QUEUE}/reset`, {}, {}, true)
+      .then(response => response.status === 204);
+  }
+
+  async generateRandom(data: GenerateRandomQueue): Promise<QueueType> {
+    return this.apiClient.post<QueueType>(`${ApiRessourcePath.RANDOM}/generate`, data, { Accept: 'application/ld+json' });
+  }
+
+  async clearRandom(): Promise<boolean> {
+    return this.apiClient.post<Response>(`${ApiRessourcePath.RANDOM}/clear`, {}, {}, true)
       .then(response => response.status === 204);
   }
 }
