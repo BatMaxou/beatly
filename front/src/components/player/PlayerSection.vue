@@ -84,7 +84,7 @@ const rangeBackground = computed(() => {
           }}</span>
         </div>
       </div>
-      <div class="justify-self-end">
+      <div class="justify-self-end flex items-center gap-3">
         <PlayerModificators />
       </div>
     </div>

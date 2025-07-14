@@ -1,7 +1,7 @@
 import { useApiClient } from "@/stores/api-client";
 import { usePlayerStore } from "@/stores/player";
 import { streamToAudioUrl } from "@/utils/stream";
-import type { Music } from "@/utils/types";
+import type { Music, Queue } from "@/utils/types";
 
 export function usePlayerPreparation() {
   const playerStore = usePlayerStore();
@@ -12,16 +12,67 @@ export function usePlayerPreparation() {
    * Execution de storeAdjacentMusicInQueue pour définir les titres précédents et suivants.
    *
    */
+  const loadQueue = async (
+    origin: string,
+    parentId: string,
+    position: number,
+    musics?: { music: Music }[] | null,
+  ) => {
+    if (playerStore.queue) {
+      playerStore.clearQueue();
+    }
+    let queue: Queue | null = null;
+    if (origin === "album") {
+      queue = await apiClient.queue.add({ album: parentId, currentPosition: position });
+    } else if (origin === "playlist") {
+      queue = await apiClient.queue.add({ playlist: parentId, currentPosition: position });
+    } else if (origin === "top-titles" && musics) {
+      const musicIds = musics
+        .map((music) => music.music["@id"])
+        .filter((id) => id !== undefined && id !== null);
+      queue = await apiClient.queue.add({ musics: musicIds, currentPosition: position });
+    }
+
+    if (queue) {
+      playerStore.setQueue(queue, parentId);
+    }
+  };
+
+  /**
+   * Génération d'une randomQueue à partir de la queue actuelle
+   * si elle est présente
+   */
+  const loadRandomQueue = async (position?: number) => {
+    if (playerStore.queue) {
+      if (playerStore.randomQueue) {
+        await playerStore.clearRandomQueue();
+      }
+      const randomQueue = await apiClient.queue.generateRandom({
+        currentPosition: position || playerStore.position,
+      });
+      if (randomQueue) {
+        playerStore.setRandomQueue(randomQueue);
+        playerStore.setPosition(1);
+        storeAdjacentMusicInQueue();
+      }
+    }
+  };
 
   /**
    * Définit les titres précédents et suivants dans le store du player
+   * en fonction de la queue ou randomQueue
    */
   const storeAdjacentMusicInQueue = async () => {
     let previousMusic: Music | null = null;
     let nextMusic = null;
     if (!playerStore.queue) return;
 
-    const queueItems = Object.values(playerStore.queue.queueItems);
+    const queueItems = Object.values(
+      playerStore.isRandomQueue && playerStore.randomQueue
+        ? playerStore.randomQueue.queueItems
+        : playerStore.queue.queueItems,
+    );
+
     if (queueItems.length === 0) return;
 
     const previousInQueue = queueItems.find((item) => item.position === playerStore.position - 1);
@@ -186,6 +237,8 @@ export function usePlayerPreparation() {
 
   return {
     // Fonctions
+    loadQueue,
+    loadRandomQueue,
     storeAdjacentMusicInQueue,
     loadQueueFile,
     playNextSong,

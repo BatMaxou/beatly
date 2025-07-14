@@ -12,7 +12,8 @@ import { usePlayerPreparation } from "@/composables/usePlayerPreparation";
 const playerStore = usePlayerStore();
 const { apiClient } = useApiClient();
 const { showError } = useToast();
-const { storeAdjacentMusicInQueue, loadQueueFile } = usePlayerPreparation();
+const { storeAdjacentMusicInQueue, loadQueueFile, loadQueue, loadRandomQueue } =
+  usePlayerPreparation();
 const emit = defineEmits(["update:isClickedToPlay"]);
 
 const { music, position, origin, isClickedToPlay, parentId, musics } = defineProps({
@@ -46,21 +47,6 @@ const resetPlayState = () => {
   emit("update:isClickedToPlay", false);
 };
 
-const addQueue = async (origin: string) => {
-  if (origin === "album") {
-    return await apiClient.queue.add({ album: parentId, currentPosition: position });
-  } else if (origin === "playlist") {
-    return await apiClient.queue.add({ playlist: parentId, currentPosition: position });
-  } else if (origin === "top-titles" && musics) {
-    const musicIds = musics
-      .map((music) => music.music["@id"])
-      .filter((id) => id !== undefined && id !== null);
-
-    return apiClient.queue.add({ musics: musicIds, currentPosition: position });
-  }
-  return Promise.reject(new Error("Invalid origin"));
-};
-
 watch(
   () => isClickedToPlay,
   async (newVal) => {
@@ -69,23 +55,24 @@ watch(
       if (music.id) {
         const queueFile = playerStore.queueFile?.find((item) => item.musicId === music.id);
         if (queueFile) {
-          playerStore.setListen(music, queueFile.file, position);
+          await playerStore.setListen(music, queueFile.file, position);
         } else {
-          apiClient.music.getFile(music.id).then(async (response) => {
+          await apiClient.music.getFile(music.id).then(async (response) => {
             if (response) {
-              playerStore.setListen(music, await streamToAudioUrl(response), position);
+              await playerStore.setListen(music, await streamToAudioUrl(response), position);
             } else {
               showError("Ce titre n'est pas disponible");
             }
           });
         }
 
-        if (!playerStore.queueParent || parentId !== playerStore.queueParent) {
-          if (playerStore.queue) {
-            playerStore.clearQueue();
+        if (origin !== "queue") {
+          if (!playerStore.queueParent || parentId !== playerStore.queueParent) {
+            await loadQueue(origin, parentId, position, musics);
+            await loadQueueFile();
+          } else if (playerStore.isRandomQueue) {
+            await loadRandomQueue(position);
           }
-          playerStore.setQueue(await addQueue(origin), parentId);
-          playerStore.setQueueFile(await loadQueueFile());
         }
 
         storeAdjacentMusicInQueue();
