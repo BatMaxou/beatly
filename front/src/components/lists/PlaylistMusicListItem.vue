@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, computed, watch } from "vue";
+import { defineProps, ref, watch, onMounted } from "vue";
 import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
 import PlaylistTitleMenu from "../menus/PlaylistTitleMenu.vue";
 import defaultCover from "@/assets/images/default-cover.png";
@@ -43,21 +43,30 @@ const handlePlaySong = (event: Event) => {
 const handlePlayStateChange = (newState: boolean) => {
   isClickedToPlay.value = newState;
 };
+
+const setIsCurrentSongPlaying = (newMusic: Music | null) => {
+  if (
+    props.position === playerStore.position &&
+    (!playerStore.queueParent || props.parentId === playerStore.queueParent)
+  ) {
+    isCurrentSongPlaying.value = true;
+  } else {
+    isCurrentSongPlaying.value = false;
+  }
+};
+
 watch(
   () => playerStore.currentMusic,
   (newVal: Music | null, oldVal: Music | null) => {
     if (newVal !== oldVal) {
-      if (
-        props.position === playerStore.position &&
-        (!playerStore.queueParent || props.parentId === playerStore.queueParent)
-      ) {
-        isCurrentSongPlaying.value = true;
-      } else {
-        isCurrentSongPlaying.value = false;
-      }
+      setIsCurrentSongPlaying(newVal);
     }
   },
 );
+
+onMounted(() => {
+  setIsCurrentSongPlaying(playerStore.currentMusic);
+});
 </script>
 
 <template>

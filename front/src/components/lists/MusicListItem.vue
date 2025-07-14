@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, watch } from "vue";
+import { defineProps, onMounted, ref, watch } from "vue";
 import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
 import type { Music } from "@/utils/types";
 import AlbumTitleMenu from "../menus/AlbumTitleMenu.vue";
@@ -12,7 +12,6 @@ const props = defineProps<{
   parentId?: string;
   origin: string;
 }>();
-
 const isHovered = ref(false);
 const isClickedToPlay = ref(false);
 const isCurrentSongPlaying = ref(false);
@@ -41,19 +40,32 @@ const handlePlaySong = (event: Event) => {
 const handlePlayStateChange = (newState: boolean) => {
   isClickedToPlay.value = newState;
 };
+
+const setIsCurrentSongPlaying = (newMusic: Music | null) => {
+  if (
+    newMusic &&
+    props.music &&
+    props.music.id === newMusic.id &&
+    (!playerStore.queueParent || props.parentId === playerStore.queueParent)
+  ) {
+    isCurrentSongPlaying.value = true;
+  } else {
+    isCurrentSongPlaying.value = false;
+  }
+};
+
 watch(
   () => playerStore.currentMusic,
-  (newVal: any, oldVal: any) => {
+  (newVal: Music | null, oldVal: Music | null) => {
     if (newVal !== oldVal) {
-      if (props.music.id === newVal.id) {
-        isCurrentSongPlaying.value = true;
-      } else {
-        isCurrentSongPlaying.value = false;
-      }
+      setIsCurrentSongPlaying(newVal);
     }
   },
-  { immediate: true },
 );
+
+onMounted(() => {
+  setIsCurrentSongPlaying(playerStore.currentMusic);
+});
 </script>
 
 <template>

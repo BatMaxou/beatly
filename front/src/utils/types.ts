@@ -33,12 +33,14 @@ export type AlbumMusic = {
 };
 
 export type Album = {
+  "@id": string;
   id: number;
   title: string;
   releaseDate: string;
   musics: AlbumMusic[];
   cover?: string;
   wallpaper?: string;
+  artists: Artist[];
 };
 
 export type Category = {
@@ -77,6 +79,7 @@ export type Playlist = {
   cover?: string;
   wallpaper?: string;
   "@type"?: PlaylistType;
+  "@id": string;
 };
 
 export type Listen = {

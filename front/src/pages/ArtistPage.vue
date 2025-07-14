@@ -227,11 +227,9 @@ onMounted(async () => {
               v-for="(album, index) in artist.albums"
               :key="album.id"
               :index="index"
-              :albumCover="album.cover ? ressourceUrl + album.cover : defaultCover"
-              :albumName="album.title"
+              :album="album"
               :artistName="artist.name"
               :releaseYear="new Date(album.releaseDate).getFullYear()"
-              :theme="`light`"
               @click="handlePlayAlbum"
               data-album
             />
