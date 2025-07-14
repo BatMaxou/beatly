@@ -31,7 +31,7 @@ if (authStore.loginSuccess) {
 <template>
   <div class="relative min-h-screen text-white">
     <div
-      class="absolute inset-0 z-10"
+      class="inset-0 z-10 fixed"
       style="background: linear-gradient(to top, #5523bf, #b00d72); opacity: 1"
     ></div>
 
@@ -41,7 +41,7 @@ if (authStore.loginSuccess) {
       <SideBar class="fixed left-0 top-0 min-w-[250px] w-full max-w-[250px] z-20" />
 
       <!-- Emplacement du contenu de la page -->
-      <div :class="'ms-[250px] z-20 w-full overflow-hidden relative ' + padding">
+      <div :class="'ms-[250px] z-20 w-full overflow-x-hidden relative ' + padding">
         <div v-if="loading" class="absolute inset-0 flex flex-col items-center justify-center">
           <img :src="loadingIcon" alt="Chargement" class="h-12 w-12 animate-spin mb-4" />
         </div>
