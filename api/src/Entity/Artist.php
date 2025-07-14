@@ -5,11 +5,14 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use App\Entity\Interface\EmbeddableEntityInterface;
+use App\Enum\EmbeddingEnum;
 use App\Enum\RoleEnum;
 use App\Repository\ArtistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ArtistRepository::class)]
 #[ApiResource(
@@ -24,7 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
         ),
     ]
 )]
-class Artist extends User
+class Artist extends User implements EmbeddableEntityInterface
 {
     /**
      * @var Collection<int, Music>
@@ -44,6 +47,9 @@ class Artist extends User
     #[ORM\OneToMany(targetEntity: Music::class, mappedBy: 'mainArtist', orphanRemoval: true)]
     private Collection $musics;
 
+    #[ORM\Column]
+    private string $uuid;
+
     public function __construct()
     {
         parent::__construct();
@@ -51,6 +57,12 @@ class Artist extends User
         $this->featuredMusics = new ArrayCollection();
         $this->albums = new ArrayCollection();
         $this->musics = new ArrayCollection();
+        $this->uuid = Uuid::v4();
+    }
+
+    public static function getClassIdentifier(): string
+    {
+        return 'artist';
     }
 
     /**
@@ -138,5 +150,25 @@ class Artist extends User
         }
 
         return $this;
+    }
+
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    public function prepareForEmbedding(EmbeddingEnum $type): string
+    {
+        return match ($type) {
+            EmbeddingEnum::SEARCH => \sprintf('%s - %s', $this->getClassIdentifier(), $this->getName() ?? ''),
+            default => throw new \InvalidArgumentException(sprintf('Unsupported embedding type: %s', $type->value)),
+        };
+    }
+
+    public function supportEmbedding(): array
+    {
+        return [
+            EmbeddingEnum::SEARCH,
+        ];
     }
 }

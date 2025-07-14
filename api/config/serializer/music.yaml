@@ -8,6 +8,7 @@ App\Entity\Music:
         - "album:read"
         - "recommendation:read"
         - "queue:read"
+        - "search:read"
     title:
       groups:
         - "music:read"
@@ -19,6 +20,7 @@ App\Entity\Music:
         - "artist:read"
         - "recommendation:read"
         - "queue:read"
+        - "search:read"
     coverName:
       groups:
         - "music:read"
@@ -27,6 +29,7 @@ App\Entity\Music:
         - "artist:read"
         - "recommendation:read"
         - "queue:read"
+        - "search:read"
     cover:
       groups:
         - "music:write"
@@ -54,6 +57,7 @@ App\Entity\Music:
         - "playlist:read"
         - "recommendation:read"
         - "queue:read"
+        - "search:read"
     artists:
       groups:
         - "music:read"
@@ -61,7 +65,6 @@ App\Entity\Music:
         - "playlist:read"
         - "recommendation:read"
         - "queue:read"
-
     albums:
       groups:
         - "music:read"
@@ -74,3 +77,4 @@ App\Entity\Music:
         - "music:update"
         - "album:read"
         - "artist:read"
+        - "search:read"

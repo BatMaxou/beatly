@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Enum\EmbeddingEnum;
 use App\Service\Client\QdrantClient;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -19,8 +20,10 @@ class DropQdrantCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->qdrantClient->removeMusicCollection();
-        $output->writeln('<info>Qdrant music collection removed</info>');
+        $this->qdrantClient->removeCollection(EmbeddingEnum::RECOMMENDATION);
+        $this->qdrantClient->removeCollection(EmbeddingEnum::SEARCH);
+
+        $output->writeln('<info>Qdrant collections removed</info>');
 
         return Command::SUCCESS;
     }

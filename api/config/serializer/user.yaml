@@ -11,6 +11,7 @@ App\Entity\User:
         - 'playlist:read'
         - 'recommendation:read'
         - 'queue:read'
+        - 'search:read'
     name:
       groups:
         - 'user:read'
@@ -23,6 +24,7 @@ App\Entity\User:
         - 'playlist:read'
         - 'recommendation:read'
         - 'queue:read'
+        - 'search:read'
     email:
       groups:
         - 'user:read'
@@ -39,6 +41,7 @@ App\Entity\User:
         - 'artist:collection:read'
         - 'album:read'
         - 'queue:read'
+        - 'search:read'
     wallpaperName:
       groups:
         - 'user:read'

@@ -26,7 +26,7 @@ class AlbumCreationProcessor implements ProcessorInterface
             throw new \InvalidArgumentException(\sprintf('Data must be an instance of %s', Album::class));
         }
 
-        if (!ApiReusableRoute::CREATE_ALBUM->value === $operation->getName()) {
+        if (ApiReusableRoute::CREATE_ALBUM->value !== $operation->getName()) {
             throw new \LogicException(sprintf('Operation "%s" is not supported by %s', $operation->getName(), self::class));
         }
 

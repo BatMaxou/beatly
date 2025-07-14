@@ -7,6 +7,7 @@ import Playlist from "./ressources/playlist";
 import Category from "./ressources/category";import Dashboard from "./ressources/dashboard";
 import Listen from "./ressources/listen";
 import Queue from "./ressources/queue";
+import Search from "./ressources/search";
 import { eraseCookie, getCookie, setCookie } from "@/utils/cookies";
 import { apiBaseUrl } from "@/utils/tools";
 import type { User } from "@/utils/types";
@@ -32,6 +33,7 @@ export class ApiClient {
   dashboard: Dashboard;
   listen: Listen;
   queue: Queue;
+  search: Search;
   token: string | null;
 
   constructor() {
@@ -46,6 +48,7 @@ export class ApiClient {
     this.dashboard = new Dashboard(this);
     this.listen = new Listen(this);
     this.queue = new Queue(this);
+    this.search = new Search(this);
     this.token = getCookie("token");
   }
 

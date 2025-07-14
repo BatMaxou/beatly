@@ -80,7 +80,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         }
     }
 
-    protected function createUser(?string $email = null, ?string $name = null): User
+    private function createUser(?string $email = null, ?string $name = null): User
     {
         return (new User())
             ->setEmail($email ?? $this->faker->email())
@@ -131,6 +131,26 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         return $playlist;
     }
 
+    protected function createCover(): string
+    {
+        $name = sprintf('cover_%s.jpg', $this->faker->unique()->slug(3));
+        $rootDir = sprintf('%s/../..', __DIR__);
+
+        copy(sprintf('%s/300x300.jpg', __DIR__), sprintf('%s%s/playlists/covers/%s', $rootDir, $this->ssrPublicUploadsPath, $name));
+
+        return $name;
+    }
+
+    protected function createWallpaper(): string
+    {
+        $name = sprintf('wallpaper_%s.jpg', $this->faker->unique()->slug(3));
+        $rootDir = sprintf('%s/../..', __DIR__);
+
+        copy(sprintf('%s/1200x400.jpg', __DIR__), sprintf('%s%s/playlists/wallpapers/%s', $rootDir, $this->ssrPublicUploadsPath, $name));
+
+        return $name;
+    }
+
     private function createBannedUsers(int $count): void
     {
         $this->createUsers($count, $this->createBannedUser(...));
@@ -142,25 +162,5 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user->addRole(RoleEnum::BANNED);
 
         return $user;
-    }
-
-    private function createCover(): string
-    {
-        $name = sprintf('cover_%s.jpg', $this->faker->unique()->slug(3));
-        $rootDir = sprintf('%s/../..', __DIR__);
-
-        copy(sprintf('%s/300x300.jpg', __DIR__), sprintf('%s%s/playlists/covers/%s', $rootDir, $this->ssrPublicUploadsPath, $name));
-
-        return $name;
-    }
-
-    private function createWallpaper(): string
-    {
-        $name = sprintf('wallpaper_%s.jpg', $this->faker->unique()->slug(3));
-        $rootDir = sprintf('%s/../..', __DIR__);
-
-        copy(sprintf('%s/1200x400.jpg', __DIR__), sprintf('%s%s/playlists/wallpapers/%s', $rootDir, $this->ssrPublicUploadsPath, $name));
-
-        return $name;
     }
 }

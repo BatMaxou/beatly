@@ -127,3 +127,7 @@ export type AddToQueue = {
 export type GenerateRandomQueue = {
   currentPosition: number;
 };
+
+export type SearchResult = {
+  results: Array<Music | Playlist | Album | Artist>;
+};
