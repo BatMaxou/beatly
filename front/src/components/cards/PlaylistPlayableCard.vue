@@ -2,23 +2,12 @@
 import { defineProps } from "vue";
 import { useRouter } from "vue-router";
 import PlaylistPlayableCover from "@/components/playlist/PlaylistPlayableCover.vue";
+import defaultCover from "@/assets/images/default-cover.png";
 import type { Playlist } from "@/utils/types";
 
 const props = defineProps({
   playlist: {
     type: Object as () => Playlist,
-    required: true,
-  },
-  playlistId: {
-    type: Number,
-    required: true,
-  },
-  playlistCover: {
-    type: String,
-    required: true,
-  },
-  playlistName: {
-    type: String,
     required: true,
   },
 });
@@ -30,7 +19,7 @@ const handleCardClick = (event: Event) => {
   const isPlayButton = target.closest("[data-play-button]");
 
   if (!isPlayButton) {
-    router.push({ name: "Playlist", params: { id: props.playlistId.toString() } });
+    router.push({ name: "Playlist", params: { id: props.playlist.id.toString() } });
   }
 };
 </script>
@@ -42,12 +31,10 @@ const handleCardClick = (event: Event) => {
   >
     <PlaylistPlayableCover
       :playlist="playlist"
-      :playlistCover="playlistCover"
-      :playlistName="playlistName"
-      :playlistId="playlistId"
+      :playlistCover="playlist.cover ? playlist.cover : defaultCover"
     />
     <div class="w-full mt-2">
-      <h4 class="font-medium text-sm truncate">{{ playlistName }}</h4>
+      <h4 class="font-medium text-sm truncate">{{ playlist.title }}</h4>
     </div>
   </div>
 </template>

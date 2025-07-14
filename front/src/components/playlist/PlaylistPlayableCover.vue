@@ -8,20 +8,11 @@ defineProps({
     type: Object as () => Playlist,
     required: true,
   },
-  playlistId: {
-    type: Number,
-    required: true,
-  },
   playlistCover: {
     type: String,
     required: true,
   },
-  playlistName: {
-    type: String,
-    required: true,
-  },
 });
-
 const isClickedToPlay = ref(false);
 
 const handlePlaySong = () => {
@@ -37,7 +28,7 @@ const handleResetClickedToPlay = () => {
   <div class="relative w-full overflow-hidden group">
     <img
       :src="playlistCover"
-      :alt="playlistName"
+      :alt="playlist.title"
       class="w-full block transition-transform duration-300 ease-in-out w-[160px] h-[160px] object-cover group-hover:scale-110"
     />
     <div
@@ -47,7 +38,7 @@ const handleResetClickedToPlay = () => {
     >
       <UniqPlayPauseButton
         origin="playlist"
-        :elementId="playlistId"
+        :parentId="playlist['@id']"
         :isClickedToPlay="isClickedToPlay"
         @update:isClickedToPlay="handleResetClickedToPlay"
       />

@@ -55,9 +55,9 @@ export const usePlayerStore = defineStore("player", {
     setIsVolumeInteraction(isVolumeInteraction: boolean) {
       this.isVolumeInteraction = isVolumeInteraction;
     },
-    setQueue(queue: Queue | null, origin: string) {
+    setQueue(queue: Queue | null, parent: string) {
       this.queue = queue;
-      this.queueParent = origin;
+      this.queueParent = parent;
     },
     setNextMusic(nextMusic: Music | null) {
       this.nextMusic = nextMusic;

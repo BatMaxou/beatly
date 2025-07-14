@@ -2,10 +2,10 @@ import type { Playlist as PlaylistType } from "@/utils/types";
 import type { ApiClient, DeleteResponse } from "../model";
 
 interface ResourceResponse extends Partial<PlaylistType> {
-  '@id': string;
+  "@id": string;
 }
 
-const ApiRessourcePath = '/playlists';
+const ApiRessourcePath = "/playlists";
 
 export default class Playlist {
   apiClient: ApiClient;
@@ -14,23 +14,34 @@ export default class Playlist {
     this.apiClient = apiClient;
   }
 
-  async get(id: number|string): Promise<PlaylistType> {
-    return this.apiClient.get<PlaylistType>(`${ApiRessourcePath}/${id}`, { Accept: 'application/ld+json' });
+  async get(id: number | string): Promise<PlaylistType> {
+    return this.apiClient.get<PlaylistType>(`${ApiRessourcePath}/${id}`, {
+      Accept: "application/ld+json",
+    });
   }
 
   async getAll(): Promise<PlaylistType[]> {
-    return this.apiClient.get<PlaylistType[]>(ApiRessourcePath);
+    const response = await this.apiClient.get<any>(ApiRessourcePath, {
+      Accept: "application/ld+json",
+    });
+
+    // Correctif provisoir car reception de members au lieu de l'objet directement
+    return response.member || response["hydra:member"] || response;
   }
 
   async create(data: Partial<PlaylistType>): Promise<ResourceResponse> {
-    return this.apiClient.post<ResourceResponse>(ApiRessourcePath, data, { Accept: 'application/ld+json' });
+    return this.apiClient.post<ResourceResponse>(ApiRessourcePath, data, {
+      Accept: "application/ld+json",
+    });
   }
 
-  async update(id: number|string, data: Partial<PlaylistType>): Promise<ResourceResponse> {
-    return this.apiClient.patch<ResourceResponse>(`${ApiRessourcePath}/${id}`, data, { Accept: 'application/ld+json' });
+  async update(id: number | string, data: Partial<PlaylistType>): Promise<ResourceResponse> {
+    return this.apiClient.patch<ResourceResponse>(`${ApiRessourcePath}/${id}`, data, {
+      Accept: "application/ld+json",
+    });
   }
 
-  async updateFiles(id: number|string, cover?: File, wallpaper?: File): Promise<PlaylistType> {
+  async updateFiles(id: number | string, cover?: File, wallpaper?: File): Promise<PlaylistType> {
     const formData = new FormData();
 
     if (cover) {
@@ -41,10 +52,12 @@ export default class Playlist {
       formData.append("wallpaper", wallpaper);
     }
 
-    return this.apiClient.post<PlaylistType>(`${ApiRessourcePath}/${id}/files`, formData, { Accept: 'application/ld+json' });
+    return this.apiClient.post<PlaylistType>(`${ApiRessourcePath}/${id}/files`, formData, {
+      Accept: "application/ld+json",
+    });
   }
 
-  async delete(id: number|string): Promise<DeleteResponse> {
-    return this.apiClient.delete(`${ApiRessourcePath}/${id}`)
+  async delete(id: number | string): Promise<DeleteResponse> {
+    return this.apiClient.delete(`${ApiRessourcePath}/${id}`);
   }
 }

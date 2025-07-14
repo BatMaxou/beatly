@@ -3,7 +3,6 @@ import { onBeforeMount, ref, onMounted } from "vue";
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
 import PlaylistPlayable from "@/components/cards/PlaylistPlayableCard.vue";
-import albumDefaultIcon from "@/assets/images/default-cover.png";
 import type { Playlist } from "@/utils/types";
 import arrowLeft from "@/assets/icons/arrow-left-light.svg";
 import arrowRight from "@/assets/icons/arrow-right-light.svg";
@@ -51,7 +50,6 @@ onBeforeMount(async () => {
   loading.value = true;
   try {
     const response = await apiClient.playlist.getAll();
-
     const playlists: Playlist[] = response;
 
     lastPlaylist.value = playlists.slice(0, 10);
@@ -89,9 +87,6 @@ onMounted(() => {
             v-for="playlist in lastPlaylist"
             :key="playlist.id"
             :playlist="playlist"
-            :playlistId="playlist.id"
-            :playlistCover="playlist.cover || albumDefaultIcon"
-            :playlistName="playlist.title || 'Playlist sans nom'"
           />
         </div>
         <button

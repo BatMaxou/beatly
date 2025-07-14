@@ -42,7 +42,7 @@ const resetPlayState = () => {
   emit("update:isClickedToPlay", false);
 };
 
-const getQueue = async (origin: string) => {
+const addQueue = async (origin: string) => {
   if (origin === "album") {
     return await apiClient.queue.add({ album: parentId, currentPosition: position });
   } else if (origin === "playlist") {
@@ -73,7 +73,7 @@ watch(
         }
 
         if (!playerStore.queueParent || parentId !== playerStore.queueParent) {
-          playerStore.setQueue(await getQueue(origin), parentId);
+          playerStore.setQueue(await addQueue(origin), parentId);
           playerStore.setQueueFile(await loadQueueFile());
         }
 
