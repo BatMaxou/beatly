@@ -8,6 +8,7 @@ import { fr } from "@formkit/i18n";
 import router from "./router";
 import Vue3Toastify, { type ToastContainerOptions } from "vue3-toastify";
 import AudioDirective from "./directives/Audio";
+import RangeDirective from "./directives/CurrentTimeRange";
 import VolumeRangeDirective from "./directives/VolumeRange";
 
 import App from "./App.vue";
@@ -24,6 +25,8 @@ createApp(App)
       locales: { fr },
       locale: "fr",
     }),
-  ).directive("audio", AudioDirective)
+  )
+  .directive("audio", AudioDirective)
+  .directive("current-time-range", RangeDirective)
   .directive("volume-range", VolumeRangeDirective)
   .mount("#app");

@@ -148,9 +148,9 @@ export function usePlayerPreparation() {
    * Lecture du titre suivant dans la queue.
    * Si le titre suivant n'existe pas, on arrête la lecture.
    */
-  const playNextSong = () => {
+  const playNextSong = async () => {
     if (playerStore.nextMusic !== null && playerStore.nextMusicFile !== null) {
-      playerStore.setListen(
+      await playerStore.setListen(
         playerStore.nextMusic,
         playerStore.nextMusicFile,
         playerStore.position + 1,
@@ -166,16 +166,20 @@ export function usePlayerPreparation() {
    * Lecture du titre précédent dans la queue.
    * Si le titre précédent n'existe pas, on rejoue le titre.
    */
-  const playPreviousSong = () => {
+  const playPreviousSong = async () => {
     if (playerStore.previousMusic !== null && playerStore.previousMusicFile !== null) {
-      playerStore.setListen(
+      await playerStore.setListen(
         playerStore.previousMusic,
         playerStore.previousMusicFile,
         playerStore.position - 1,
       );
       storeAdjacentMusicInQueue();
     } else if (playerStore.currentMusic !== null && playerStore.musicFile !== null) {
-      playerStore.setListen(playerStore.currentMusic, playerStore.musicFile, playerStore.position);
+      await playerStore.setListen(
+        playerStore.currentMusic,
+        playerStore.musicFile,
+        playerStore.position,
+      );
       return;
     }
   };

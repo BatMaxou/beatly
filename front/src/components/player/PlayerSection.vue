@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import { usePlayerStore } from "@/stores/player";
 import { useTimeFormat } from "@/composables/useTimeFormat";
 import PlayerInformations from "./PlayerInformations.vue";
@@ -8,18 +8,11 @@ import PlayerControls from "./PlayerControls.vue";
 
 const playerStore = usePlayerStore();
 const isPlayerActive = computed(() => playerStore.isPlayerActive);
-const playerElement = ref<HTMLAudioElement | null>(null);
-const currentTimeValue = ref<number>(0);
+const currentTimeValue = computed(() => playerStore.currentTime);
 const duration = computed(() => playerStore.duration);
 const rangeValue = ref(0);
 const pendingSeekTime = ref<number | null>(null);
 const { formattedCurrentTime, formattedDuration } = useTimeFormat(currentTimeValue, duration);
-
-const handleAudioTimeUpdate = (event: CustomEvent) => {
-  if (!playerStore.isPlayerInteraction) {
-    currentTimeValue.value = event.detail.currentTime;
-  }
-};
 
 // Synchroniser le range avec le currentTime quand l'utilisateur n'interagit pas
 watch(currentTimeValue, (newTime) => {
@@ -42,7 +35,6 @@ watch(
     if (!isInteracting && pendingSeekTime.value !== null) {
       if (playerStore.audioPlayer) {
         playerStore.audioPlayer.currentTime = pendingSeekTime.value;
-        currentTimeValue.value = pendingSeekTime.value;
       }
       pendingSeekTime.value = null;
     }
@@ -53,12 +45,6 @@ const rangeBackground = computed(() => {
   const percentage = duration.value > 0 ? (rangeValue.value / duration.value) * 100 : 0;
   const activeColor = playerStore.isPlayerInteraction ? "#ffffffcc" : "#ffffff";
   return `linear-gradient(90deg, ${activeColor} ${percentage}%, #ffffff2a ${percentage}%)`;
-});
-
-onMounted(() => {
-  if (playerElement.value) {
-    playerStore.setAudioPlayer(playerElement.value);
-  }
 });
 </script>
 
@@ -75,15 +61,6 @@ onMounted(() => {
         <PlayerInformations />
       </div>
       <div class="justify-self-center col-span-3">
-        <audio
-          ref="playerElement"
-          v-audio
-          class="hidden pointer-events-none"
-          src=""
-          controls
-          preload="auto"
-          @audio-timeupdate="handleAudioTimeUpdate"
-        />
         <PlayerControls />
         <div class="w-full flex flex-row justify-center items-center gap-4 pt-2">
           <span id="currentTime" class="text-xs text-white/80 font-mono min-w-[3rem] text-right">{{
@@ -92,6 +69,7 @@ onMounted(() => {
           <input
             type="range"
             v-model="rangeValue"
+            v-current-time-range
             name="audioProgress"
             min="0"
             :max="playerStore.duration || 100"
