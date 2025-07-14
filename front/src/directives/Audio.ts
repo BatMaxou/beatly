@@ -1,6 +1,18 @@
 import { usePlayerPreparation } from "@/composables/usePlayerPreparation";
 import { usePlayerStore } from "@/stores/player";
 
+// Fonction de throttle généré par Claude Sonnet 4 pour optimiser les appels de fonction
+function throttle<T extends (...args: any[]) => any>(func: T, limit: number): T {
+  let inThrottle: boolean;
+  return ((...args: any[]) => {
+    if (!inThrottle) {
+      func(...args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  }) as T;
+}
+
 interface ExtendedHTMLAudioElement extends HTMLAudioElement {
   _audioDirectiveCleanup?: () => void;
 }
@@ -18,47 +30,15 @@ export default {
 
     el.controls = true;
 
-    const range = el.parentElement?.querySelector('input[type="range"]');
-
-    if (!range) {
-      console.warn("Slider non trouve a cote de l'element audio.");
-      return;
-    }
-
-    const hasInteractionMethod = typeof playerStore.setIsPlayerInteraction === "function";
-
-    const handleInteractionStart = () => {
-      if (hasInteractionMethod) {
-        playerStore.setIsPlayerInteraction(true);
+    const handleTimeUpdate = throttle(() => {
+      // Mettre à jour le store seulement 5 fois par seconde pour éviter les appels excessifs
+      if (!playerStore.isPlayerInteraction) {
+        playerStore.setCurrentTime(el.currentTime);
       }
-    };
-    const handleInteractionEnd = () => {
-      if (hasInteractionMethod) {
-        playerStore.setIsPlayerInteraction(false);
-      }
-    };
-
-    range.addEventListener("mousedown", handleInteractionStart);
-    range.addEventListener("mouseup", handleInteractionEnd);
-    range.addEventListener("touchstart", handleInteractionStart);
-    range.addEventListener("touchend", handleInteractionEnd);
-    range.addEventListener("focus", handleInteractionStart);
-    range.addEventListener("blur", handleInteractionEnd);
+    }, 200); // 200ms = 5 fois par seconde
 
     const handleLoadedMetadata = () => {
       playerStore.setDuration(el.duration);
-    };
-
-    const handleTimeUpdate = () => {
-      // Émettre un événement personnalisé pour que le composant parent puisse l'écouter
-      el.dispatchEvent(
-        new CustomEvent("audio-timeupdate", {
-          detail: {
-            currentTime: el.currentTime,
-            duration: el.duration,
-          },
-        }),
-      );
     };
 
     const handleDurationChange = () => {
@@ -84,13 +64,6 @@ export default {
     el.addEventListener("ended", handleEnded);
 
     extendedEl._audioDirectiveCleanup = () => {
-      range?.removeEventListener("mousedown", handleInteractionStart);
-      range?.removeEventListener("mouseup", handleInteractionEnd);
-      range?.removeEventListener("touchstart", handleInteractionStart);
-      range?.removeEventListener("touchend", handleInteractionEnd);
-      range?.removeEventListener("focus", handleInteractionStart);
-      range?.removeEventListener("blur", handleInteractionEnd);
-
       el.removeEventListener("loadedmetadata", handleLoadedMetadata);
       el.removeEventListener("timeupdate", handleTimeUpdate);
       el.removeEventListener("durationchange", handleDurationChange);

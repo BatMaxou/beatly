@@ -41,7 +41,6 @@ const { music, position, origin, isClickedToPlay, parentId, musics } = definePro
     default: null,
   },
 });
-console.log(music);
 
 const resetPlayState = () => {
   emit("update:isClickedToPlay", false);
@@ -65,6 +64,7 @@ const addQueue = async (origin: string) => {
 watch(
   () => isClickedToPlay,
   async (newVal) => {
+    resetPlayState();
     if (newVal && music && music.id !== playerStore.currentMusic?.id) {
       if (music.id) {
         const queueFile = playerStore.queueFile?.find((item) => item.musicId === music.id);
@@ -81,16 +81,16 @@ watch(
         }
 
         if (!playerStore.queueParent || parentId !== playerStore.queueParent) {
-          playerStore.clearQueue();
+          if (playerStore.queue) {
+            playerStore.clearQueue();
+          }
           playerStore.setQueue(await addQueue(origin), parentId);
           playerStore.setQueueFile(await loadQueueFile());
         }
 
         storeAdjacentMusicInQueue();
-        resetPlayState();
       } else {
         showError("Ce titre n'est pas disponible");
-        resetPlayState();
         return;
       }
     } else if (newVal && music.id === playerStore.currentMusic?.id) {
@@ -99,7 +99,6 @@ watch(
       } else {
         playerStore.setPlay();
       }
-      resetPlayState();
     }
   },
   { immediate: true },

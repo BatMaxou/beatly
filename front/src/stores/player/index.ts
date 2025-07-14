@@ -13,6 +13,7 @@ export const usePlayerStore = defineStore("player", {
     isPlayerActive: false as boolean,
     audioPlayer: null as HTMLAudioElement | null,
     duration: 0 as number,
+    currentTime: 0 as number,
     isPlayerInteraction: false as boolean,
     isVolumeInteraction: false as boolean,
     queue: null as Queue | null,
@@ -49,6 +50,9 @@ export const usePlayerStore = defineStore("player", {
     },
     setDuration(duration: number) {
       this.duration = duration;
+    },
+    setCurrentTime(currentTime: number) {
+      this.currentTime = currentTime;
     },
     setIsPlayerInteraction(isPlayerInteraction: boolean) {
       this.isPlayerInteraction = isPlayerInteraction;
@@ -103,13 +107,14 @@ export const usePlayerStore = defineStore("player", {
       this.audioPlayer?.play();
       this.setIsPlay(true);
     },
-    setListen(music: Music, musicFile: string, position: number) {
-      this.setPause();
+    async setListen(music: Music, musicFile: string, position: number) {
       this.setIsPlayerActive(true);
       this.setCurrentMusic(music);
       this.setMusicFile(musicFile);
       this.setPosition(position);
-      this.setPlay();
+      setTimeout(() => {
+        this.setPlay();
+      }, 100);
     },
     setChangeCurrentTime(number: number) {
       if (this.audioPlayer) {
