@@ -12,7 +12,7 @@ function focusSearchInput() {
 </script>
 
 <template>
-  <div 
+  <div
     class="search bg-[#2E0B40]/30 hover:bg-[#2E0B40]/80 focus-within:bg-[#2E0B40]/80 transition duration-500 flex justify-start items-center cursor-pointer py-5 ps-4 pe-5 w-full"
     @click="focusSearchInput"
     ref="searchDiv"
