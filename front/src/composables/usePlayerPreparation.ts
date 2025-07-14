@@ -103,7 +103,7 @@ export function usePlayerPreparation() {
     if (!playerStore.queue) return null;
     const queueItems = Object.values(playerStore.queue.queueItems);
     if (queueItems.length === 0) return null;
-    let queueFiles = [];
+    const queueFiles = [];
     for (const music of queueItems) {
       if (
         music.music.id &&

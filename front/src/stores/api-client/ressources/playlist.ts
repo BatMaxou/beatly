@@ -25,7 +25,8 @@ export default class Playlist {
       Accept: "application/ld+json",
     });
 
-    // Correctif provisoir car reception de members au lieu de l'objet directement
+    // Correctif provisoire car reception de members au lieu de l'objet directement
+    // Retirer <any> pour le remplacer par le bon typage quand corrigé
     return response.member || response["hydra:member"] || response;
   }
 

@@ -91,7 +91,7 @@ onMounted(async () => {
         artist.value = response;
 
         if (response.musics) {
-          // @ts-ignore
+          // @ts-expect-error Le tableau est modifié pour inclure l'artiste actuel afin de faire fonctionner les informations du player
           bestListenedSongList.value = response.musics
             .sort((a, b) => (b.listeningsNumber || 0) - (a.listeningsNumber || 0))
             .slice(0, 5)

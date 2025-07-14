@@ -45,7 +45,7 @@ const handlePlayStateChange = (newState: boolean) => {
   isClickedToPlay.value = newState;
 };
 
-const setIsCurrentSongPlaying = (newMusic: Music | null) => {
+const setIsCurrentSongPlaying = () => {
   if (
     props.position === playerStore.position &&
     (!playerStore.queueParent || props.parentId === playerStore.queueParent)
@@ -60,13 +60,13 @@ watch(
   () => playerStore.currentMusic,
   (newVal: Music | null, oldVal: Music | null) => {
     if (newVal !== oldVal) {
-      setIsCurrentSongPlaying(newVal);
+      setIsCurrentSongPlaying();
     }
   },
 );
 
 onMounted(() => {
-  setIsCurrentSongPlaying(playerStore.currentMusic);
+  setIsCurrentSongPlaying();
 });
 </script>
 
@@ -101,13 +101,8 @@ onMounted(() => {
       </div>
       <div class="flex flex-col">
         <span class="font-medium text-white">{{ music.title }}</span>
-        <p class="font-medium text-white">
-          <span
-            v-if="origin === 'playlist'"
-            v-for="artist in music.artists"
-            :key="artist.id"
-            class="text-white/70 text-sm"
-          >
+        <p v-if="origin === 'playlist'" class="font-medium text-white">
+          <span v-for="artist in music.artists" :key="artist.id" class="text-white/70 text-sm">
             {{ artist.name }}
           </span>
         </p>
