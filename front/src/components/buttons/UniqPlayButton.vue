@@ -47,7 +47,9 @@ watch(
   async (newVal) => {
     if (newVal && parentId !== playerStore.queueParent) {
       if (parentId) {
-        playerStore.clearQueue();
+        if (playerStore.queue) {
+          playerStore.clearQueue();
+        }
         const queue = await addQueue(origin);
         if (queue) {
           playerStore.setQueue(queue, parentId);

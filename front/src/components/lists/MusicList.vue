@@ -57,8 +57,6 @@ const topTitlesMusics = computed(() => {
   return [];
 });
 
-console.log(musicList);
-console.log(topTitlesMusics);
 // Quand la clé popularity sera en place, si l'origin est top-titles, on trie par popularité
 // Quand le clé playlistIndex sera en place, si l'origin est playlist, on trie par index de la playlist
 </script>

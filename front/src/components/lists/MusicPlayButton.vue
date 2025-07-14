@@ -41,7 +41,6 @@ const { music, position, origin, isClickedToPlay, parentId, musics } = definePro
     default: null,
   },
 });
-console.log(music);
 
 const resetPlayState = () => {
   emit("update:isClickedToPlay", false);
@@ -81,7 +80,9 @@ watch(
         }
 
         if (!playerStore.queueParent || parentId !== playerStore.queueParent) {
-          playerStore.clearQueue();
+          if (playerStore.queue) {
+            playerStore.clearQueue();
+          }
           playerStore.setQueue(await addQueue(origin), parentId);
           playerStore.setQueueFile(await loadQueueFile());
         }
