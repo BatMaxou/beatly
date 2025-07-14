@@ -1,0 +1,5 @@
+App\Api\Model\Search:
+  attributes:
+    results:
+      groups:
+        - 'search:read'

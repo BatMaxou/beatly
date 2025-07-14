@@ -16,7 +16,7 @@ class MeProvider implements ProviderInterface
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
-        if (!ApiReusableRoute::ME->value === $operation->getName()) {
+        if (ApiReusableRoute::ME->value !== $operation->getName()) {
             throw new \LogicException(sprintf('Operation "%s" is not supported by %s', $operation->getName(), self::class));
         }
 

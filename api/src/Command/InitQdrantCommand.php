@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Enum\EmbeddingEnum;
 use App\Service\Client\QdrantClient;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -19,8 +20,10 @@ class InitQdrantCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->qdrantClient->initMusicCollection();
-        $output->writeln('<info>Qdrant music collection initialized</info>');
+        $this->qdrantClient->initCollection(EmbeddingEnum::RECOMMENDATION);
+        $this->qdrantClient->initCollection(EmbeddingEnum::SEARCH);
+
+        $output->writeln('<info>Qdrant collections initialized</info>');
 
         return Command::SUCCESS;
     }

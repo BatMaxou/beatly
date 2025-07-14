@@ -10,8 +10,10 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Api\Processor\PlaylistCreationProcessor;
 use App\Api\Processor\PlaylistFilesProcessor;
+use App\Entity\Interface\EmbeddableEntityInterface;
 use App\Entity\Interface\ListenableEntityInterface;
 use App\Enum\ApiReusableRoute;
+use App\Enum\EmbeddingEnum;
 use App\Repository\PlaylistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,6 +22,7 @@ use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Uid\Uuid;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[Vich\Uploadable]
@@ -62,7 +65,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         ),
     ]
 )]
-class Playlist implements ListenableEntityInterface
+class Playlist implements ListenableEntityInterface, EmbeddableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -97,9 +100,18 @@ class Playlist implements ListenableEntityInterface
     #[ORM\OneToMany(targetEntity: PlaylistMusic::class, mappedBy: 'playlist', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $musics;
 
+    #[ORM\Column]
+    private string $uuid;
+
     public function __construct()
     {
         $this->musics = new ArrayCollection();
+        $this->uuid = Uuid::v4();
+    }
+
+    public static function getClassIdentifier(): string
+    {
+        return 'playlist';
     }
 
     public function getId(): ?int
@@ -217,5 +229,25 @@ class Playlist implements ListenableEntityInterface
         }
 
         return $this;
+    }
+
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    public function prepareForEmbedding(EmbeddingEnum $type): string
+    {
+        return match ($type) {
+            EmbeddingEnum::SEARCH => sprintf('%s - %s - %s', $this->getClassIdentifier(), $this->getTitle(), $this->getCreator()?->getName() ?? ''),
+            default => throw new \InvalidArgumentException(sprintf('Unsupported embedding type: %s', $type->value)),
+        };
+    }
+
+    public function supportEmbedding(): array
+    {
+        return [
+            EmbeddingEnum::SEARCH,
+        ];
     }
 }

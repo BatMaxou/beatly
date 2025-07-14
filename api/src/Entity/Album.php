@@ -9,14 +9,17 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Api\Processor\AlbumFilesProcessor;
+use App\Entity\Interface\EmbeddableEntityInterface;
 use App\Entity\Interface\ListenableEntityInterface;
 use App\Enum\ApiReusableRoute;
+use App\Enum\EmbeddingEnum;
 use App\Repository\AlbumRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Uid\Uuid;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[Vich\Uploadable]
@@ -52,7 +55,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         ),
     ]
 )]
-class Album implements ListenableEntityInterface
+class Album implements ListenableEntityInterface, EmbeddableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -90,9 +93,18 @@ class Album implements ListenableEntityInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Artist $artist = null;
 
+    #[ORM\Column]
+    private string $uuid;
+
     public function __construct()
     {
         $this->musics = new ArrayCollection();
+        $this->uuid = Uuid::v4();
+    }
+
+    public static function getClassIdentifier(): string
+    {
+        return 'album';
     }
 
     public function getId(): ?int
@@ -222,5 +234,25 @@ class Album implements ListenableEntityInterface
         $this->artist = $artist;
 
         return $this;
+    }
+
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    public function prepareForEmbedding(EmbeddingEnum $type): string
+    {
+        return match ($type) {
+            EmbeddingEnum::SEARCH => \sprintf('%s - %s - %s', $this->getClassIdentifier(), $this->getTitle(), $this->getArtist()?->getName() ?? ''),
+            default => throw new \InvalidArgumentException(sprintf('Unsupported embedding type: %s', $type->value)),
+        };
+    }
+
+    public function supportEmbedding(): array
+    {
+        return [
+            EmbeddingEnum::SEARCH,
+        ];
     }
 }

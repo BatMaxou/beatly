@@ -23,7 +23,7 @@ class MusicFilesProcessor implements ProcessorInterface
             throw new \InvalidArgumentException(\sprintf('Data must be an instance of %s', Music::class));
         }
 
-        if (!ApiReusableRoute::UPDATE_MUSIC_FILES->value === $operation->getName()) {
+        if (ApiReusableRoute::UPDATE_MUSIC_FILES->value !== $operation->getName()) {
             throw new \LogicException(sprintf('Operation "%s" is not supported by %s', $operation->getName(), self::class));
         }
 

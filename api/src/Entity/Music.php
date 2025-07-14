@@ -13,11 +13,13 @@ use App\Api\Processor\MusicFilesProcessor;
 use App\Entity\Interface\EmbeddableEntityInterface;
 use App\Entity\Interface\ListenableEntityInterface;
 use App\Enum\ApiReusableRoute;
+use App\Enum\EmbeddingEnum;
 use App\Repository\MusicRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Uid\Uuid;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[Vich\Uploadable]
@@ -102,12 +104,21 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Artist $mainArtist = null;
 
+    #[ORM\Column]
+    private string $uuid;
+
     public function __construct()
     {
         $this->listeningsNumber = 0;
         $this->categories = new ArrayCollection();
         $this->artists = new ArrayCollection();
         $this->albums = new ArrayCollection();
+        $this->uuid = Uuid::v4();
+    }
+
+    public static function getClassIdentifier(): string
+    {
+        return 'music';
     }
 
     public function getId(): ?int
@@ -275,7 +286,29 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface
         ++$this->listeningsNumber;
     }
 
-    public function prepareForEmbedding(): string
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    public function prepareForEmbedding(EmbeddingEnum $type): string
+    {
+        return match ($type) {
+            EmbeddingEnum::RECOMMENDATION => $this->prepareForRecommendationEmbedding(),
+            EmbeddingEnum::SEARCH => $this->prepareForSearchEmbedding(),
+            default => throw new \InvalidArgumentException(sprintf('Unsupported embedding type: %s', $type->value)),
+        };
+    }
+
+    public function supportEmbedding(): array
+    {
+        return [
+            EmbeddingEnum::RECOMMENDATION,
+            EmbeddingEnum::SEARCH,
+        ];
+    }
+
+    private function prepareForRecommendationEmbedding(): string
     {
         $categories = $this->categories->map(fn (Category $category) => md5($category->getName()))->toArray();
         $artists = $this->artists->map(fn (Artist $artist) => md5($artist->getName()))->toArray();
@@ -287,6 +320,18 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface
             md5($this->getMainArtist()?->getName() ?? ''),
             implode(' ', $artists),
             implode(' ', $albums)
+        );
+    }
+
+    private function prepareForSearchEmbedding(): string
+    {
+        return sprintf(
+            '%s - %2$s %2$s %2$s - %s - %s - %s',
+            $this->getClassIdentifier(),
+            $this->title,
+            implode(' ', $this->categories->map(fn (Category $category) => $category->getName())->toArray()),
+            $this->getMainArtist()?->getName() ?? '',
+            implode(' ', $this->artists->map(fn (Artist $artist) => $artist->getName())->toArray())
         );
     }
 }
