@@ -7,6 +7,7 @@ App\Entity\Playlist:
         - "music:read"
         - "dashboard:read"
         - 'search:read'
+        - 'favorite:read'
     title:
       groups:
         - "playlist:read"
@@ -16,6 +17,7 @@ App\Entity\Playlist:
         - "music:read"
         - "dashboard:read"
         - 'search:read'
+        - 'favorite:read'
     musics:
       groups:
         - "playlist:read"
@@ -25,6 +27,7 @@ App\Entity\Playlist:
       groups:
         - "playlist:read"
         - 'search:read'
+        - 'favorite:read'
     cover:
       groups:
         - "playlist:write"

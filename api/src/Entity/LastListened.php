@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Interface\ListenableEntityInterface;
 use App\Repository\LastListenedRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
@@ -33,6 +34,11 @@ abstract class LastListened
     #[ORM\Column]
     private ?\DateTimeImmutable $listenedAt = null;
 
+    public function __construct()
+    {
+        $this->listenedAt = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -55,20 +61,13 @@ abstract class LastListened
         return $this->listenedAt;
     }
 
-    public function setListenedAt(\DateTimeImmutable $listenedAt): static
-    {
-        $this->listenedAt = $listenedAt;
-
-        return $this;
-    }
-
     /**
      * @return T|null
      */
-    abstract public function getTarget(): ?object;
+    abstract public function getTarget(): ?ListenableEntityInterface;
 
     /**
      * @param T $target
      */
-    abstract public function setTarget(object $target): static;
+    abstract public function setTarget(ListenableEntityInterface $target): static;
 }

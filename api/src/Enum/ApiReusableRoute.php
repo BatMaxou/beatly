@@ -19,4 +19,8 @@ enum ApiReusableRoute: string
     case GET_DASHBOARD = 'api_get_dashboard';
     case GET_RECOMMENDATIONS = 'api_get_recommendations';
     case GET_QUEUE = 'api_get_queue';
+    case GET_FAVORITES = 'api_get_favorites';
+    case GET_FAVORITE_MUSICS = 'api_get_favorite_musics';
+    case GET_FAVORITE_ALBUMS = 'api_get_favorite_albums';
+    case GET_FAVORITE_PLAYLISTS = 'api_get_favorite_playlists';
 }

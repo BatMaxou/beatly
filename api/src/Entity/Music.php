@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Post;
 use App\Api\Processor\MusicCreationProcessor;
 use App\Api\Processor\MusicFilesProcessor;
 use App\Entity\Interface\EmbeddableEntityInterface;
+use App\Entity\Interface\LikableEntityInterface;
 use App\Entity\Interface\ListenableEntityInterface;
 use App\Enum\ApiReusableRoute;
 use App\Enum\EmbeddingEnum;
@@ -56,7 +57,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         ),
     ]
 )]
-class Music implements EmbeddableEntityInterface, ListenableEntityInterface
+class Music implements EmbeddableEntityInterface, ListenableEntityInterface, LikableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Category;
-use App\Entity\Favorite;
+use App\Entity\FavoriteMusic;
 use App\Entity\Music;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,7 +22,7 @@ class CategoryRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('category')
             ->innerJoin(Music::class, 'music', 'WITH', 'category MEMBER OF music.categories')
-            ->innerJoin(Favorite::class, 'favorite', 'WITH', 'favorite.music = music')
+            ->innerJoin(FavoriteMusic::class, 'favorite', 'WITH', 'favorite.music = music')
             ->groupBy('category.id')
             ->orderBy('COUNT(favorite.id)', 'DESC')
             ->setMaxResults($limit)

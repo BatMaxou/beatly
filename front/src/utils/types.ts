@@ -90,13 +90,13 @@ export type Listen = {
   album?: string;
 };
 
-export type LastListened = {
-  target: Music | Playlist | Album;
+export type LastListened<T> = {
+  target: T;
   listenedAt: string;
 };
 
 export type Dashboard = {
-  lastListened: LastListened[];
+  lastListened: LastListened<Music | Album | Playlist>[];
   mostPopularCategories: Category[];
   mostLikedMusics: Music[];
   mostListenedMusics: Music[];
@@ -130,4 +130,21 @@ export type GenerateRandomQueue = {
 
 export type SearchResult = {
   results: Array<Music | Playlist | Album | Artist>;
+};
+
+export type FavoriteAction = {
+  music?: string;
+  playlist?: string;
+  album?: string;
+};
+
+export type Favorite<T> = {
+  target: T;
+  addedAt: string;
+};
+
+export type Favorites = {
+  musics?: Favorite<Music>[];
+  playlists?: Favorite<Playlist>[];
+  albums?: Favorite<Album>[];
 };

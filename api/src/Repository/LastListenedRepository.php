@@ -86,7 +86,6 @@ class LastListenedRepository extends ServiceEntityRepository
         $class = self::MAPPING[$listened::class];
         $lastListened = new $class();
         $lastListened->setUser($user);
-        $lastListened->setListenedAt(new \DateTimeImmutable());
         $lastListened->setTarget($listened);
 
         $em = $this->getEntityManager();
