@@ -9,6 +9,7 @@ use App\Entity\LastListened;
 use App\Entity\LastMusicListened;
 use App\Entity\LastPlaylistListened;
 use App\Entity\Music;
+use App\Entity\PlatformPlaylist;
 use App\Entity\Playlist;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -23,12 +24,14 @@ class LastListenedRepository extends ServiceEntityRepository
         Music::class => LastMusicListened::class,
         Album::class => LastAlbumListened::class,
         Playlist::class => LastPlaylistListened::class,
+        PlatformPlaylist::class => LastPlaylistListened::class,
     ];
 
     public const ATTR_MAPPING = [
         Music::class => 'music',
         Album::class => 'album',
         Playlist::class => 'playlist',
+        PlatformPlaylist::class => 'playlist',
     ];
 
     public function __construct(ManagerRegistry $registry)

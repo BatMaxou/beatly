@@ -63,7 +63,7 @@ class AddToQueueHandler
         });
 
         return new JsonResponse(
-            $this->serializer->serialize($user->getRandomQueue() ?? $user->getQueue(), 'json', ['groups' => ['queue:read']]),
+            $this->serializer->serialize($user->getRandomQueue() ?? $user->getQueue(), 'jsonld', ['groups' => ['queue:read']]),
             Response::HTTP_CREATED,
             [],
             true,
