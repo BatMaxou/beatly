@@ -52,7 +52,7 @@ watch(
           } else {
             firstMusic = Object.entries(playerStore.queue.queueItems)[0][1];
           }
-          // console.log(firstMusic);
+
           if (firstMusic) {
             const queueFile = playerStore.queueFile?.find(
               (item) => item.musicId === firstMusic.music.id,

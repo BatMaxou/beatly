@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps, ref } from "vue";
-import UniqPlayPauseButton from "../buttons/UniqPlayButton.vue";
+import FastPlayButton from "../buttons/FastPlayButton.vue";
 import type { Playlist } from "@/utils/types";
 
 defineProps({
@@ -36,7 +36,7 @@ const handleResetClickedToPlay = () => {
       data-play-button
       @click="handlePlaySong"
     >
-      <UniqPlayPauseButton
+      <FastPlayButton
         origin="playlist"
         :parentId="playlist['@id']"
         :isClickedToPlay="isClickedToPlay"

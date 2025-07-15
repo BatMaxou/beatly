@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps, ref } from "vue";
-import UniqPlayPauseButton from "../buttons/UniqPlayButton.vue";
+import FastPlayButton from "../buttons/FastPlayButton.vue";
 
 const props = defineProps({
   result: {
@@ -45,7 +45,7 @@ function getTypeLabel() {
       <div
         class="absolute inset-0 bg-black/50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300"
       >
-        <UniqPlayPauseButton v-if="result.type === 'album' || result.type === 'song'" />
+        <FastPlayButton v-if="result.type === 'album' || result.type === 'song'" />
       </div>
     </div>
     <div class="flex flex-col justify-center flex-1 p-4 md:pl-5 md:max-w-[calc(100%-10rem)]">

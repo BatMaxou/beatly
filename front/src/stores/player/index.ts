@@ -135,13 +135,13 @@ export const usePlayerStore = defineStore("player", {
       this.setIsPlay(true);
     },
     async setListen(music: Music, musicFile: string, position: number, containerId?: string) {
+      this.setListeningNumber(music, containerId);
       this.setIsPlayerActive(true);
       this.setCurrentMusic(music);
       this.setMusicFile(musicFile);
       this.setPosition(position);
       setTimeout(async () => {
         this.setPlay();
-        await this.setListeningNumber(music, containerId);
       }, 100);
     },
     setChangeCurrentTime(number: number) {
@@ -150,27 +150,19 @@ export const usePlayerStore = defineStore("player", {
       }
     },
 
-    async setListeningNumber(music: Music, id?: string) {
-      // console.log(id, this.queueParent);
-      // console.log(music, id);
-      if (id && music) {
+    async setListeningNumber(music: Music, id: string | null = null) {
+      if (music) {
         const { apiClient } = useApiClient();
         const listenData: Listen = {
-          music: music["@id"],
-          ...(id.startsWith("/api/albums/") && id !== this.queueParent && { album: id }),
-          ...(id.startsWith("/api/playlists/") && id !== this.queueParent && { playlist: id }),
+          music: music["@id"] ? music["@id"] : music.id ? "/api/music/" + music.id : music["@id"],
+          ...(id && id.startsWith("/api/albums/") && { album: id }),
+          ...(id && id.startsWith("/api/playlists/") && { playlist: id }),
         };
-        // console.log(listenData);
-        // console.log("Envoi des données d'écoute:", listenData);
-        const hasRequiredData = listenData.music || listenData.album || listenData.playlist;
+
+        const hasRequiredData = listenData.music;
 
         if (hasRequiredData) {
-          try {
-            await apiClient.listen.play(listenData);
-            console.log("Écoute enregistrée avec succès");
-          } catch (error) {
-            console.warn("Erreur lors de l'enregistrement de l'écoute:", error);
-          }
+          await apiClient.listen.play(listenData);
         }
       }
     },

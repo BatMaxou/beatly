@@ -63,7 +63,7 @@ watch(
                 music,
                 await streamToAudioUrl(response),
                 position,
-                parentId,
+                parentId !== playerStore.queueParent ? parentId : undefined,
               );
             } else {
               showError("Ce titre n'est pas disponible");

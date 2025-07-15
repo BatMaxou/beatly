@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps, watch, ref } from "vue";
 import type { Album } from "@/utils/types";
-import UniqPlayPauseButton from "../buttons/UniqPlayButton.vue";
+import FastPlayButton from "../buttons/FastPlayButton.vue";
 import loadingIcon from "@/assets/icons/loading-light.svg";
 
 const props = defineProps({
@@ -55,7 +55,7 @@ watch(
         @click="handlePlaySong"
         v-if="!isLoading"
       >
-        <UniqPlayPauseButton
+        <FastPlayButton
           :musicId="album?.id"
           origin="album"
           :parentId="album['@id']"

@@ -110,7 +110,6 @@ const topTitlesMusics = computed(() => {
       :music="music.music"
       :index="index"
       :position="index + 1"
-      :parentId="parentId"
       :origin="origin"
       :musics="extractedMusics"
       :customStyles="props.customStyles"
