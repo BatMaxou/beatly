@@ -35,7 +35,8 @@
         "symfony/uid": "7.2.*",
         "symfony/validator": "7.2.*",
         "symfony/yaml": "7.2.*",
-        "vich/uploader-bundle": "^2.7"
+        "vich/uploader-bundle": "^2.7",
+        "wapmorgan/mp3info": "^0.1.1"
     },
     "config": {
         "allow-plugins": {

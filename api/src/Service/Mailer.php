@@ -38,7 +38,7 @@ class Mailer
             throw new InvalidArgumentException('User email is required');
         }
 
-        $template = (new TemplatedEmail())
+        $template = new TemplatedEmail()
             ->to($to)
             ->from('team@beatly.fr')
             ->subject($subject)

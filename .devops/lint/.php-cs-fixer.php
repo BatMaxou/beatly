@@ -3,7 +3,7 @@
 $finder = PhpCsFixer\Finder::create()
     ->exclude('vendor')
     ->exclude('var')
-    ->in('./api')
+    ->in('./api/src')
 ;
 
 $config = new PhpCsFixer\Config();

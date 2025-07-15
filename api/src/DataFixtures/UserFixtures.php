@@ -82,7 +82,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
     private function createUser(?string $email = null, ?string $name = null): User
     {
-        return (new User())
+        return new User()
             ->setEmail($email ?? $this->faker->email())
             ->setName($name ?? $this->faker->name())
             ->setPassword('azerty');
@@ -125,7 +125,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     {
         for ($j = 0; $j < $this->faker->numberBetween(5, 15); ++$j) {
             $music = $this->faker->randomElement($this->musics);
-            $playlist->addMusic((new PlaylistMusic())->setMusic($music));
+            $playlist->addMusic(new PlaylistMusic()->setMusic($music));
         }
 
         return $playlist;

@@ -83,3 +83,14 @@ App\Entity\Music:
         - "album:read"
         - "artist:read"
         - "search:read"
+    duration:
+      groups:
+        - "music:read"
+        - "music:write"
+        - "music:update"
+        - "album:read"
+        - "playlist:read"
+        - "dashboard:read"
+        - "artist:read"
+        - "recommendation:read"
+        - "queue:read"

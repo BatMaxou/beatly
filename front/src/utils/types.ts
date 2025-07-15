@@ -66,6 +66,7 @@ export type Music = {
   file?: string;
   cover?: string;
   listeningsNumber?: number;
+  duration?: number;
 };
 
 export type PlaylistMusic = {
