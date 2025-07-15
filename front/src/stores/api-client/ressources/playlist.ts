@@ -24,7 +24,7 @@ export default class Playlist {
     const response = await this.apiClient.get<CollectionResponse<PlaylistType>>(ApiRessourcePath, {
       Accept: "application/ld+json",
     });
-    return response["hydra:member"];
+    return response.member;
   }
 
   async create(data: Partial<PlaylistType>): Promise<ResourceResponse> {

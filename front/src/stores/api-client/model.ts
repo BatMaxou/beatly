@@ -24,14 +24,14 @@ export interface DeleteResponse {
 }
 
 export interface CollectionResponse<T> {
-  "hydra:member": T[];
-  "hydra:totalItems": number;
-  "hydra:view"?: {
+  member: T[];
+  totalItems: number;
+  view: {
     "@id": string;
-    "hydra:first"?: string;
-    "hydra:last"?: string;
-    "hydra:next"?: string;
-    "hydra:previous"?: string;
+    "@type": string;
+    first: string;
+    last: string;
+    next: string;
   };
 }
 
