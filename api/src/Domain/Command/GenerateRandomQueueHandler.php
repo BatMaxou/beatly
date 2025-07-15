@@ -31,7 +31,7 @@ class GenerateRandomQueueHandler
         $this->eventDispatcher->dispatch(new GenerateRandomQueueEvent($user, $command->currentPosition));
 
         return new JsonResponse(
-            $this->serializer->serialize($user->getRandomQueue(), 'json', ['groups' => ['queue:read']]),
+            $this->serializer->serialize($user->getRandomQueue(), 'jsonld', ['groups' => ['queue:read']]),
             Response::HTTP_CREATED,
             [],
             true,
