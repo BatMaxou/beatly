@@ -51,11 +51,11 @@ node-modules:
 .PHONY: node_modules
 
 up:
-	@docker compose up -d
+	@docker compose up -d $(ARGS)
 .PHONY: up
 
 down:
-	@docker compose down
+	@docker compose down $(ARGS)
 .PHONY: down
 
 jwt:
@@ -98,7 +98,7 @@ fixcs:
 .PHONY: fixcs
 
 phpcs:
-	@$(phpcsfixer) fix --config=$(PHP_CS_FIXER_CONFIGURATION_FILE) --dry-run
+	@$(phpcsfixer) fix --config=$(PHP_CS_FIXER_CONFIGURATION_FILE) --dry-run --diff
 .PHONY: phpcs
 
 php-lint:

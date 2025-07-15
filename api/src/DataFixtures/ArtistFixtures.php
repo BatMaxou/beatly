@@ -11,8 +11,10 @@ use App\Entity\Artist;
 use App\Entity\Category;
 use App\Entity\Music;
 use App\Entity\MusicFile;
+use App\Service\Mp3MetadataManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Vich\UploaderBundle\Storage\StorageInterface;
 
 class ArtistFixtures extends Fixture
 {
@@ -27,7 +29,9 @@ class ArtistFixtures extends Fixture
     public function __construct(
         private readonly string $ssrPublicUploadsPath,
         private readonly string $privateUploadsPath,
-        private readonly SampleLoader $sampleLoader
+        private readonly SampleLoader $sampleLoader,
+        private readonly StorageInterface $storage,
+        private readonly Mp3MetadataManager $mp3MetadataManager,
     ) {
         $this->initializeFaker();
     }
@@ -117,10 +121,12 @@ class ArtistFixtures extends Fixture
                     $musicFile = (new MusicFile())->setName($this->createMusicFile());
                     $this->manager->persist($musicFile);
 
+                    $filePath = $this->storage->resolvePath($musicFile, 'file');
                     $music = (new Music())
                         ->setTitle($songTitle)
                         ->setFile($musicFile)
-                        ->setListeningsNumber($this->faker->numberBetween(50000, 1000000));
+                        ->setListeningsNumber($this->faker->numberBetween(50000, 1000000))
+                        ->setDuration($this->mp3MetadataManager->getFor($filePath)['duration']);
 
                     if ($this->faker->boolean(10)) {
                         $music->setCoverName($this->createCover('music'));
