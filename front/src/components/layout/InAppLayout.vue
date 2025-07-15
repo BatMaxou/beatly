@@ -36,7 +36,11 @@ if (authStore.loginSuccess) {
       style="background: linear-gradient(to top, #5523bf, #b00d72); opacity: 1"
     ></div>
 
-    <div :class="playerStore.isPlayerActive ? 'pb-[80px] z-20 flex' : 'min-h-screen z-20 flex'">
+    <div
+      :class="
+        playerStore.isPlayerActive ? 'pb-[80px] min-h-screen z-20 flex' : 'min-h-screen z-20 flex'
+      "
+    >
       <SideBar class="fixed left-0 top-0 min-w-[250px] w-full max-w-[250px] z-20" />
 
       <!-- Emplacement du contenu de la page -->
