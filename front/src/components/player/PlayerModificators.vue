@@ -5,6 +5,7 @@ import randomIcon from "@/assets/icons/random-light.svg";
 import volumeIcon from "@/assets/icons/volume-light.svg";
 import volumeOffIcon from "@/assets/icons/volume-off-light.svg";
 import queueIcon from "@/assets/icons/queue-light.svg";
+import repeatIcon from "@/assets/icons/repeat-light.svg";
 
 const playerStore = usePlayerStore();
 
@@ -32,6 +33,10 @@ const handleMute = () => {
 
 const handleShuffle = () => {
   playerStore.setIsRandomQueue(!playerStore.isRandomQueue);
+};
+
+const handleRepeat = async () => {
+  await playerStore.setIsRepeatQueue(!playerStore.isRepeatQueue);
 };
 
 const volumeBackground = computed(() => {
@@ -89,6 +94,24 @@ const volumeBackground = computed(() => {
           alt="Random Icon"
           :class="
             playerStore.isRandomQueue
+              ? 'w-6 h-6 cursor-pointer opacity-100'
+              : 'w-6 h-6 cursor-pointer opacity-50'
+          "
+        />
+      </button>
+    </div>
+    <!-- Bouton repeat -->
+    <div>
+      <button
+        @click="handleRepeat"
+        class="transition-colors p-2 hover:bg-[#440a50] rounded-full"
+        title="Lecture en boucle"
+      >
+        <img
+          :src="repeatIcon"
+          alt="Random Icon"
+          :class="
+            playerStore.isRepeatQueue
               ? 'w-6 h-6 cursor-pointer opacity-100'
               : 'w-6 h-6 cursor-pointer opacity-50'
           "

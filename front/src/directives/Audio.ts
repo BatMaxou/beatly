@@ -1,5 +1,8 @@
 import { usePlayerPreparation } from "@/composables/usePlayerPreparation";
+import { useToast } from "@/composables/useToast";
+import { useApiClient } from "@/stores/api-client";
 import { usePlayerStore } from "@/stores/player";
+import { streamToAudioUrl } from "@/utils/stream";
 
 // Fonction de throttle généré par Claude Sonnet 4 pour optimiser les appels de fonction
 function throttle<T extends (...args: any[]) => any>(func: T, limit: number): T {
@@ -25,7 +28,9 @@ export default {
     }
 
     const playerStore = usePlayerStore();
-    const { playNextSong } = usePlayerPreparation();
+    const { apiClient } = useApiClient();
+    const { playNextSong, loadRandomQueue, storeAdjacentMusicInQueue } = usePlayerPreparation();
+    const { showError } = useToast();
     const extendedEl = el as ExtendedHTMLAudioElement;
 
     el.controls = true;
@@ -53,8 +58,63 @@ export default {
       }
     };
 
-    const handleEnded = () => {
-      playNextSong();
+    const handleEnded = async () => {
+      if (playerStore.nextMusic) {
+        playNextSong();
+      } else {
+        if (playerStore.isRepeatQueue) {
+          if (playerStore.isRandomQueue) {
+            const randomQueue = await loadRandomQueue(0);
+            const firstElement = randomQueue?.queueItems[0];
+            if (firstElement) {
+              const queueFile = playerStore.queueFile?.find(
+                (item) => item.musicId === firstElement.music.id,
+              );
+              if (queueFile) {
+                await playerStore.setListen(firstElement.music, queueFile.file, 1);
+              } else {
+                await apiClient.music.getFile(firstElement.music.id).then(async (response) => {
+                  if (response) {
+                    await playerStore.setListen(
+                      firstElement.music,
+                      await streamToAudioUrl(response),
+                      1,
+                    );
+                  } else {
+                    showError("Ce titre n'est pas disponible");
+                  }
+                });
+              }
+            }
+          } else {
+            const firstElement = playerStore.queue?.queueItems[0];
+            if (firstElement) {
+              const queueFile = playerStore.queueFile?.find(
+                (item) => item.musicId === firstElement.music.id,
+              );
+              if (queueFile) {
+                await playerStore.setListen(firstElement.music, queueFile.file, 1);
+                storeAdjacentMusicInQueue();
+              } else {
+                await apiClient.music.getFile(firstElement.music.id).then(async (response) => {
+                  if (response) {
+                    await playerStore.setListen(
+                      firstElement.music,
+                      await streamToAudioUrl(response),
+                      1,
+                    );
+                    storeAdjacentMusicInQueue();
+                  } else {
+                    showError("Ce titre n'est pas disponible");
+                  }
+                });
+              }
+            }
+          }
+        } else {
+          playerStore.setPause();
+        }
+      }
     };
 
     el.addEventListener("loadedmetadata", handleLoadedMetadata);

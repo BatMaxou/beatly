@@ -8,6 +8,13 @@ export function usePlayerPreparation() {
   const { apiClient } = useApiClient();
 
   /**
+   * Trouve la dernière musique de la queue
+   */
+  const getLastQueueItem = (items: any[]) => {
+    return items.reduce((max, item) => (item.position > max ? item.position : max), 0);
+  };
+
+  /**
    * Lancement initial de la musique.
    * Execution de storeAdjacentMusicInQueue pour définir les titres précédents et suivants.
    *
@@ -48,14 +55,16 @@ export function usePlayerPreparation() {
         await playerStore.clearRandomQueue();
       }
       const randomQueue = await apiClient.queue.generateRandom({
-        currentPosition: position || playerStore.position,
+        currentPosition: position !== undefined ? position : playerStore.position,
       });
       if (randomQueue) {
         playerStore.setRandomQueue(randomQueue);
         playerStore.setPosition(1);
         storeAdjacentMusicInQueue();
+        return randomQueue;
       }
     }
+    return null;
   };
 
   /**
@@ -75,8 +84,18 @@ export function usePlayerPreparation() {
 
     if (queueItems.length === 0) return;
 
-    const previousInQueue = queueItems.find((item) => item.position === playerStore.position - 1);
-    const nextInQueue = queueItems.find((item) => item.position === playerStore.position + 1);
+    let previousInQueue = queueItems.find((item) => item.position === playerStore.position - 1);
+
+    if (!previousInQueue && playerStore.isRepeatQueue) {
+      const lastPosition = getLastQueueItem(queueItems);
+      previousInQueue = queueItems.find((item) => item.position === lastPosition);
+    }
+
+    let nextInQueue = queueItems.find((item) => item.position === playerStore.position + 1);
+
+    if (!nextInQueue && playerStore.isRepeatQueue) {
+      nextInQueue = queueItems.find((item) => item.position === 1);
+    }
 
     if (previousInQueue) {
       if (playerStore.queueFile) {
@@ -201,11 +220,20 @@ export function usePlayerPreparation() {
    */
   const playNextSong = async () => {
     if (playerStore.nextMusic !== null && playerStore.nextMusicFile !== null) {
-      await playerStore.setListen(
-        playerStore.nextMusic,
-        playerStore.nextMusicFile,
-        playerStore.position + 1,
+      const queueItems = Object.values(
+        playerStore.isRandomQueue && playerStore.randomQueue
+          ? playerStore.randomQueue.queueItems
+          : playerStore.queue?.queueItems || {},
       );
+
+      const isBackToStart =
+        playerStore.isRepeatQueue &&
+        queueItems.length > 0 &&
+        playerStore.nextMusic.id === queueItems.find((item) => item.position === 1)?.music.id;
+
+      const newPosition = isBackToStart ? 1 : playerStore.position + 1;
+
+      await playerStore.setListen(playerStore.nextMusic, playerStore.nextMusicFile, newPosition);
       storeAdjacentMusicInQueue();
     } else {
       playerStore.setPause();
@@ -219,10 +247,24 @@ export function usePlayerPreparation() {
    */
   const playPreviousSong = async () => {
     if (playerStore.previousMusic !== null && playerStore.previousMusicFile !== null) {
+      const queueItems = Object.values(
+        playerStore.isRandomQueue && playerStore.randomQueue
+          ? playerStore.randomQueue.queueItems
+          : playerStore.queue?.queueItems || {},
+      );
+
+      const isBackToEnd =
+        playerStore.isRepeatQueue &&
+        queueItems.length > 0 &&
+        playerStore.previousMusic.id ===
+          queueItems.find((item) => item.position === getLastQueueItem(queueItems))?.music.id;
+
+      const newPosition = isBackToEnd ? getLastQueueItem(queueItems) : playerStore.position - 1;
+
       await playerStore.setListen(
         playerStore.previousMusic,
         playerStore.previousMusicFile,
-        playerStore.position - 1,
+        newPosition,
       );
       storeAdjacentMusicInQueue();
     } else if (playerStore.currentMusic !== null && playerStore.musicFile !== null) {

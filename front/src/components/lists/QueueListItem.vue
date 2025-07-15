@@ -57,7 +57,14 @@ const setIsCurrentSongPlaying = () => {
 };
 
 watch(
-  () => playerStore.position,
+  () => playerStore.currentMusic,
+  () => {
+    setIsCurrentSongPlaying();
+  },
+);
+
+watch(
+  () => playerStore.isRandomQueue,
   () => {
     setIsCurrentSongPlaying();
   },
