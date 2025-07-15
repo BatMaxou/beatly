@@ -51,7 +51,7 @@ class ArtistFixtures extends Fixture
     {
         $categories = [];
         foreach ($this->sampleLoader->load(SampleType::CATEGORY) as $categoryData) {
-            $category = (new Category())
+            $category = new Category()
                 ->setName($categoryData['name'])
                 ->setColor($categoryData['color']);
 
@@ -77,7 +77,7 @@ class ArtistFixtures extends Fixture
 
     private function createArtist(string $name): Artist
     {
-        $artist = (new Artist())
+        $artist = new Artist()
             ->setName($name)
             ->setEmail(strtolower(str_replace(' ', '.', $name)).'@music.com')
             ->setPassword('azerty');
@@ -101,7 +101,7 @@ class ArtistFixtures extends Fixture
             $artist = $artistInfo['entity'];
             $artistData = $artistInfo['data'];
             foreach ($artistData['albums'] as $albumTitle => $songs) {
-                $album = (new Album())
+                $album = new Album()
                     ->setTitle($albumTitle)
                     ->setArtist($artist)
                     ->setReleaseDate($this->faker->dateTimeBetween('-15 years', 'now'));
@@ -118,11 +118,11 @@ class ArtistFixtures extends Fixture
 
                 $musicPosition = 1;
                 foreach ($songs as $songTitle => $songCategories) {
-                    $musicFile = (new MusicFile())->setName($this->createMusicFile());
+                    $musicFile = new MusicFile()->setName($this->createMusicFile());
                     $this->manager->persist($musicFile);
 
                     $filePath = $this->storage->resolvePath($musicFile, 'file');
-                    $music = (new Music())
+                    $music = new Music()
                         ->setTitle($songTitle)
                         ->setFile($musicFile)
                         ->setListeningsNumber($this->faker->numberBetween(50000, 1000000))
@@ -134,7 +134,7 @@ class ArtistFixtures extends Fixture
 
                     $music->setMainArtist($artist);
                     $music->addAlbum(
-                        (new AlbumMusic())
+                        new AlbumMusic()
                         ->setAlbum($album)
                         ->setPosition($musicPosition)
                     );

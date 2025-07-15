@@ -74,7 +74,7 @@ class QueueManager
     {
         foreach ($musics as $music) {
             $queue->addQueueItem(
-                (new QueueItem())
+                new QueueItem()
                 ->setMusic($music)
                 ->setPosition($queue->getNextPosition())
             );
@@ -94,7 +94,7 @@ class QueueManager
 
         foreach ($musics as $music) {
             $queue->addQueueItem(
-                (new QueueItem())
+                new QueueItem()
                 ->setMusic($music)
                 ->setPosition($startPosition)
             );
@@ -114,7 +114,7 @@ class QueueManager
             $this->reorderAfterPosition($queue, $randomPosition - 1);
 
             $queue->addQueueItem(
-                (new QueueItem())
+                new QueueItem()
                 ->setMusic($music)
                 ->setPosition($randomPosition)
             );
@@ -182,7 +182,7 @@ class QueueManager
         foreach ($queue->getQueueItems() as $item) {
             if ($item->getPosition() === $currentPosition) {
                 $randomQueue->addQueueItem(
-                    (new QueueItem())
+                    new QueueItem()
                     ->setMusic($item->getMusic())
                     ->setPosition(1)
                 );

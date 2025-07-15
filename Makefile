@@ -98,7 +98,7 @@ fixcs:
 .PHONY: fixcs
 
 phpcs:
-	@$(phpcsfixer) fix --config=$(PHP_CS_FIXER_CONFIGURATION_FILE) --dry-run --diff
+	@$(phpcsfixer) fix --config=$(PHP_CS_FIXER_CONFIGURATION_FILE) --dry-run
 .PHONY: phpcs
 
 php-lint:
