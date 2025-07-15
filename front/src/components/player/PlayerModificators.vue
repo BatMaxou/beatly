@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
+import { usePlayerStore } from "@/stores/player";
+import randomIcon from "@/assets/icons/random-light.svg";
 import volumeIcon from "@/assets/icons/volume-light.svg";
 import volumeOffIcon from "@/assets/icons/volume-off-light.svg";
-import { usePlayerStore } from "@/stores/player";
+import queueIcon from "@/assets/icons/queue-light.svg";
 
 const playerStore = usePlayerStore();
 
@@ -28,6 +30,10 @@ const handleMute = () => {
   playerStore.setMuted(!playerStore.muted);
 };
 
+const handleShuffle = () => {
+  playerStore.setIsRandomQueue(!playerStore.isRandomQueue);
+};
+
 const volumeBackground = computed(() => {
   const percentage = volumeValue.value;
   const activeColor = playerStore.isVolumeInteraction ? "#ffffffcc" : "#ffffff";
@@ -36,48 +42,95 @@ const volumeBackground = computed(() => {
 </script>
 
 <template>
-  <div v-if="!playerStore.muted" class="volume-controls flex items-center gap-2">
-    <img :src="volumeIcon" alt="Volume Icon" class="w-8 h-8 cursor-pointer" @click="handleMute" />
-    <input
-      type="range"
-      v-model="volumeValue"
-      v-volume-range
-      name="volumeRange"
-      min="0"
-      max="100"
-      id="volumeInputRange"
-      class="inputRange cursor-pointer"
-      :style="{ background: volumeBackground }"
-    />
-  </div>
-  <div v-else class="volume-controls">
-    <img
-      :src="volumeOffIcon"
-      alt="Volume Icon"
-      class="w-8 h-8 cursor-pointer"
-      @click="handleMute"
-    />
+  <div class="flex items-center gap-2">
+    <!-- Contrôle de volume avec position relative pour contenir l'overlay -->
+    <div class="relative volume-container">
+      <button
+        @click="handleMute"
+        class="volume-button transition-colors p-2 hover:bg-[#440a50] rounded-full"
+        title="Volume"
+      >
+        <img
+          :src="playerStore.muted ? volumeOffIcon : volumeIcon"
+          alt="Volume Icon"
+          class="w-6 h-6 cursor-pointer"
+        />
+      </button>
+
+      <!-- Range de volume qui apparaît au-dessus en absolue -->
+      <div
+        v-if="!playerStore.muted"
+        class="absolute bottom-full left-1/2 transform min-h-[6px] p-3 mb-12 -rotate-90 origin-center -translate-x-1/2 bg-[#2E0B40] rounded-lg shadow-lg opacity-0 invisible hover:opacity-100 hover:visible volume-overlay transition-all duration-300"
+      >
+        <input
+          type="range"
+          v-model="volumeValue"
+          v-volume-range
+          name="volumeRange"
+          min="0"
+          max="100"
+          id="volumeInputRange"
+          class="volume-range-vertical"
+          :style="{ background: volumeBackground }"
+          orientation="vertical"
+        />
+      </div>
+    </div>
+
+    <!-- Bouton shuffle -->
+    <div>
+      <button
+        @click="handleShuffle"
+        class="transition-colors p-2 hover:bg-[#440a50] rounded-full"
+        title="Lecture aléatoire"
+      >
+        <img
+          :src="randomIcon"
+          alt="Random Icon"
+          :class="
+            playerStore.isRandomQueue
+              ? 'w-6 h-6 cursor-pointer opacity-100'
+              : 'w-6 h-6 cursor-pointer opacity-50'
+          "
+        />
+      </button>
+    </div>
+
+    <!-- Bouton file d'attente -->
+    <div>
+      <button
+        @click="playerStore.setShowQueue(!playerStore.showQueue)"
+        class="transition-colors p-2 hover:bg-[#440a50] rounded-full"
+        :class="{ 'bg-[#440a50]': playerStore.showQueue }"
+        title="File d'attente"
+      >
+        <img :src="queueIcon" alt="Queue Icon" class="w-6 h-6 cursor-pointer" />
+      </button>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.volume-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transform: rotate(180deg);
+.volume-container:hover .volume-overlay {
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-.volume-controls input[type="range"] {
-  width: 0px;
-  transition: width 0.5s ease;
+.volume-container:hover .volume-button {
+  background-color: #440a50;
+}
+
+.volume-range-vertical {
+  display: block;
+  width: 100px;
+  height: 6px;
   appearance: none;
   -webkit-appearance: none;
-  height: 12px;
   border-radius: 9999px;
   cursor: pointer;
 }
-.volume-controls input[type="range"]::-webkit-slider-thumb {
+
+.volume-range-vertical::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 0px;
@@ -88,28 +141,14 @@ const volumeBackground = computed(() => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.volume-controls input[type="range"]::-moz-range-thumb {
+.volume-range-vertical::-moz-range-thumb {
   appearance: none;
   width: 0px;
   height: 0px;
+  border: none;
   border-radius: 50%;
   background: #ffffff;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.volume-controls:hover input[type="range"] {
-  width: 100px;
-  transition: width 0.5s ease;
-}
-
-.volume-controls:hover input[type="range"]::-webkit-slider-thumb {
-  width: 0px;
-  height: 0px;
-}
-
-.volume-controls:hover input[type="range"]::-moz-range-thumb {
-  width: 0px;
-  height: 0px;
 }
 </style>

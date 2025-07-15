@@ -11,7 +11,8 @@ import { streamToAudioUrl } from "@/utils/stream";
 const { showError } = useToast();
 const playerStore = usePlayerStore();
 const { apiClient } = useApiClient();
-const { storeAdjacentMusicInQueue, loadQueueFile } = usePlayerPreparation();
+const { loadQueue, loadRandomQueue, storeAdjacentMusicInQueue, loadQueueFile } =
+  usePlayerPreparation();
 const emit = defineEmits(["update:isClickedToPlay"]);
 
 const { origin, parentId, isClickedToPlay } = defineProps({
@@ -33,46 +34,44 @@ const resetPlayState = () => {
   emit("update:isClickedToPlay", false);
 };
 
-const addQueue = async (origin: string) => {
-  if (origin === "album") {
-    return await apiClient.queue.add({ album: parentId, currentPosition: 1 });
-  } else if (origin === "playlist") {
-    return await apiClient.queue.add({ playlist: parentId, currentPosition: 1 });
-  }
-  return Promise.reject(new Error("Invalid origin"));
-};
-
 watch(
   () => isClickedToPlay,
   async (newVal) => {
     if (newVal && parentId !== playerStore.queueParent) {
       if (parentId) {
+        await loadQueue(origin, parentId, 1, null);
         if (playerStore.queue) {
-          playerStore.clearQueue();
-        }
-        const queue = await addQueue(origin);
-        if (queue) {
-          playerStore.setQueue(queue, parentId);
-          playerStore.setQueueFile(await loadQueueFile());
-          const firstMusic = Object.entries(queue.queueItems)[0][1];
-
-          const queueFile = playerStore.queueFile?.find(
-            (item) => item.musicId === firstMusic.music.id,
-          );
-          if (queueFile) {
-            playerStore.setListen(firstMusic.music, queueFile.file, firstMusic.position);
+          await loadQueueFile();
+          let firstMusic;
+          if (playerStore.isRandomQueue) {
+            await loadRandomQueue(0);
+            firstMusic =
+              (playerStore.randomQueue &&
+                Object.entries(playerStore.randomQueue?.queueItems)[0][1]) ||
+              null;
           } else {
-            apiClient.music.getFile(firstMusic.music.id).then(async (response) => {
-              if (response) {
-                playerStore.setListen(
-                  firstMusic.music,
-                  await streamToAudioUrl(response),
-                  firstMusic.position,
-                );
-              } else {
-                showError("Ce titre n'est pas disponible");
-              }
-            });
+            firstMusic = Object.entries(playerStore.queue.queueItems)[0][1];
+          }
+
+          if (firstMusic) {
+            const queueFile = playerStore.queueFile?.find(
+              (item) => item.musicId === firstMusic.music.id,
+            );
+            if (queueFile) {
+              playerStore.setListen(firstMusic.music, queueFile.file, firstMusic.position);
+            } else {
+              apiClient.music.getFile(firstMusic.music.id).then(async (response) => {
+                if (response) {
+                  playerStore.setListen(
+                    firstMusic.music,
+                    await streamToAudioUrl(response),
+                    firstMusic.position,
+                  );
+                } else {
+                  showError("Ce titre n'est pas disponible");
+                }
+              });
+            }
           }
         }
 

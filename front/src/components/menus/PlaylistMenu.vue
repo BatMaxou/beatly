@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import dotsLight from "@/assets/icons/dots-light.svg";
-import playListLight from "@/assets/icons/play-list-light.svg";
+import queueLight from "@/assets/icons/queue-light.svg";
 import removelight from "@/assets/icons/remove-light.svg";
 import editLight from "@/assets/icons/edit-light.svg";
 import lockLight from "@/assets/icons/lock-light.svg";
@@ -17,7 +17,8 @@ const props = defineProps({
   position: {
     type: String as () => "top-left" | "top-right" | "bottom-left" | "bottom-right",
     default: "bottom-left",
-    validator: (value: string) => ["top-left", "top-right", "bottom-left", "bottom-right"].includes(value),
+    validator: (value: string) =>
+      ["top-left", "top-right", "bottom-left", "bottom-right"].includes(value),
   },
   isPublic: {
     type: Boolean,
@@ -48,7 +49,14 @@ const toggleMenu = () => {
   }
 };
 
-const handleAction = (action: "addToQueue" | "deletePlaylist" | "editPlaylist" | "togglePrivacy" | "addToLibrary" | "closeMenu"
+const handleAction = (
+  action:
+    | "addToQueue"
+    | "deletePlaylist"
+    | "editPlaylist"
+    | "togglePrivacy"
+    | "addToLibrary"
+    | "closeMenu",
 ) => {
   emit(action);
   toggleMenu();
@@ -75,7 +83,7 @@ onBeforeUnmount(() => {
     <!-- Bouton pour ouvrir le menu -->
     <button
       @click.stop="toggleMenu"
-      class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-700/30 transition-colors duration-200 focus:outline-none"
+      class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#440a50] transition-colors duration-200 focus:outline-none"
       aria-label="Menu options"
     >
       <img :src="dotsLight" alt="Options" class="w-5 h-5 dark:invert" />
@@ -85,7 +93,7 @@ onBeforeUnmount(() => {
     <div
       v-if="menuVisible"
       :class="[
-        'absolute z-50 bg-gray-800/90 backdrop-blur-md border border-gray-700 rounded-xl shadow-xl overflow-hidden transform transition-all duration-200 dark:bg-gray-900/90 dark:border-gray-700 whitespace-nowrap',
+        'absolute z-50 bg-[#1a0725] backdrop-blur-md border border-[#440a50] rounded-xl shadow-xl overflow-hidden transform transition-all duration-200 dark:bg-gray-900/90 dark:border-gray-700 whitespace-nowrap',
         {
           'top-full mt-2': props.position.startsWith('bottom'),
           'bottom-full mb-2': props.position.startsWith('top'),
@@ -97,28 +105,28 @@ onBeforeUnmount(() => {
       <div class="py-1 text-sm min-w-max">
         <button
           @click="handleAction('addToQueue')"
-          class="flex items-center w-full px-4 py-3 text-white hover:bg-gray-700/50 transition-colors duration-200 dark:hover:bg-gray-800/70"
+          class="flex items-center w-full px-4 py-3 text-white hover:bg-[#440a50] transition-colors duration-200 dark:hover:bg-gray-800/70"
         >
           <!-- Icône file d'attente -->
-          <img :src="playListLight" alt="File d'attente" class="w-5 h-5 flex-shrink-0" />
+          <img :src="queueLight" alt="File d'attente" class="w-5 h-5 flex-shrink-0" />
           <span class="ml-3 whitespace-nowrap">Ajouter à la file d'attente</span>
         </button>
 
         <button
           v-if="!props.isUserPlaylist"
           @click="handleAction('addToLibrary')"
-          class="flex items-center w-full px-4 py-3 text-white hover:bg-gray-700/50 transition-colors duration-200 dark:hover:bg-gray-800/70"
+          class="flex items-center w-full px-4 py-3 text-white hover:bg-[#440a50] transition-colors duration-200 dark:hover:bg-gray-800/70"
         >
           <!-- Icône ajouter à la bibliothèque -->
           <img :src="addLight" alt="Ajouter" class="w-5 h-5 flex-shrink-0" />
           <span class="ml-3 whitespace-nowrap">Ajouter à la bibliothèque</span>
         </button>
 
-        <div class="border-t border-gray-700 my-1 dark:border-gray-600"></div>
+        <div class="border-t border-[#440a50] my-1 dark:border-gray-600"></div>
 
         <button
           @click="handleAction('editPlaylist')"
-          class="flex items-center w-full px-4 py-3 text-white hover:bg-gray-700/50 transition-colors duration-200 dark:hover:bg-gray-800/70"
+          class="flex items-center w-full px-4 py-3 text-white hover:bg-[#440a50] transition-colors duration-200 dark:hover:bg-gray-800/70"
         >
           <!-- Icône édition -->
           <img :src="editLight" alt="Éditer" class="w-5 h-5 flex-shrink-0" />
@@ -127,7 +135,7 @@ onBeforeUnmount(() => {
 
         <button
           @click="handleAction('togglePrivacy')"
-          class="flex items-center w-full px-4 py-3 text-white hover:bg-gray-700/50 transition-colors duration-200 dark:hover:bg-gray-800/70"
+          class="flex items-center w-full px-4 py-3 text-white hover:bg-[#440a50] transition-colors duration-200 dark:hover:bg-gray-800/70"
         >
           <!-- Icône verrouillage -->
           <img
@@ -140,11 +148,11 @@ onBeforeUnmount(() => {
           }}</span>
         </button>
 
-        <div class="border-t border-gray-700 my-1 dark:border-gray-600"></div>
+        <div class="border-t border-[#440a50] my-1 dark:border-gray-600"></div>
 
         <button
           @click="handleAction('deletePlaylist')"
-          class="flex items-center w-full px-4 py-3 text-red-400 hover:bg-gray-700/50 transition-colors duration-200 dark:hover:bg-gray-800/70"
+          class="flex items-center w-full px-4 py-3 text-red-400 hover:bg-[#440a50] transition-colors duration-200 dark:hover:bg-gray-800/70"
         >
           <!-- Icône suppression -->
           <img :src="removelight" alt="Supprimer" class="w-5 h-5 flex-shrink-0" />

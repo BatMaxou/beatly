@@ -1,4 +1,3 @@
-import { usePlayerPreparation } from "@/composables/usePlayerPreparation";
 import { usePlayerStore } from "@/stores/player";
 
 interface ExtendedHTMLElement extends HTMLElement {

@@ -5,6 +5,7 @@ import { useToast } from "@/composables/useToast";
 import loadingIcon from "@/assets/icons/loading-light.svg";
 import PlayerSection from "@/components/player/PlayerSection.vue";
 import { usePlayerStore } from "@/stores/player";
+import SideBarQueue from "../sidebar/SideBarQueue.vue";
 
 // Props
 const { loading, padding } = defineProps({
@@ -53,17 +54,51 @@ if (authStore.loginSuccess) {
           <slot v-if="!loading"></slot>
         </div>
       </div>
-
-      <!-- Player en bas de page -->
     </div>
-    <div class="fixed bottom-0 left-0 right-0 z-20 bg-[#2E0B40] flex justify-center items-center">
+    <!-- Player en bas de page -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 bg-[#2E0B40] flex justify-center items-center">
       <PlayerSection />
     </div>
+
+    <!-- Sidebar File d'attente -->
+    <Transition name="slide-right">
+      <div
+        v-if="playerStore.showQueue"
+        class="fixed inset-0 bg-black/50 z-30"
+        :class="playerStore.isPlayerActive ? 'pb-[80px]' : 'min-h-screen'"
+        @click="playerStore.setShowQueue(false)"
+      ></div>
+    </Transition>
+
+    <Transition name="slide-right">
+      <SideBarQueue
+        v-if="playerStore.showQueue"
+        :class="playerStore.isPlayerActive ? 'pb-[80px]' : 'min-h-screen'"
+        class="fixed top-0 right-0 min-w-[500px] h-full z-40 shadow-2xl"
+        style="background: linear-gradient(to top, #5523bf, #b00d72); opacity: 1"
+      />
+    </Transition>
   </div>
 </template>
 
 <style scoped>
 .playingMinHeight {
   max-height: calc(100vh - 80px);
+}
+
+/* Animation pour la sidebar coulissante */
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 0.3s ease-in-out;
+}
+
+.slide-right-enter-from,
+.slide-right-leave-to {
+  transform: translateX(100%);
+}
+
+.slide-right-enter-to,
+.slide-right-leave-from {
+  transform: translateX(0);
 }
 </style>

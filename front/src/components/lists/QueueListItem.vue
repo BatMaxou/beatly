@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { defineProps, ref, watch, onMounted } from "vue";
+import { defineProps, onMounted, ref, watch } from "vue";
 import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
-import PlaylistTitleMenu from "../menus/PlaylistTitleMenu.vue";
+import type { Music } from "@/utils/types";
 import defaultCover from "@/assets/images/default-cover.png";
 import { usePlayerStore } from "@/stores/player";
-import type { Music } from "@/utils/types";
+import PlaylistTitleMenu from "../menus/PlaylistTitleMenu.vue";
 
 const props = defineProps<{
   music: Music;
@@ -12,9 +12,7 @@ const props = defineProps<{
   position: number;
   parentId?: string;
   origin: string;
-  musics: { music: Music }[] | null;
 }>();
-
 const isHovered = ref(false);
 const isClickedToPlay = ref(false);
 const isCurrentSongPlaying = ref(false);
@@ -47,7 +45,9 @@ const handlePlayStateChange = (newState: boolean) => {
 
 const setIsCurrentSongPlaying = () => {
   if (
-    props.music.id === playerStore.currentMusic?.id &&
+    playerStore.currentMusic &&
+    props.music &&
+    props.music.id === playerStore.currentMusic.id &&
     (!playerStore.queueParent || props.parentId === playerStore.queueParent)
   ) {
     isCurrentSongPlaying.value = true;
@@ -57,11 +57,9 @@ const setIsCurrentSongPlaying = () => {
 };
 
 watch(
-  () => playerStore.currentMusic,
-  (newVal: Music | null, oldVal: Music | null) => {
-    if (newVal !== oldVal) {
-      setIsCurrentSongPlaying();
-    }
+  () => playerStore.position,
+  () => {
+    setIsCurrentSongPlaying();
   },
 );
 
@@ -93,7 +91,6 @@ onMounted(() => {
             :isClickedToPlay="isClickedToPlay"
             :position="position"
             :parentId="parentId"
-            :musics="origin === 'top-titles' ? musics : null"
             :origin="origin"
             @update:isClickedToPlay="handlePlayStateChange"
           />
