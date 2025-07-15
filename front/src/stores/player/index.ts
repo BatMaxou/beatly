@@ -18,6 +18,7 @@ export const usePlayerStore = defineStore("player", {
     isPlayerInteraction: false as boolean,
     isVolumeInteraction: false as boolean,
     isRandomQueue: false as boolean,
+    isRepeatQueue: false as boolean,
     showQueue: false as boolean,
     queue: null as Queue | null,
     queueParent: null as string | null,
@@ -70,6 +71,13 @@ export const usePlayerStore = defineStore("player", {
       if (isRandomQueue) {
         const { loadRandomQueue } = usePlayerPreparation();
         await loadRandomQueue();
+      }
+    },
+    async setIsRepeatQueue(repeatQueue: boolean) {
+      this.isRepeatQueue = repeatQueue;
+      if (this.queue && this.isPlayerActive) {
+        const { storeAdjacentMusicInQueue } = usePlayerPreparation();
+        await storeAdjacentMusicInQueue();
       }
     },
     setShowQueue(showQueue: boolean) {
