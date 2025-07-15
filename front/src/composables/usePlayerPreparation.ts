@@ -19,7 +19,7 @@ export function usePlayerPreparation() {
     musics?: { music: Music }[] | null,
   ) => {
     if (playerStore.queue) {
-      playerStore.clearQueue();
+      await playerStore.clearQueue();
     }
     let queue: Queue | null = null;
     if (origin === "album") {

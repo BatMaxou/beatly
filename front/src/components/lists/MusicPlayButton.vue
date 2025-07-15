@@ -67,11 +67,13 @@ watch(
         }
 
         if (origin !== "queue") {
-          if (!playerStore.queueParent || parentId !== playerStore.queueParent) {
+          if (!playerStore.isRandomQueue && parentId !== playerStore.queueParent) {
             await loadQueue(origin, parentId, position, musics);
             await loadQueueFile();
           } else if (playerStore.isRandomQueue) {
+            await loadQueue(origin, parentId, position, musics);
             await loadRandomQueue(position);
+            await loadQueueFile();
           }
         }
 

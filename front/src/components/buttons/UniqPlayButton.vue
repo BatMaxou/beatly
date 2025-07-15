@@ -11,7 +11,8 @@ import { streamToAudioUrl } from "@/utils/stream";
 const { showError } = useToast();
 const playerStore = usePlayerStore();
 const { apiClient } = useApiClient();
-const { loadQueue, storeAdjacentMusicInQueue, loadQueueFile } = usePlayerPreparation();
+const { loadQueue, loadRandomQueue, storeAdjacentMusicInQueue, loadQueueFile } =
+  usePlayerPreparation();
 const emit = defineEmits(["update:isClickedToPlay"]);
 
 const { origin, parentId, isClickedToPlay } = defineProps({
@@ -41,25 +42,36 @@ watch(
         await loadQueue(origin, parentId, 1, null);
         if (playerStore.queue) {
           await loadQueueFile();
-          const firstMusic = Object.entries(playerStore.queue.queueItems)[0][1];
-
-          const queueFile = playerStore.queueFile?.find(
-            (item) => item.musicId === firstMusic.music.id,
-          );
-          if (queueFile) {
-            playerStore.setListen(firstMusic.music, queueFile.file, firstMusic.position);
+          let firstMusic;
+          if (playerStore.isRandomQueue) {
+            await loadRandomQueue(0);
+            firstMusic =
+              (playerStore.randomQueue &&
+                Object.entries(playerStore.randomQueue?.queueItems)[0][1]) ||
+              null;
           } else {
-            apiClient.music.getFile(firstMusic.music.id).then(async (response) => {
-              if (response) {
-                playerStore.setListen(
-                  firstMusic.music,
-                  await streamToAudioUrl(response),
-                  firstMusic.position,
-                );
-              } else {
-                showError("Ce titre n'est pas disponible");
-              }
-            });
+            firstMusic = Object.entries(playerStore.queue.queueItems)[0][1];
+          }
+
+          if (firstMusic) {
+            const queueFile = playerStore.queueFile?.find(
+              (item) => item.musicId === firstMusic.music.id,
+            );
+            if (queueFile) {
+              playerStore.setListen(firstMusic.music, queueFile.file, firstMusic.position);
+            } else {
+              apiClient.music.getFile(firstMusic.music.id).then(async (response) => {
+                if (response) {
+                  playerStore.setListen(
+                    firstMusic.music,
+                    await streamToAudioUrl(response),
+                    firstMusic.position,
+                  );
+                } else {
+                  showError("Ce titre n'est pas disponible");
+                }
+              });
+            }
           }
         }
 
