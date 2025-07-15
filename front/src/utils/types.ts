@@ -26,19 +26,12 @@ export interface Artist extends User {
   albums?: Album[];
 }
 
-export type AlbumMusic = {
-  id: number;
-  music: Music;
-  position: number;
-  addedAt: string;
-};
-
 export type Album = {
   "@id": string;
   id: number;
   title: string;
   releaseDate: string;
-  musics: AlbumMusic[];
+  musics: Music[];
   cover?: string;
   wallpaper?: string;
   artists: Artist[];
@@ -60,6 +53,7 @@ export type Music = {
   "@id": string;
   id: number;
   title: string;
+  addedAt: string;
   mainArtist: Artist;
   artists: Artist[];
   categories: Category[];
@@ -67,6 +61,7 @@ export type Music = {
   cover?: string;
   listeningsNumber?: number;
   duration?: number;
+  albumPosition?: number;
 };
 
 export type PlaylistMusic = {
