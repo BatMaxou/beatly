@@ -12,3 +12,6 @@ App\Api\Model\Dashboard:
     mostLikedMusics:
       groups:
         - 'dashboard:read'
+    mostLikedPlaylists:
+      groups:
+        - 'dashboard:read'
