@@ -24,6 +24,7 @@ class Dashboard
         public array $mostPopularCategories = [],
         public array $mostLikedMusics = [],
         public array $mostListenedMusics = [],
+        public array $mostLikedPlaylists = [],
     ) {
     }
 }

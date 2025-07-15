@@ -100,6 +100,7 @@ export type Dashboard = {
   mostPopularCategories: Category[];
   mostLikedMusics: Music[];
   mostListenedMusics: Music[];
+  mostLikedPlaylists: Playlist[];
 };
 
 export type Recommendation = {

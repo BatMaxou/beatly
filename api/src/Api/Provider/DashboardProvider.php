@@ -9,6 +9,7 @@ use App\Enum\ApiReusableRoute;
 use App\Repository\CategoryRepository;
 use App\Repository\LastListenedRepository;
 use App\Repository\MusicRepository;
+use App\Repository\PlaylistRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class DashboardProvider implements ProviderInterface
@@ -18,6 +19,7 @@ class DashboardProvider implements ProviderInterface
         private readonly LastListenedRepository $lastListenedRepository,
         private readonly MusicRepository $musicRepository,
         private readonly CategoryRepository $categoryRepository,
+        private readonly PlaylistRepository $playlistRepository,
     ) {
     }
 
@@ -37,6 +39,7 @@ class DashboardProvider implements ProviderInterface
             $this->categoryRepository->findMostPopular(),
             $this->musicRepository->findMostLiked(),
             $this->musicRepository->findMostListened(),
+            $this->playlistRepository->findMostLiked(),
         );
     }
 }
