@@ -1,4 +1,4 @@
-import type { Music, Queue } from "@/utils/types";
+import type { Listen, Music, Queue } from "@/utils/types";
 import { defineStore } from "pinia";
 import { useApiClient } from "../api-client";
 import { usePlayerPreparation } from "@/composables/usePlayerPreparation";
@@ -7,6 +7,7 @@ export const usePlayerStore = defineStore("player", {
   state: () => ({
     currentMusic: null as Music | null,
     musicFile: "" as string,
+    listeningNumber: 0 as number,
     position: -1 as number,
     volume: 50 as number,
     muted: false as boolean,
@@ -133,18 +134,44 @@ export const usePlayerStore = defineStore("player", {
       this.audioPlayer?.play();
       this.setIsPlay(true);
     },
-    async setListen(music: Music, musicFile: string, position: number) {
+    async setListen(music: Music, musicFile: string, position: number, containerId?: string) {
       this.setIsPlayerActive(true);
       this.setCurrentMusic(music);
       this.setMusicFile(musicFile);
       this.setPosition(position);
-      setTimeout(() => {
+      setTimeout(async () => {
         this.setPlay();
+        await this.setListeningNumber(music, containerId);
       }, 100);
     },
     setChangeCurrentTime(number: number) {
       if (this.audioPlayer) {
         this.audioPlayer.currentTime = number;
+      }
+    },
+
+    async setListeningNumber(music: Music, id?: string) {
+      // console.log(id, this.queueParent);
+      // console.log(music, id);
+      if (id && music) {
+        const { apiClient } = useApiClient();
+        const listenData: Listen = {
+          music: music["@id"],
+          ...(id.startsWith("/api/albums/") && id !== this.queueParent && { album: id }),
+          ...(id.startsWith("/api/playlists/") && id !== this.queueParent && { playlist: id }),
+        };
+        // console.log(listenData);
+        // console.log("Envoi des données d'écoute:", listenData);
+        const hasRequiredData = listenData.music || listenData.album || listenData.playlist;
+
+        if (hasRequiredData) {
+          try {
+            await apiClient.listen.play(listenData);
+            console.log("Écoute enregistrée avec succès");
+          } catch (error) {
+            console.warn("Erreur lors de l'enregistrement de l'écoute:", error);
+          }
+        }
       }
     },
     async clearRandomQueue() {
