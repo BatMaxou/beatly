@@ -11,7 +11,7 @@ import arrowRight from "@/assets/icons/arrow-right-light.svg";
 import defaultWallpaper from "@/assets/images/default-wallpaper-playlist.jpg";
 import defaultCover from "@/assets/images/default-cover.png";
 import AlbumPlayableCover from "@/components/albums/AlbumPlayableCover.vue";
-import UniqPlayButton from "@/components/buttons/UniqPlayButton.vue";
+import FastPlayButton from "@/components/buttons/FastPlayButton.vue";
 import AlbumPlayableCard from "@/components/cards/AlbumPlayableCard.vue";
 
 const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
@@ -193,7 +193,7 @@ onMounted(async () => {
                       class="bg-black/50 opacity-90 hover:bg-black/60 hover:opacity-100 transition-all rounded-full p-4 h-fit cursor-pointer"
                       data-play
                     >
-                      <UniqPlayButton
+                      <FastPlayButton
                         :musicId="lastAlbum.id"
                         origin="album"
                         :parentId="lastAlbum['@id']"

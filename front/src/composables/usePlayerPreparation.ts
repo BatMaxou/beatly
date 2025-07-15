@@ -1,7 +1,7 @@
 import { useApiClient } from "@/stores/api-client";
 import { usePlayerStore } from "@/stores/player";
 import { streamToAudioUrl } from "@/utils/stream";
-import type { Music, Queue } from "@/utils/types";
+import type { Music, Queue, QueueItem } from "@/utils/types";
 
 export function usePlayerPreparation() {
   const playerStore = usePlayerStore();
@@ -10,7 +10,7 @@ export function usePlayerPreparation() {
   /**
    * Trouve la dernière musique de la queue
    */
-  const getLastQueueItem = (items: any[]) => {
+  const getLastQueueItem = (items: QueueItem[]) => {
     return items.reduce((max, item) => (item.position > max ? item.position : max), 0);
   };
 

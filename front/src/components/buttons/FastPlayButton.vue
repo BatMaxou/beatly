@@ -58,7 +58,12 @@ watch(
               (item) => item.musicId === firstMusic.music.id,
             );
             if (queueFile) {
-              playerStore.setListen(firstMusic.music, queueFile.file, firstMusic.position);
+              playerStore.setListen(
+                firstMusic.music,
+                queueFile.file,
+                firstMusic.position,
+                parentId,
+              );
             } else {
               apiClient.music.getFile(firstMusic.music.id).then(async (response) => {
                 if (response) {
@@ -66,6 +71,7 @@ watch(
                     firstMusic.music,
                     await streamToAudioUrl(response),
                     firstMusic.position,
+                    parentId,
                   );
                 } else {
                   showError("Ce titre n'est pas disponible");

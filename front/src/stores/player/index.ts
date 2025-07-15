@@ -1,4 +1,4 @@
-import type { Music, Queue } from "@/utils/types";
+import type { Listen, Music, Queue } from "@/utils/types";
 import { defineStore } from "pinia";
 import { useApiClient } from "../api-client";
 import { usePlayerPreparation } from "@/composables/usePlayerPreparation";
@@ -7,6 +7,7 @@ export const usePlayerStore = defineStore("player", {
   state: () => ({
     currentMusic: null as Music | null,
     musicFile: "" as string,
+    listeningNumber: 0 as number,
     position: -1 as number,
     volume: 50 as number,
     muted: false as boolean,
@@ -133,18 +134,36 @@ export const usePlayerStore = defineStore("player", {
       this.audioPlayer?.play();
       this.setIsPlay(true);
     },
-    async setListen(music: Music, musicFile: string, position: number) {
+    async setListen(music: Music, musicFile: string, position: number, containerId?: string) {
+      this.setListeningNumber(music, containerId);
       this.setIsPlayerActive(true);
       this.setCurrentMusic(music);
       this.setMusicFile(musicFile);
       this.setPosition(position);
-      setTimeout(() => {
+      setTimeout(async () => {
         this.setPlay();
       }, 100);
     },
     setChangeCurrentTime(number: number) {
       if (this.audioPlayer) {
         this.audioPlayer.currentTime = number;
+      }
+    },
+
+    async setListeningNumber(music: Music, id: string | null = null) {
+      if (music) {
+        const { apiClient } = useApiClient();
+        const listenData: Listen = {
+          music: music["@id"] ? music["@id"] : music.id ? "/api/music/" + music.id : music["@id"],
+          ...(id && id.startsWith("/api/albums/") && { album: id }),
+          ...(id && id.startsWith("/api/playlists/") && { playlist: id }),
+        };
+
+        const hasRequiredData = listenData.music;
+
+        if (hasRequiredData) {
+          await apiClient.listen.play(listenData);
+        }
       }
     },
     async clearRandomQueue() {

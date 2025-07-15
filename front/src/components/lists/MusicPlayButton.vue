@@ -55,11 +55,16 @@ watch(
       if (music.id) {
         const queueFile = playerStore.queueFile?.find((item) => item.musicId === music.id);
         if (queueFile) {
-          await playerStore.setListen(music, queueFile.file, position);
+          await playerStore.setListen(music, queueFile.file, position, parentId);
         } else {
           await apiClient.music.getFile(music.id).then(async (response) => {
             if (response) {
-              await playerStore.setListen(music, await streamToAudioUrl(response), position);
+              await playerStore.setListen(
+                music,
+                await streamToAudioUrl(response),
+                position,
+                parentId !== playerStore.queueParent ? parentId : undefined,
+              );
             } else {
               showError("Ce titre n'est pas disponible");
             }
