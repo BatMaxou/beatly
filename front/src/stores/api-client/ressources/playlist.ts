@@ -1,5 +1,5 @@
 import type { Playlist as PlaylistType } from "@/utils/types";
-import type { ApiClient, DeleteResponse } from "../model";
+import type { ApiClient, CollectionResponse, DeleteResponse } from "../model";
 
 interface ResourceResponse extends Partial<PlaylistType> {
   "@id": string;
@@ -21,13 +21,10 @@ export default class Playlist {
   }
 
   async getAll(): Promise<PlaylistType[]> {
-    const response = await this.apiClient.get<any>(ApiRessourcePath, {
+    const response = await this.apiClient.get<CollectionResponse<PlaylistType>>(ApiRessourcePath, {
       Accept: "application/ld+json",
     });
-
-    // Correctif provisoire car reception de members au lieu de l'objet directement
-    // Retirer <any> pour le remplacer par le bon typage quand corrigé
-    return response.member || response["hydra:member"] || response;
+    return response["hydra:member"];
   }
 
   async create(data: Partial<PlaylistType>): Promise<ResourceResponse> {

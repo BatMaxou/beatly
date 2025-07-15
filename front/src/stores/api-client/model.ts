@@ -4,7 +4,8 @@ import Artist from "./ressources/artist";
 import UserResource from "./ressources/user";
 import Album from "./ressources/album";
 import Playlist from "./ressources/playlist";
-import Category from "./ressources/category";import Dashboard from "./ressources/dashboard";
+import Category from "./ressources/category";
+import Dashboard from "./ressources/dashboard";
 import Listen from "./ressources/listen";
 import Queue from "./ressources/queue";
 import Search from "./ressources/search";
@@ -20,6 +21,18 @@ export interface LoginResponse {
 
 export interface DeleteResponse {
   success: boolean;
+}
+
+export interface CollectionResponse<T> {
+  "hydra:member": T[];
+  "hydra:totalItems": number;
+  "hydra:view"?: {
+    "@id": string;
+    "hydra:first"?: string;
+    "hydra:last"?: string;
+    "hydra:next"?: string;
+    "hydra:previous"?: string;
+  };
 }
 
 export class ApiClient {
@@ -79,7 +92,12 @@ export class ApiClient {
       });
   }
 
-  async post<T>(url: string, body: object = {}, additionnalHeaders: HeadersInit = {}, raw: boolean = false): Promise<T> {
+  async post<T>(
+    url: string,
+    body: object = {},
+    additionnalHeaders: HeadersInit = {},
+    raw: boolean = false,
+  ): Promise<T> {
     const isFormData = body instanceof FormData;
 
     const headers: HeadersInit = isFormData
@@ -100,7 +118,7 @@ export class ApiClient {
         ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
       },
       body: isFormData ? body : JSON.stringify(body),
-    }).then((response) => raw ? response : response.json());
+    }).then((response) => (raw ? response : response.json()));
   }
 
   async patch<T>(url: string, body: object, additionnalHeaders: HeadersInit = {}): Promise<T> {

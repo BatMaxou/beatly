@@ -1,17 +1,6 @@
 import { usePlayerPreparation } from "@/composables/usePlayerPreparation";
 import { usePlayerStore } from "@/stores/player";
-
-// Fonction de throttle généré par Claude Sonnet 4 pour optimiser les appels de fonction
-function throttle<T extends (...args: any[]) => any>(func: T, limit: number): T {
-  let inThrottle: boolean;
-  return ((...args: any[]) => {
-    if (!inThrottle) {
-      func(...args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
-  }) as T;
-}
+import { debounce } from "lodash";
 
 interface ExtendedHTMLAudioElement extends HTMLAudioElement {
   _audioDirectiveCleanup?: () => void;
@@ -30,7 +19,7 @@ export default {
 
     el.controls = true;
 
-    const handleTimeUpdate = throttle(() => {
+    const handleTimeUpdate = debounce(() => {
       // Mettre à jour le store seulement 5 fois par seconde pour éviter les appels excessifs
       if (!playerStore.isPlayerInteraction) {
         playerStore.setCurrentTime(el.currentTime);
