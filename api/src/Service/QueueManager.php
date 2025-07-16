@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Album;
-use App\Entity\AlbumMusic;
 use App\Entity\Interface\ListenableEntityInterface;
 use App\Entity\Music;
 use App\Entity\Playlist;
@@ -152,25 +151,21 @@ class QueueManager
 
     public function addAlbumToQueue(QueueBase $queue, Album $album, ?int $currentPosition = null): void
     {
-        $albumMusics = $album->getMusics()->toArray();
-        usort($albumMusics, function ($a, $b) {
-            return $a->getPosition() <=> $b->getPosition();
+        $musics = $album->getMusics()->toArray();
+        usort($musics, function ($a, $b) {
+            return $a->getAlbumPosition() <=> $b->getAlbumPosition();
         });
 
         $callback = null === $currentPosition ? $this->addMusicsToQueue(...) : $this->addNextMusicsToQueue(...);
 
-        $callback(
-            $queue,
-            array_map(fn ($music) => $music->getMusic(), $albumMusics),
-            $currentPosition
-        );
+        $callback($queue, $musics, $currentPosition);
     }
 
     public function addRandomAlbumToQueue(QueueBase $queue, Album $album, int $currentPosition): void
     {
         $this->addRandomMusicsToQueue(
             $queue,
-            $album->getMusics()->map(fn (AlbumMusic $albumMusic) => $albumMusic->getMusic())->toArray(),
+            $album->getMusics()->toArray(),
             $currentPosition
         );
     }

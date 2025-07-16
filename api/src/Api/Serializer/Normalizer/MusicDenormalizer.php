@@ -2,21 +2,21 @@
 
 namespace App\Api\Serializer\Normalizer;
 
-use App\Entity\AlbumMusic;
+use App\Entity\Music;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-final class AlbumMusicDenormalizer implements DenormalizerInterface, DenormalizerAwareInterface
+final class MusicDenormalizer implements DenormalizerInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
 
-    private const ALREADY_CALLED = 'album_music_denormalizer_already_called';
+    private const ALREADY_CALLED = 'music_denormalizer_already_called';
 
-    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): AlbumMusic
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): Music
     {
-        if (isset($data['position']) && is_string($data['position'])) {
-            $data['position'] = (int) $data['position'];
+        if (isset($data['albumPosition']) && is_string($data['albumPosition'])) {
+            $data['albumPosition'] = (int) $data['albumPosition'];
         }
 
         return $this->denormalizer->denormalize(
@@ -29,13 +29,13 @@ final class AlbumMusicDenormalizer implements DenormalizerInterface, Denormalize
 
     public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
     {
-        return AlbumMusic::class === $type && false === ($context[self::ALREADY_CALLED] ?? false);
+        return Music::class === $type && false === ($context[self::ALREADY_CALLED] ?? false);
     }
 
     public function getSupportedTypes(?string $format): array
     {
         return [
-            AlbumMusic::class => false,
+            Music::class => false,
         ];
     }
 }

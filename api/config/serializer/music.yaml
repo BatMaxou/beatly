@@ -94,3 +94,11 @@ App\Entity\Music:
         - "artist:read"
         - "recommendation:read"
         - "queue:read"
+    albumPosition:
+      groups:
+        - 'album:read'
+        - 'music:write'
+        - 'music:update'
+    addedAt:
+      groups:
+        - 'album:read'

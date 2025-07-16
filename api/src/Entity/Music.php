@@ -96,15 +96,13 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface, Lik
     #[ORM\ManyToMany(targetEntity: Artist::class, inversedBy: 'featuredMusics')]
     private Collection $artists;
 
-    /**
-     * @var Collection<int, AlbumMusic>
-     */
-    #[ORM\OneToMany(targetEntity: AlbumMusic::class, mappedBy: 'music', orphanRemoval: true, cascade: ['persist', 'remove'])]
-    private Collection $albums;
-
     #[ORM\ManyToOne(inversedBy: 'musics')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Artist $mainArtist = null;
+
+    #[ORM\ManyToOne(inversedBy: 'musics')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Album $album = null;
 
     #[ORM\Column]
     private string $uuid;
@@ -112,13 +110,19 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface, Lik
     #[ORM\Column]
     private ?int $duration = null;
 
+    #[ORM\Column]
+    private ?int $albumPosition = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $addedAt = null;
+
     public function __construct()
     {
         $this->listeningsNumber = 0;
         $this->categories = new ArrayCollection();
         $this->artists = new ArrayCollection();
-        $this->albums = new ArrayCollection();
         $this->uuid = Uuid::v4();
+        $this->addedAt = new \DateTimeImmutable();
     }
 
     public static function getClassIdentifier(): string
@@ -244,32 +248,14 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface, Lik
         return $this;
     }
 
-    /**
-     * @return Collection<int, AlbumMusic>
-     */
-    public function getAlbums(): Collection
+    public function getAlbum(): ?Album
     {
-        return $this->albums;
+        return $this->album;
     }
 
-    public function addAlbum(AlbumMusic $album): static
+    public function setAlbum(?Album $album): static
     {
-        if (!$this->albums->contains($album)) {
-            $this->albums->add($album);
-            $album->setMusic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAlbum(AlbumMusic $album): static
-    {
-        if ($this->albums->removeElement($album)) {
-            // set the owning side to null (unless already changed)
-            if ($album->getAlbum() === $this) {
-                $album->setAlbum(null);
-            }
-        }
+        $this->album = $album;
 
         return $this;
     }
@@ -282,6 +268,30 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface, Lik
     public function setMainArtist(?Artist $mainArtist): static
     {
         $this->mainArtist = $mainArtist;
+
+        return $this;
+    }
+
+    public function getAlbumPosition(): ?int
+    {
+        return $this->albumPosition;
+    }
+
+    public function setAlbumPosition(int $albumPosition): static
+    {
+        $this->albumPosition = $albumPosition;
+
+        return $this;
+    }
+
+    public function getAddedAt(): ?\DateTimeImmutable
+    {
+        return $this->addedAt;
+    }
+
+    public function setAddedAt(\DateTimeImmutable $addedAt): static
+    {
+        $this->addedAt = $addedAt;
 
         return $this;
     }
@@ -317,14 +327,13 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface, Lik
     {
         $categories = $this->categories->map(fn (Category $category) => md5($category->getName()))->toArray();
         $artists = $this->artists->map(fn (Artist $artist) => md5($artist->getName()))->toArray();
-        $albums = $this->albums->map(fn (AlbumMusic $album) => md5($album->getAlbum()->getTitle()))->toArray();
 
         return sprintf(
             '%s - %s - %s - %s',
             implode(' ', $categories),
             md5($this->getMainArtist()?->getName() ?? ''),
             implode(' ', $artists),
-            implode(' ', $albums)
+            md5($this->getAlbum()?->getTitle() ?? ''),
         );
     }
 

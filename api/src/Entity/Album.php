@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Api\Processor\AlbumCreationProcessor;
 use App\Api\Processor\AlbumFilesProcessor;
 use App\Entity\Interface\EmbeddableEntityInterface;
 use App\Entity\Interface\LikableEntityInterface;
@@ -29,6 +30,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     operations: [
         new Post(
             name: ApiReusableRoute::CREATE_ALBUM->value,
+            processor: AlbumCreationProcessor::class,
             normalizationContext: ['groups' => ['album:read']],
             denormalizationContext: ['groups' => ['album:write']],
         ),
@@ -85,9 +87,9 @@ class Album implements ListenableEntityInterface, EmbeddableEntityInterface, Lik
     private ?\DateTimeImmutable $updatedAt = null;
 
     /**
-     * @var Collection<int, AlbumMusic>
+     * @var Collection<int, Music>
      */
-    #[ORM\OneToMany(targetEntity: AlbumMusic::class, mappedBy: 'album', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Music::class, mappedBy: 'album', cascade: ['persist'])]
     private Collection $musics;
 
     #[ORM\ManyToOne(inversedBy: 'albums')]
@@ -196,14 +198,14 @@ class Album implements ListenableEntityInterface, EmbeddableEntityInterface, Lik
     }
 
     /**
-     * @return Collection<int, AlbumMusic>
+     * @return Collection<int, Music>
      */
     public function getMusics(): Collection
     {
         return $this->musics;
     }
 
-    public function addMusic(AlbumMusic $music): static
+    public function addMusic(Music $music): static
     {
         if (!$this->musics->contains($music)) {
             $this->musics->add($music);
@@ -213,7 +215,7 @@ class Album implements ListenableEntityInterface, EmbeddableEntityInterface, Lik
         return $this;
     }
 
-    public function removeMusic(AlbumMusic $music): static
+    public function removeMusic(Music $music): static
     {
         if ($this->musics->removeElement($music)) {
             // set the owning side to null (unless already changed)
