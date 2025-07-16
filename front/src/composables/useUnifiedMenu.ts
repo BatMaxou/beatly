@@ -211,12 +211,6 @@ export function useUnifiedMenu() {
       router.push(`/album/${element.album.id}`);
     },
 
-    addToLibrary: (element: Album | Playlist) => {
-      // A voir comment gérer l'ajout en bibliothèque
-      // Avec le favorite ?
-      // await apiClient.library.add(element.id, element.type);
-    },
-
     deletePlaylist: (element: Playlist) => {
       // Afficher confirmation et supprimer
       // if (await confirmDelete(element.title)) {

@@ -36,7 +36,6 @@ const emit = defineEmits<{
   closeMenu: [];
   openMenu: [];
 
-  addToLibrary: [];
   addToQueue: [];
   addToPlaylist: [];
   addToFavorites: [];
