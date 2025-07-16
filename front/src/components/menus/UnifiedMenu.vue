@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed, nextTick, defineComponent } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { useMenuManager } from "@/composables/useMenuManager";
 import {
   menuConfig,
@@ -8,6 +8,8 @@ import {
   type MenuType,
   type MenuAction,
   type MenuElement,
+  type MenuHandlers,
+  type MenuProps,
 } from "@/composables/useUnifiedMenu";
 
 const props = withDefaults(
@@ -69,7 +71,6 @@ const menuId = generateMenuId();
 const menuVisible = ref(props.showMenu);
 const menuRef = ref<HTMLElement | null>(null);
 const menuPosition = ref({ x: 0, y: 0, useCustomPosition: false });
-const position = ref<string>("bottom-right");
 // Configuration du menu basée sur le type
 const currentMenuConfig = computed(() => menuConfig[props.type]);
 
@@ -77,7 +78,7 @@ const currentMenuConfig = computed(() => menuConfig[props.type]);
 const availableActions = computed(() => {
   return currentMenuConfig.value.filter((action) => {
     if (action.condition) {
-      return action.condition(props);
+      return action.condition(props as MenuProps);
     }
     return true;
   });
@@ -166,7 +167,7 @@ const handleAction = (action: string) => {
   const handlerMap = handlers.value;
 
   if (handlerMap && typeof handlerMap === "object") {
-    const handler = (handlerMap as Record<string, Function>)[handlerName];
+    const handler = (handlerMap as MenuHandlers)[handlerName];
     if (typeof handler === "function") {
       handler();
       closeMenu();
@@ -185,14 +186,14 @@ const handleClickOutside = (event: Event) => {
 
 const getIcon = (action: MenuAction) => {
   if (typeof action.icon === "function") {
-    return action.icon(props);
+    return action.icon(props as MenuProps);
   }
   return action.icon;
 };
 
 const getLabel = (action: MenuAction) => {
   if (typeof action.label === "function") {
-    return action.label(props);
+    return action.label(props as MenuProps);
   }
   return action.label;
 };

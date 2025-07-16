@@ -50,9 +50,9 @@ export function usePlayerPreparation() {
    * Relance loadQueueFile pour charger les fichiers audio si ils n'existent pas dans la liste
    */
   const addToQueue = async (data: AddToQueue) => {
-    const { music, musics, playlist, album, shouldBeNext, currentPosition } = data;
+    const { music, playlist, album, shouldBeNext, currentPosition } = data;
     let queueUpdated;
-    let origin = String(music || playlist || album);
+    const origin = String(music || playlist || album);
     if (music) {
       queueUpdated = await apiClient.queue.add({
         music: music,

@@ -25,12 +25,26 @@ export type MenuType = "album" | "albumTitle" | "playlist" | "playlistTitle" | "
 // Types des éléments pouvant être passés au menu
 export type MenuElement = Music | Album | Playlist;
 
+// Type pour les handlers de menu
+export type MenuHandler = () => void;
+export type MenuHandlers = Record<string, MenuHandler>;
+
+// Interface pour les props du menu (utilisées dans les fonctions icon/label/condition)
+export interface MenuProps {
+  isFavorite?: boolean;
+  isInLibrary?: boolean;
+  isPublic?: boolean;
+  isUserPlaylist?: boolean;
+  type?: MenuType;
+  element?: MenuElement;
+}
+
 // Interface pour une action de menu
 export interface MenuAction {
   action: string;
-  icon: string | ((props: any) => string);
-  label: string | ((props: any) => string);
-  condition?: (props: any) => boolean;
+  icon: string | ((props: MenuProps) => string);
+  label: string | ((props: MenuProps) => string);
+  condition?: (props: MenuProps) => boolean | undefined;
   separator?: boolean;
 }
 
@@ -39,8 +53,8 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
   album: [
     {
       action: "addToLibrary",
-      icon: (props: any) => (props.isFavorite ? removeLight : addLight),
-      label: (props: any) =>
+      icon: (props: MenuProps) => (props.isFavorite ? removeLight : addLight),
+      label: (props: MenuProps) =>
         props.isFavorite ? "Supprimer de la bibliothèque" : "Ajouter à la bibliothèque",
     },
     {
@@ -60,8 +74,9 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
   albumTitle: [
     {
       action: "addToFavorites",
-      icon: (props: any) => (props.isFavorite ? addToFavActive : addToFavInactive),
-      label: (props: any) => (props.isFavorite ? "Supprimer des favoris" : "Ajouter aux favoris"),
+      icon: (props: MenuProps) => (props.isFavorite ? addToFavActive : addToFavInactive),
+      label: (props: MenuProps) =>
+        props.isFavorite ? "Supprimer des favoris" : "Ajouter aux favoris",
     },
     { action: "addToPlaylist", icon: playlistLight, label: "Ajouter à une playlist" },
     {
@@ -77,8 +92,8 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
   playlist: [
     {
       action: "addToLibrary",
-      icon: (props: any) => (props.isFavorite ? removeLight : addLight),
-      label: (props: any) =>
+      icon: (props: MenuProps) => (props.isFavorite ? removeLight : addLight),
+      label: (props: MenuProps) =>
         props.isFavorite ? "Supprimer de la bibliothèque" : "Ajouter à la bibliothèque",
     },
     {
@@ -93,13 +108,13 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
       icon: removeLight,
       label: "Supprimer la playlist",
       separator: true,
-      condition: (props: any) => props.isUserPlaylist,
+      condition: (props: MenuProps) => props.isUserPlaylist,
     },
     {
       action: "editPlaylist",
       icon: editLight,
       label: "Modifier la playlist",
-      condition: (props: any) => props.isUserPlaylist,
+      condition: (props: MenuProps) => props.isUserPlaylist,
     },
     // De base fait pour la visibilité des playlist utilisateur mais pas implémenté pour le moment
     // {
@@ -113,8 +128,9 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
   playlistTitle: [
     {
       action: "addToFavorites",
-      icon: (props: any) => (props.isFavorite ? addToFavActive : addToFavInactive),
-      label: (props: any) => (props.isFavorite ? "Supprimer des favoris" : "Ajouter aux favoris"),
+      icon: (props: MenuProps) => (props.isFavorite ? addToFavActive : addToFavInactive),
+      label: (props: MenuProps) =>
+        props.isFavorite ? "Supprimer des favoris" : "Ajouter aux favoris",
     },
     { action: "addToPlaylist", icon: playlistLight, label: "Ajouter à une playlist" },
     {
@@ -131,8 +147,9 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
   queue: [
     {
       action: "addToFavorites",
-      icon: (props: any) => (props.isFavorite ? addToFavActive : addToFavInactive),
-      label: (props: any) => (props.isFavorite ? "Supprimer des favoris" : "Ajouter aux favoris"),
+      icon: (props: MenuProps) => (props.isFavorite ? addToFavActive : addToFavInactive),
+      label: (props: MenuProps) =>
+        props.isFavorite ? "Supprimer des favoris" : "Ajouter aux favoris",
     },
     { action: "addToPlaylist", icon: playlistLight, label: "Ajouter à une playlist" },
     {
@@ -211,21 +228,21 @@ export function useUnifiedMenu() {
       router.push(`/album/${element.album.id}`);
     },
 
-    deletePlaylist: (element: Playlist) => {
-      // Afficher confirmation et supprimer
-      // if (await confirmDelete(element.title)) {
-      //   await apiClient.playlists.delete(element.id);
-      // }
-    },
+    // deletePlaylist: (element: Playlist) => {
+    //   // Afficher confirmation et supprimer
+    //   // if (await confirmDelete(element.title)) {
+    //   //   await apiClient.playlists.delete(element.id);
+    //   // }
+    // },
 
-    editPlaylist: (element: Playlist) => {
-      // Ouvrir modal d'édition
-      // await openPlaylistEditor(element);
-    },
+    // editPlaylist: (element: Playlist) => {
+    //   // Ouvrir modal d'édition
+    //   // await openPlaylistEditor(element);
+    // },
   };
 
   // Fonction pour créer les gestionnaires d'événements configurés pour un élément spécifique
-  const createMenuHandlers = (element: MenuElement) => {
+  const createMenuHandlers = (element: MenuElement): MenuHandlers => {
     return {
       handleAddToFavorites: () => menuHandlers.addToFavorites(element as Music),
       handleAddToPlaylist: () => menuHandlers.addToPlaylist(element),
@@ -234,8 +251,8 @@ export function useUnifiedMenu() {
       handleGoToArtist: () => menuHandlers.goToArtist(element as Music),
       handleGoToAlbum: () => menuHandlers.goToAlbum(element as Music),
       handleAddToLibrary: () => menuHandlers.addToFavorites(element as Album | Playlist),
-      handleDeletePlaylist: () => menuHandlers.deletePlaylist(element as Playlist),
-      handleEditPlaylist: () => menuHandlers.editPlaylist(element as Playlist),
+      // handleDeletePlaylist: () => menuHandlers.deletePlaylist(element as Playlist),
+      // handleEditPlaylist: () => menuHandlers.editPlaylist(element as Playlist),
     };
   };
 
