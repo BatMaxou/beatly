@@ -6,6 +6,8 @@ import loadingIcon from "@/assets/icons/loading-light.svg";
 import PlayerSection from "@/components/player/PlayerSection.vue";
 import { usePlayerStore } from "@/stores/player";
 import SideBarQueue from "../sidebar/SideBarQueue.vue";
+import PlaylistSelectorModal from "../modals/PlaylistSelectorModal.vue";
+import { useModalsStore } from "@/stores/modals";
 
 // Props
 const { loading, padding } = defineProps({
@@ -22,6 +24,7 @@ const { loading, padding } = defineProps({
 const playerStore = usePlayerStore();
 const authStore = useAuthStore();
 const { showSuccess } = useToast();
+const modalsStore = useModalsStore();
 
 if (authStore.loginSuccess) {
   showSuccess("Vous êtes connecté !");
@@ -82,6 +85,13 @@ if (authStore.loginSuccess) {
         style="background: linear-gradient(to top, #5523bf, #b00d72); opacity: 1"
       />
     </Transition>
+
+    <!-- Modale de sélection de playlist -->
+    <PlaylistSelectorModal
+      :isVisible="modalsStore.isPlaylistSelectorVisible"
+      :element="modalsStore.playlistSelectorElement"
+      @close="modalsStore.closePlaylistSelector"
+    />
   </div>
 </template>
 

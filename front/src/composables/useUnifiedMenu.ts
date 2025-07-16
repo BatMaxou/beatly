@@ -17,6 +17,7 @@ import { useApiClient } from "@/stores/api-client";
 import { useToast } from "./useToast";
 import { usePlayerPreparation } from "./usePlayerPreparation";
 import { usePlayerStore } from "@/stores/player";
+import { useModalsStore } from "@/stores/modals";
 
 // Types des menus
 export type MenuType = "album" | "albumTitle" | "playlist" | "playlistTitle" | "queue";
@@ -152,6 +153,7 @@ export function useUnifiedMenu() {
   const { apiClient } = useApiClient();
   const { showSuccess, showError } = useToast();
   const { addToQueue } = usePlayerPreparation();
+  const modalsStore = useModalsStore();
   const playerStore = usePlayerStore();
   // Gestionnaires d'événements centralisés
   const menuHandlers = {
@@ -180,8 +182,7 @@ export function useUnifiedMenu() {
     },
 
     addToPlaylist: (element: MenuElement) => {
-      // Ouvrir modal de sélection de playlist
-      // await openPlaylistSelector(element);
+      modalsStore.openPlaylistSelector(element);
     },
 
     addToQueue: (element: MenuElement, shouldBeNext: boolean = false) => {
