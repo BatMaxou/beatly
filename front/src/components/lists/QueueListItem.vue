@@ -68,9 +68,9 @@ const handlePlayStateChange = (newState: boolean) => {
 
 const setIsCurrentSongPlaying = () => {
   if (
-    playerStore.currentMusic &&
-    props.music &&
-    props.music.id === playerStore.currentMusic.id &&
+    playerStore.position &&
+    props.index &&
+    playerStore.position === props.index &&
     (!playerStore.queueParent || props.parentId === playerStore.queueParent)
   ) {
     isCurrentSongPlaying.value = true;
@@ -123,6 +123,7 @@ onMounted(() => {
             :position="position"
             :parentId="parentId"
             :origin="origin"
+            :isCurrentSongPlaying="isCurrentSongPlaying"
             @update:isClickedToPlay="handlePlayStateChange"
           />
         </div>

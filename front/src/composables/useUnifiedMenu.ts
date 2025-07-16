@@ -7,6 +7,7 @@ import addToFavActive from "@/assets/icons/add-to-fav-active-light.svg";
 import addToFavInactive from "@/assets/icons/add-to-fav-inactive-light.svg";
 import playlistLight from "@/assets/icons/playlist-light.svg";
 import queueLight from "@/assets/icons/queue-light.svg";
+import queueNextLight from "@/assets/icons/queue-next-light.svg";
 import micLight from "@/assets/icons/mic-light.svg";
 import discLight from "@/assets/icons/disc-light.svg";
 import addLight from "@/assets/icons/add-light.svg";
@@ -14,6 +15,8 @@ import removeLight from "@/assets/icons/remove-light.svg";
 import editLight from "@/assets/icons/edit-light.svg";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "./useToast";
+import { usePlayerPreparation } from "./usePlayerPreparation";
+import { usePlayerStore } from "@/stores/player";
 
 // Types des menus
 export type MenuType = "album" | "albumTitle" | "playlist" | "playlistTitle" | "queue";
@@ -39,8 +42,18 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
       label: (props: any) =>
         props.isFavorite ? "Supprimer de la bibliothèque" : "Ajouter à la bibliothèque",
     },
-    { action: "addToPlaylist", icon: playlistLight, label: "Ajouter à une playlist" },
-    { action: "addToQueue", icon: queueLight, label: "Ajouter à la file d'attente" },
+    {
+      action: "addToPlaylist",
+      icon: playlistLight,
+      label: "Ajouter à une playlist",
+    },
+    {
+      action: "addToQueue",
+      icon: queueLight,
+      label: "Ajouter à la file d'attente",
+      separator: true,
+    },
+    { action: "playNext", icon: queueNextLight, label: "Lire ensuite" },
   ],
 
   albumTitle: [
@@ -50,7 +63,13 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
       label: (props: any) => (props.isFavorite ? "Supprimer des favoris" : "Ajouter aux favoris"),
     },
     { action: "addToPlaylist", icon: playlistLight, label: "Ajouter à une playlist" },
-    { action: "addToQueue", icon: queueLight, label: "Ajouter à la file d'attente" },
+    {
+      action: "addToQueue",
+      icon: queueLight,
+      label: "Ajouter à la file d'attente",
+      separator: true,
+    },
+    { action: "playNext", icon: queueNextLight, label: "Lire ensuite" },
     { action: "goToArtist", icon: micLight, label: "Aller à l'artiste", separator: true },
   ],
 
@@ -61,7 +80,13 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
       label: (props: any) =>
         props.isFavorite ? "Supprimer de la bibliothèque" : "Ajouter à la bibliothèque",
     },
-    { action: "addToQueue", icon: queueLight, label: "Ajouter à la file d'attente" },
+    {
+      action: "addToQueue",
+      icon: queueLight,
+      label: "Ajouter à la file d'attente",
+      separator: true,
+    },
+    { action: "playNext", icon: queueNextLight, label: "Lire ensuite" },
     {
       action: "deletePlaylist",
       icon: removeLight,
@@ -91,7 +116,13 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
       label: (props: any) => (props.isFavorite ? "Supprimer des favoris" : "Ajouter aux favoris"),
     },
     { action: "addToPlaylist", icon: playlistLight, label: "Ajouter à une playlist" },
-    { action: "addToQueue", icon: queueLight, label: "Ajouter à la file d'attente" },
+    {
+      action: "addToQueue",
+      icon: queueLight,
+      label: "Ajouter à la file d'attente",
+      separator: true,
+    },
+    { action: "playNext", icon: queueNextLight, label: "Lire ensuite" },
     { action: "goToArtist", icon: micLight, label: "Aller à l'artiste", separator: true },
     { action: "goToAlbum", icon: discLight, label: "Aller à l'album" },
   ],
@@ -103,6 +134,13 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
       label: (props: any) => (props.isFavorite ? "Supprimer des favoris" : "Ajouter aux favoris"),
     },
     { action: "addToPlaylist", icon: playlistLight, label: "Ajouter à une playlist" },
+    {
+      action: "addToQueue",
+      icon: queueLight,
+      label: "Ajouter à la file d'attente",
+      separator: true,
+    },
+    { action: "playNext", icon: queueNextLight, label: "Lire ensuite" },
     { action: "goToArtist", icon: micLight, label: "Aller à l'artiste", separator: true },
     { action: "goToAlbum", icon: discLight, label: "Aller à l'album" },
   ],
@@ -113,6 +151,8 @@ export function useUnifiedMenu() {
   const router = useRouter();
   const { apiClient } = useApiClient();
   const { showSuccess, showError } = useToast();
+  const { addToQueue } = usePlayerPreparation();
+  const playerStore = usePlayerStore();
   // Gestionnaires d'événements centralisés
   const menuHandlers = {
     addToFavorites: async (element: MenuElement) => {
@@ -144,9 +184,20 @@ export function useUnifiedMenu() {
       // await openPlaylistSelector(element);
     },
 
-    addToQueue: (element: MenuElement) => {
-      // Appel API pour ajouter à la file d'attente
-      // await apiClient.queue.add(element, shouldBeNext);
+    addToQueue: (element: MenuElement, shouldBeNext: boolean = false) => {
+      const targetType =
+        element["@id"].split("/")[2] === "albums"
+          ? "album"
+          : element["@id"].split("/")[2] === "playlists" ||
+              element["@id"].split("/")[2] === "plateform_playlists"
+            ? "playlist"
+            : element["@id"].split("/")[2];
+
+      addToQueue({
+        [targetType]: element["@id"],
+        currentPosition: playerStore.position,
+        shouldBeNext,
+      });
     },
 
     goToArtist: (element: Music) => {
@@ -184,6 +235,7 @@ export function useUnifiedMenu() {
       handleAddToFavorites: () => menuHandlers.addToFavorites(element as Music),
       handleAddToPlaylist: () => menuHandlers.addToPlaylist(element),
       handleAddToQueue: () => menuHandlers.addToQueue(element),
+      handlePlayNext: () => menuHandlers.addToQueue(element, true),
       handleGoToArtist: () => menuHandlers.goToArtist(element as Music),
       handleGoToAlbum: () => menuHandlers.goToAlbum(element as Music),
       handleAddToLibrary: () => menuHandlers.addToFavorites(element as Album | Playlist),

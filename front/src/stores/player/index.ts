@@ -144,12 +144,6 @@ export const usePlayerStore = defineStore("player", {
         this.setPlay();
       }, 100);
     },
-    setChangeCurrentTime(number: number) {
-      if (this.audioPlayer) {
-        this.audioPlayer.currentTime = number;
-      }
-    },
-
     async setListeningNumber(music: Music, id: string | null = null) {
       if (music) {
         const { apiClient } = useApiClient();
@@ -182,6 +176,7 @@ export const usePlayerStore = defineStore("player", {
     async clearQueue() {
       const { apiClient } = useApiClient();
       await apiClient.queue.reset();
+      this.setQueueFile(null);
       this.queue = null;
       this.queueParent = null;
     },

@@ -112,6 +112,7 @@ onMounted(() => {
           :position="position"
           :parentId="parentId"
           :origin="origin"
+          :isCurrentSongPlaying="isCurrentSongPlaying"
           @update:isClickedToPlay="handlePlayStateChange"
         />
         <span v-else class="text-white font-medium">
