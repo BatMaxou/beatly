@@ -51,11 +51,11 @@ node-modules:
 .PHONY: node_modules
 
 up:
-	@docker compose up -d
+	@docker compose up -d $(ARGS)
 .PHONY: up
 
 down:
-	@docker compose down
+	@docker compose down $(ARGS)
 .PHONY: down
 
 jwt:

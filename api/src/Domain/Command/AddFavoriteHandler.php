@@ -34,9 +34,9 @@ class AddFavoriteHandler
         }
 
         $newFavorite = match (true) {
-            null !== $command->music => (new FavoriteMusic())->setTarget($command->music),
-            null !== $command->playlist => (new FavoritePlaylist())->setTarget($command->playlist),
-            null !== $command->album => (new FavoriteAlbum())->setTarget($command->album),
+            null !== $command->music => new FavoriteMusic()->setTarget($command->music),
+            null !== $command->playlist => new FavoritePlaylist()->setTarget($command->playlist),
+            null !== $command->album => new FavoriteAlbum()->setTarget($command->album),
             default => throw new \InvalidArgumentException('No valid entity provided'),
         };
 

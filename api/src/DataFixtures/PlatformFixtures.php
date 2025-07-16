@@ -39,7 +39,7 @@ class PlatformFixtures extends UserFixtures
 
     private function createUser(?string $email = null, ?string $name = null): Platform
     {
-        return (new Platform())
+        return new Platform()
             ->setEmail($email ?? $this->faker->email())
             ->setName($name ?? $this->faker->name())
             ->setPassword('azerty');

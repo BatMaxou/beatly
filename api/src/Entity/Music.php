@@ -8,8 +8,8 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use App\Api\Processor\MusicCreationProcessor;
 use App\Api\Processor\MusicFilesProcessor;
+use App\Api\Processor\MusicUpsertProcessor;
 use App\Entity\Interface\EmbeddableEntityInterface;
 use App\Entity\Interface\LikableEntityInterface;
 use App\Entity\Interface\ListenableEntityInterface;
@@ -29,7 +29,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     operations: [
         new Post(
             name: ApiReusableRoute::CREATE_MUSIC->value,
-            processor: MusicCreationProcessor::class,
+            processor: MusicUpsertProcessor::class,
             normalizationContext: ['groups' => ['music:read']],
             denormalizationContext: ['groups' => ['music:write']],
         ),
@@ -40,7 +40,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             normalizationContext: ['groups' => ['music:read']],
         ),
         new Patch(
-            name: 'api_update_music',
+            name: ApiReusableRoute::UPDATE_MUSIC->value,
+            processor: MusicUpsertProcessor::class,
             normalizationContext: ['groups' => ['music:read']],
             denormalizationContext: ['groups' => ['music:update']],
         ),
@@ -107,6 +108,9 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface, Lik
 
     #[ORM\Column]
     private string $uuid;
+
+    #[ORM\Column]
+    private ?int $duration = null;
 
     public function __construct()
     {
@@ -334,5 +338,17 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface, Lik
             $this->getMainArtist()?->getName() ?? '',
             implode(' ', $this->artists->map(fn (Artist $artist) => $artist->getName())->toArray())
         );
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(int $duration): static
+    {
+        $this->duration = $duration;
+
+        return $this;
     }
 }
