@@ -35,6 +35,8 @@ export type Album = {
   cover?: string;
   wallpaper?: string;
   artists: Artist[];
+  artist: Artist;
+  isFavorite: boolean;
 };
 
 export type Category = {
@@ -54,6 +56,7 @@ export type Music = {
   id: number;
   title: string;
   addedAt: string;
+  album: Album;
   mainArtist: Artist;
   artists: Artist[];
   categories: Category[];
@@ -62,6 +65,7 @@ export type Music = {
   listeningsNumber?: number;
   duration?: number;
   albumPosition?: number;
+  isFavorite: boolean;
 };
 
 export type PlaylistMusic = {
@@ -76,6 +80,7 @@ export type Playlist = {
   musics: PlaylistMusic[];
   cover?: string;
   wallpaper?: string;
+  isFavorite: boolean;
   "@type"?: PlaylistType;
   "@id": string;
 };

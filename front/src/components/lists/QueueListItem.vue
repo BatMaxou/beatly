@@ -141,7 +141,7 @@ onMounted(() => {
         ref="menuRef"
         type="queue"
         :element="music"
-        :isFavorite="false"
+        :isFavorite="music.isFavorite"
         :showMenuIcon="isHovered || isCurrentSongPlaying"
       />
     </div>

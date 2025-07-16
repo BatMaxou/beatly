@@ -10,8 +10,10 @@ import queueLight from "@/assets/icons/queue-light.svg";
 import micLight from "@/assets/icons/mic-light.svg";
 import discLight from "@/assets/icons/disc-light.svg";
 import addLight from "@/assets/icons/add-light.svg";
-import removelight from "@/assets/icons/remove-light.svg";
+import removeLight from "@/assets/icons/remove-light.svg";
 import editLight from "@/assets/icons/edit-light.svg";
+import { useApiClient } from "@/stores/api-client";
+import { useToast } from "./useToast";
 
 // Types des menus
 export type MenuType = "album" | "albumTitle" | "playlist" | "playlistTitle" | "queue";
@@ -33,9 +35,9 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
   album: [
     {
       action: "addToLibrary",
-      icon: addLight,
-      label: "Ajouter à la bibliothèque",
-      condition: (props: any) => !props.isInLibrary,
+      icon: (props: any) => (props.isFavorite ? removeLight : addLight),
+      label: (props: any) =>
+        props.isFavorite ? "Supprimer de la bibliothèque" : "Ajouter à la bibliothèque",
     },
     { action: "addToPlaylist", icon: playlistLight, label: "Ajouter à une playlist" },
     { action: "addToQueue", icon: queueLight, label: "Ajouter à la file d'attente" },
@@ -53,10 +55,16 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
   ],
 
   playlist: [
+    {
+      action: "addToLibrary",
+      icon: (props: any) => (props.isFavorite ? removeLight : addLight),
+      label: (props: any) =>
+        props.isFavorite ? "Supprimer de la bibliothèque" : "Ajouter à la bibliothèque",
+    },
     { action: "addToQueue", icon: queueLight, label: "Ajouter à la file d'attente" },
     {
       action: "deletePlaylist",
-      icon: removelight,
+      icon: removeLight,
       label: "Supprimer la playlist",
       separator: true,
       condition: (props: any) => props.isUserPlaylist,
@@ -74,13 +82,6 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
     //   label: (props: any) => (props.isPublic ? "Rendre privé" : "Rendre public"),
     //   condition: (props: any) => props.isUserPlaylist,
     // },
-    {
-      action: "addToLibrary",
-      icon: addLight,
-      label: "Ajouter à la bibliothèque",
-      separator: true,
-      condition: (props: any) => !props.isUserPlaylist,
-    },
   ],
 
   playlistTitle: [
@@ -110,15 +111,32 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
 // Composable pour la gestion des événements du menu
 export function useUnifiedMenu() {
   const router = useRouter();
-
+  const { apiClient } = useApiClient();
+  const { showSuccess, showError } = useToast();
   // Gestionnaires d'événements centralisés
   const menuHandlers = {
-    addToFavorites: (element: MenuElement, isFavorite: boolean) => {
-      // if (isFavorite) {
-      //   await apiClient.favorites.remove(element.id);
-      // } else {
-      //   await apiClient.favorites.add(element.id);
-      // }
+    addToFavorites: async (element: MenuElement) => {
+      const targetType =
+        element["@id"].split("/")[2] === "albums"
+          ? "album"
+          : element["@id"].split("/")[2] === "playlists" ||
+              element["@id"].split("/")[2] === "plateform_playlists"
+            ? "playlist"
+            : element["@id"].split("/")[2];
+
+      try {
+        if (element.isFavorite) {
+          await apiClient.favorite.remove({ [targetType]: element["@id"] });
+          showSuccess("Titre supprimé des favoris");
+        } else {
+          await apiClient.favorite.add({ [targetType]: element["@id"] });
+          showSuccess("Titre ajouté aux favoris");
+        }
+        element.isFavorite = !element.isFavorite;
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour des favoris:", error);
+        showError("Erreur lors de la mise à jour des favoris");
+      }
     },
 
     addToPlaylist: (element: MenuElement) => {
@@ -138,8 +156,7 @@ export function useUnifiedMenu() {
     },
 
     goToAlbum: (element: Music) => {
-      // Récupérer l'album depuis le type music de l'élément séléctionné
-      // router.push(`/album/${album.id}`);
+      router.push(`/album/${element.album.id}`);
     },
 
     addToLibrary: (element: Album | Playlist) => {
@@ -162,14 +179,14 @@ export function useUnifiedMenu() {
   };
 
   // Fonction pour créer les gestionnaires d'événements configurés pour un élément spécifique
-  const createMenuHandlers = (element: MenuElement, props: any = {}) => {
+  const createMenuHandlers = (element: MenuElement) => {
     return {
-      handleAddToFavorites: () => menuHandlers.addToFavorites(element, props.isFavorite || false),
+      handleAddToFavorites: () => menuHandlers.addToFavorites(element as Music),
       handleAddToPlaylist: () => menuHandlers.addToPlaylist(element),
       handleAddToQueue: () => menuHandlers.addToQueue(element),
       handleGoToArtist: () => menuHandlers.goToArtist(element as Music),
       handleGoToAlbum: () => menuHandlers.goToAlbum(element as Music),
-      handleAddToLibrary: () => menuHandlers.addToLibrary(element as Album | Playlist),
+      handleAddToLibrary: () => menuHandlers.addToFavorites(element as Album | Playlist),
       handleDeletePlaylist: () => menuHandlers.deletePlaylist(element as Playlist),
       handleEditPlaylist: () => menuHandlers.editPlaylist(element as Playlist),
     };

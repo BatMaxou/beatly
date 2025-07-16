@@ -139,7 +139,7 @@ onMounted(() => {
         ref="menuRef"
         type="playlistTitle"
         :element="music"
-        :isFavorite="false"
+        :isFavorite="music.isFavorite"
         :showMenuIcon="isHovered || isCurrentSongPlaying"
       />
     </div>

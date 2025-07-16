@@ -127,7 +127,7 @@ onMounted(() => {
         type="albumTitle"
         :element="music"
         :showMenuIcon="isHovered || isCurrentSongPlaying"
-        :isFavorite="false"
+        :isFavorite="music.isFavorite"
       />
     </div>
   </div>
