@@ -9,7 +9,8 @@ import LandingButton from "@/components/buttons/LandingButton.vue";
 import arrowLeft from "@/assets/icons/arrow-left-light.svg";
 import defaultWallpaper from "@/assets/images/default-wallpaper-playlist.jpg";
 import defaultCover from "@/assets/images/default-cover.png";
-import AlbumMenu from "@/components/menus/AlbumMenu.vue";
+// @ts-expect-error Toujours aucune idée de pourquoi il pense que c'est un module
+import UnifiedMenu from "@/components/menus/UnifiedMenu.vue";
 
 const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const router = useRouter();
@@ -23,6 +24,12 @@ const albumId = route.params.id as string;
 
 const handleBack = () => {
   router.go(-1);
+};
+
+const goToArtist = () => {
+  if (album.value?.artist) {
+    router.push(`/artiste/${album.value.artist.id}`);
+  }
 };
 
 onMounted(async () => {
@@ -65,17 +72,25 @@ onMounted(async () => {
           <div class="flex flex-col items-start justify-end mb-4">
             <span class="mb-8">Album</span>
             <p class="text-white text-4xl font-bold">{{ album?.title }}</p>
-            <p class="text-md font-bold">
-              <!-- <span class="font-bold" v-for="artist in album.artists" :key="artist.id">{{ artist.name }}</span> -->
+            <p @click="goToArtist()" class="text-white text-md hover:underline cursor-pointer">
+              {{ album?.artist.name }}
+            </p>
+            <p class="text-md">
               <span class="">{{ releaseYear }}</span>
-              <span class="text-lg front-bold"> • </span>
+              <span class="text-lg font-bold"> • </span>
               <span class=""
                 >{{ album.musics.length }} titre{{ album.musics.length > 1 ? "s" : "" }}</span
               >
             </p>
           </div>
         </div>
-        <AlbumMenu :albumId="album.id" position="bottom-right" class="me-16 mb-16 h-full z-10" />
+        <UnifiedMenu
+          type="album"
+          :element="album"
+          :albumId="album.id"
+          class="me-16 mb-16 h-full z-10"
+          :isFavorite="album.isFavorite"
+        />
       </div>
       <div v-if="album" class="text-white px-10">
         <div class="space-y-2">

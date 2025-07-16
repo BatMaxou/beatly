@@ -4,7 +4,8 @@ import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
 import type { Music } from "@/utils/types";
 import defaultCover from "@/assets/images/default-cover.png";
 import { usePlayerStore } from "@/stores/player";
-import PlaylistTitleMenu from "../menus/PlaylistTitleMenu.vue";
+// @ts-expect-error Aucune idée de pourquoi il détecte UnifiedMenu comme un module
+import UnifiedMenu from "../menus/UnifiedMenu.vue";
 
 const props = defineProps<{
   music: Music;
@@ -18,6 +19,7 @@ const isClickedToPlay = ref(false);
 const isCurrentSongPlaying = ref(false);
 const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const playerStore = usePlayerStore();
+const menuRef = ref<InstanceType<typeof UnifiedMenu> | null>(null);
 
 const handleMouseEnter = () => {
   isHovered.value = true;
@@ -39,15 +41,36 @@ const handlePlaySong = (event: Event) => {
   isClickedToPlay.value = true;
 };
 
+const handleContextMenu = (event: MouseEvent) => {
+  event.preventDefault();
+
+  // Vérifie si le clic droit est fait dans le menu ou le bouton
+  const target = event.target as HTMLElement;
+  const isMenuClick =
+    target.closest(".z-50") ||
+    target.closest("button[aria-label='Menu options']") ||
+    target.closest("[data-menu]");
+
+  if (isMenuClick) {
+    return;
+  }
+
+  if (menuRef.value) {
+    const x = event.clientX;
+    const y = event.clientY;
+    menuRef.value.openMenu(x, y);
+  }
+};
+
 const handlePlayStateChange = (newState: boolean) => {
   isClickedToPlay.value = newState;
 };
 
 const setIsCurrentSongPlaying = () => {
   if (
-    playerStore.currentMusic &&
-    props.music &&
-    props.music.id === playerStore.currentMusic.id &&
+    playerStore.position &&
+    props.index &&
+    playerStore.position === props.index &&
     (!playerStore.queueParent || props.parentId === playerStore.queueParent)
   ) {
     isCurrentSongPlaying.value = true;
@@ -82,6 +105,7 @@ onMounted(() => {
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
     @click="handlePlaySong"
+    @contextmenu="handleContextMenu"
   >
     <div class="flex flex-row items-center w-full gap-2">
       <div class="relative flex items-center justify-center w-12 min-w-12">
@@ -99,6 +123,7 @@ onMounted(() => {
             :position="position"
             :parentId="parentId"
             :origin="origin"
+            :isCurrentSongPlaying="isCurrentSongPlaying"
             @update:isClickedToPlay="handlePlayStateChange"
           />
         </div>
@@ -113,7 +138,13 @@ onMounted(() => {
       </div>
     </div>
     <div class="text-gray-500 font-normal">
-      <PlaylistTitleMenu :isFavorite="false" position="bottom-right" />
+      <UnifiedMenu
+        ref="menuRef"
+        type="queue"
+        :element="music"
+        :isFavorite="music.isFavorite"
+        :showMenuIcon="isHovered || isCurrentSongPlaying"
+      />
     </div>
   </div>
 </template>

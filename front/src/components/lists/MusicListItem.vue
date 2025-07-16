@@ -2,7 +2,8 @@
 import { defineProps, onMounted, ref, watch } from "vue";
 import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
 import type { Music } from "@/utils/types";
-import AlbumTitleMenu from "../menus/AlbumTitleMenu.vue";
+// @ts-expect-error Aucune idée de pourquoi il détecte UnifiedMenu comme un module
+import UnifiedMenu from "@/components/menus/UnifiedMenu.vue";
 import { usePlayerStore } from "@/stores/player";
 
 const props = defineProps<{
@@ -16,6 +17,7 @@ const isHovered = ref(false);
 const isClickedToPlay = ref(false);
 const isCurrentSongPlaying = ref(false);
 const playerStore = usePlayerStore();
+const menuRef = ref<InstanceType<typeof UnifiedMenu> | null>(null);
 
 const handleMouseEnter = () => {
   isHovered.value = true;
@@ -28,13 +30,37 @@ const handleMouseLeave = () => {
 const handlePlaySong = (event: Event) => {
   const target = event.target as HTMLElement;
 
-  const isMenuClick = target.closest(".album-title-menu") || target.closest("[data-menu]");
+  const isMenuClick =
+    target.closest(".album-title-menu") ||
+    target.closest("[data-menu]") ||
+    target.closest("button[aria-label='Menu options']");
 
   if (isMenuClick) {
     return;
   }
 
   isClickedToPlay.value = true;
+};
+
+const handleContextMenu = (event: MouseEvent) => {
+  event.preventDefault();
+
+  // Vérifie si le clic droit est fait dans le menu ou le bouton
+  const target = event.target as HTMLElement;
+  const isMenuClick =
+    target.closest(".z-50") ||
+    target.closest("button[aria-label='Menu options']") ||
+    target.closest("[data-menu]");
+
+  if (isMenuClick) {
+    return;
+  }
+
+  if (menuRef.value) {
+    const x = event.clientX;
+    const y = event.clientY;
+    menuRef.value.openMenu(x, y);
+  }
 };
 
 const handlePlayStateChange = (newState: boolean) => {
@@ -75,6 +101,7 @@ onMounted(() => {
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
     @click="handlePlaySong"
+    @contextmenu="handleContextMenu"
   >
     <div class="flex flex-row items-center gap-2">
       <div class="flex items-center justify-center w-8 min-w-8">
@@ -85,6 +112,7 @@ onMounted(() => {
           :position="position"
           :parentId="parentId"
           :origin="origin"
+          :isCurrentSongPlaying="isCurrentSongPlaying"
           @update:isClickedToPlay="handlePlayStateChange"
         />
         <span v-else class="text-white font-medium">
@@ -95,7 +123,13 @@ onMounted(() => {
       <span class="font-medium">{{ music.title }}</span>
     </div>
     <div class="text-gray-500 font-normal" data-menu>
-      <AlbumTitleMenu position="bottom-right" />
+      <UnifiedMenu
+        ref="menuRef"
+        type="albumTitle"
+        :element="music"
+        :showMenuIcon="isHovered || isCurrentSongPlaying"
+        :isFavorite="music.isFavorite"
+      />
     </div>
   </div>
 </template>

@@ -15,6 +15,7 @@
   "dependencies": {
     "@formkit/i18n": "^1.6.9",
     "@formkit/vue": "^1.6.9",
+    "lodash": "^4.17.21",
     "pinia": "^3.0.3",
     "tailwind-scrollbar-hide": "^4.0.0",
     "vue": "^3.5.13",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.1",
+    "@types/lodash": "^4.17.20",
     "@types/node": "^22.15.33",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/eslint-config-prettier": "^10.2.0",

@@ -2,11 +2,11 @@
 import { defineProps, computed } from "vue";
 import MusicListItem from "@/components/lists/MusicListItem.vue";
 import PlaylistMusicListItem from "@/components/lists/PlaylistMusicListItem.vue";
-import type { PlaylistMusic, AlbumMusic, Music } from "@/utils/types";
+import type { PlaylistMusic, Music } from "@/utils/types";
 
 const props = defineProps({
   musicList: {
-    type: Array as () => PlaylistMusic[] | AlbumMusic[] | Music[],
+    type: Array as () => PlaylistMusic[] | Music[],
     required: true,
   },
   parentId: {
@@ -38,7 +38,7 @@ const extractedMusics = computed(() => {
 
 const albumMusics = computed(() => {
   if (props.origin === "album") {
-    return musicList as AlbumMusic[];
+    return musicList as Music[];
   }
   return [];
 });
@@ -69,9 +69,9 @@ const topTitlesMusics = computed(() => {
   >
     <MusicListItem
       v-for="(music, index) in albumMusics"
-      :key="music.position"
-      :music="music.music"
-      :position="music.position"
+      :key="music.albumPosition"
+      :music="music"
+      :position="music.albumPosition || index + 1"
       :index="index"
       :parentId="parentId"
       :origin="origin"

@@ -1,7 +1,7 @@
 import { useApiClient } from "@/stores/api-client";
 import { usePlayerStore } from "@/stores/player";
 import { streamToAudioUrl } from "@/utils/stream";
-import type { Music, Queue, QueueItem } from "@/utils/types";
+import type { AddToQueue, Music, Queue, QueueItem } from "@/utils/types";
 
 export function usePlayerPreparation() {
   const playerStore = usePlayerStore();
@@ -42,6 +42,55 @@ export function usePlayerPreparation() {
 
     if (queue) {
       playerStore.setQueue(queue, parentId);
+    }
+  };
+
+  /**
+   * Ajout d'un album / titre / playlist / liste de titres à la file d'attente
+   * Relance loadQueueFile pour charger les fichiers audio si ils n'existent pas dans la liste
+   */
+  const addToQueue = async (data: AddToQueue) => {
+    const { music, playlist, album, shouldBeNext, currentPosition } = data;
+    let queueUpdated;
+    const origin = String(music || playlist || album);
+    if (music) {
+      queueUpdated = await apiClient.queue.add({
+        music: music,
+        shouldBeNext: shouldBeNext,
+        currentPosition: shouldBeNext ? currentPosition : undefined,
+      });
+      // } else if (musics && musics.length > 0) {
+      //   queueUpdated = await apiClient.queue.add({
+      //     musics: musics,
+      //     shouldBeNext: shouldBeNext,
+      //     currentPosition: shouldBeNext ? currentPosition : undefined,
+      //   });
+    } else if (playlist) {
+      queueUpdated = await apiClient.queue.add({
+        playlist,
+        shouldBeNext: shouldBeNext,
+        currentPosition: shouldBeNext ? currentPosition : undefined,
+      });
+    } else if (album) {
+      queueUpdated = await apiClient.queue.add({
+        album,
+        shouldBeNext: shouldBeNext,
+        currentPosition: shouldBeNext ? currentPosition : undefined,
+      });
+    }
+    if (queueUpdated) {
+      const wasQueueEmpty = playerStore.queue === null && playerStore.queueParent === null;
+      playerStore.setQueue(
+        queueUpdated,
+        wasQueueEmpty ? origin : playerStore.queueParent || origin,
+      );
+      // Si je suis dans une randomQueue,
+      // Je récupère lastQueue et queueUpdated et je récupère les éléments de différence dans l'ordre
+      // Si shouldBeNext, ajouter la liste de musiques à la randomQueue en fonction de currentPosition
+      // Sinon, ajout a la fin du tableau randomQueue
+
+      // Problème a cause des positions, a voir comment on va gérer le cas random
+      storeAdjacentMusicInQueue();
     }
   };
 
@@ -281,6 +330,7 @@ export function usePlayerPreparation() {
     // Fonctions
     loadQueue,
     loadRandomQueue,
+    addToQueue,
     storeAdjacentMusicInQueue,
     loadQueueFile,
     playNextSong,

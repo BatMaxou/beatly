@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
-import MusicFile from "../pages/MusicFilePage.vue";
 import Ui from "../pages/UiPage.vue";
 import RootPage from "../pages/RootPage.vue";
 import Register from "../pages/RegisterPage.vue";
@@ -34,11 +33,6 @@ const routes: RouteRecordRaw[] = [
     path: "/artiste/:id",
     name: "Artist",
     component: ArtistPage,
-  },
-  {
-    path: "/test-music-file",
-    name: "MusicFile",
-    component: MusicFile,
   },
   {
     path: "/ui",

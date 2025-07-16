@@ -9,6 +9,8 @@ import LandingButton from "@/components/buttons/LandingButton.vue";
 import arrowLeft from "@/assets/icons/arrow-left-light.svg";
 import defaultWallpaper from "@/assets/images/default-wallpaper-playlist.jpg";
 import defaultCover from "@/assets/images/default-cover.png";
+// @ts-expect-error Toujours aucune idée de pourquoi il pense que c'est un module
+import UnifiedMenu from "@/components/menus/UnifiedMenu.vue";
 
 const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const router = useRouter();
@@ -51,9 +53,9 @@ onMounted(async () => {
             ? `url(${ressourceUrl + playlist.wallpaper})`
             : `url(${defaultWallpaper})`,
         }"
-        class="bg-cover bg-center object-cover relative playlistBackground z-2"
+        class="bg-cover bg-center object-cover flex flex-row justify-between items-end relative playlistBackground mb-6 z-2"
       >
-        <div class="relative flex flex-row justify-start items-between gap-4 pt-24 ps-16 mb-6 z-10">
+        <div class="relative flex flex-row justify-start items-between gap-4 pt-24 ps-16 z-10">
           <img
             :src="playlist.cover ? ressourceUrl + playlist.cover : defaultCover"
             alt="Playlist Cover"
@@ -73,6 +75,13 @@ onMounted(async () => {
             </p>
           </div>
         </div>
+        <UnifiedMenu
+          type="playlist"
+          :element="playlist"
+          :playlistId="playlist.id"
+          class="me-16 mb-16 h-full z-10"
+          :isFavorite="playlist.isFavorite"
+        />
       </div>
       <div v-if="playlist" class="text-white px-10">
         <div class="space-y-2">
