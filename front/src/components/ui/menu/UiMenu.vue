@@ -5,23 +5,22 @@
       <div class="mb-60">
         <h3 class="text-lg font-semibold mb-2">Menu titre playlist</h3>
         <div class="flex flex-row gap-4">
-          <PlaylistTitleMenu :isFavorite="true" />
+          <UnifiedMenu type="playlistTitle" :isFavorite="true" />
         </div>
       </div>
       <div class="mb-6">
         <h3 class="text-lg font-semibold mb-2">Menu playlist</h3>
-        <PlaylistMenu />
+        <UnifiedMenu type="playlist" />
       </div>
       <div class="mb-6">
         <h3 class="text-lg font-semibold mb-2">Menu album</h3>
-        <AlbumMenu />
+        <UnifiedMenu type="album" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import PlaylistTitleMenu from "../../menus/PlaylistTitleMenu.vue";
-import PlaylistMenu from "../../menus/PlaylistMenu.vue";
-import AlbumMenu from "../../menus/AlbumMenu.vue";
+// @ts-expect-error Aucune idée de pourquoi ts le détecte en module
+import UnifiedMenu from "../../menus/UnifiedMenu.vue";
 </script>

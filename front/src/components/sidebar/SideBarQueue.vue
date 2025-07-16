@@ -51,7 +51,7 @@ const setActiveTab = (tab: "queue" | "lyrics") => {
     </div>
 
     <!-- Onglets -->
-    <div class="flex-1 overflow-y-auto">
+    <div class="flex-1 overflow-y-scroll scrollbar-hide">
       <!-- File d'attente -->
       <div v-if="activeTab === 'queue'">
         <ul class="space-y-2">

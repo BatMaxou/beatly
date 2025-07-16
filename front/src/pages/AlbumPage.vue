@@ -9,7 +9,8 @@ import LandingButton from "@/components/buttons/LandingButton.vue";
 import arrowLeft from "@/assets/icons/arrow-left-light.svg";
 import defaultWallpaper from "@/assets/images/default-wallpaper-playlist.jpg";
 import defaultCover from "@/assets/images/default-cover.png";
-import AlbumMenu from "@/components/menus/AlbumMenu.vue";
+// @ts-expect-error Toujours aucune idée de pourquoi il pense que c'est un module
+import UnifiedMenu from "@/components/menus/UnifiedMenu.vue";
 
 const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const router = useRouter();
@@ -75,7 +76,12 @@ onMounted(async () => {
             </p>
           </div>
         </div>
-        <AlbumMenu :albumId="album.id" position="bottom-right" class="me-16 mb-16 h-full z-10" />
+        <UnifiedMenu
+          type="album"
+          :element="album"
+          :albumId="album.id"
+          class="me-16 mb-16 h-full z-10"
+        />
       </div>
       <div v-if="album" class="text-white px-10">
         <div class="space-y-2">
