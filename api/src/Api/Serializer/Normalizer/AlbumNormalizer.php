@@ -31,7 +31,7 @@ final class AlbumNormalizer implements NormalizerInterface, NormalizerAwareInter
 
         if (isset($normalized['musics']) && is_array($normalized['musics'])) {
             usort($normalized['musics'], function ($a, $b) {
-                return $a['position'] <=> $b['position'];
+                return $a['albumPosition'] <=> $b['albumPosition'];
             });
         }
 

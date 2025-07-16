@@ -6,7 +6,6 @@ use App\DataFixtures\Faker\FakerFixtureTrait;
 use App\DataFixtures\Sample\SampleLoader;
 use App\DataFixtures\Sample\SampleType;
 use App\Entity\Album;
-use App\Entity\AlbumMusic;
 use App\Entity\Artist;
 use App\Entity\Category;
 use App\Entity\Music;
@@ -132,12 +131,10 @@ class ArtistFixtures extends Fixture
                         $music->setCoverName($this->createCover('music'));
                     }
 
-                    $music->setMainArtist($artist);
-                    $music->addAlbum(
-                        new AlbumMusic()
+                    $music
+                        ->setMainArtist($artist)
                         ->setAlbum($album)
-                        ->setPosition($musicPosition)
-                    );
+                        ->setAlbumPosition($musicPosition);
 
                     foreach ($songCategories as $category) {
                         if (isset($this->categories[$category->value])) {
