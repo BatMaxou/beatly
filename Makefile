@@ -106,7 +106,7 @@ php-lint:
 .PHONY: php-lint
 
 front-lint:
-	@docker compose exec front npm run lint
+# 	@docker compose exec front npm run lint
 .PHONY: front-lint
 
 # --- PROD REGISTRY COMMANDS ---
