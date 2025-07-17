@@ -25,7 +25,6 @@ const fetchUserPlaylists = async () => {
     // En attente de l'enpoint pour récupérer les playlists de l'utilisateur
     const response = await apiClient.playlist.getAll();
     playlists.value = response || [];
-    console.log(response);
   } catch (error) {
     console.error("Erreur lors du chargement des playlists:", error);
     playlists.value = [];
@@ -35,13 +34,9 @@ const fetchUserPlaylists = async () => {
 };
 
 const selectPlaylist = async (playlist: Playlist) => {
-  console.log("Playlist sélectionnée:", playlist);
-  console.log("Élément à ajouter:", props.element);
-
   try {
     if (props.element?.["@id"]) {
       // Remplacer par le vrai appel API une fois l'endpoint créé
-      console.log(`API call: Adding element ${props.element["@id"]} to playlist ${playlist.id}`);
       showSuccess(`Ajouté à la playlist "${playlist.title}"`);
     } else {
       showError("Impossible d'ajouter cet élément");
@@ -74,9 +69,6 @@ const submitCreatePlaylist = async (data: { name: string }) => {
     // Ajouter l'élément à la nouvelle playlist si un élément est sélectionné
     if (props.element?.["@id"] && newPlaylist.id) {
       // Remplacer par le vrai appel API une fois l'endpoint créé
-      console.log(
-        `API call: Adding element ${props.element["@id"]} to new playlist ${newPlaylist.id}`,
-      );
       showSuccess(`Élément ajouté à la nouvelle playlist`);
     }
 

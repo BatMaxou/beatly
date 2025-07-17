@@ -9,7 +9,6 @@ import LandingButton from "@/components/buttons/LandingButton.vue";
 import arrowLeft from "@/assets/icons/arrow-left-light.svg";
 import defaultWallpaper from "@/assets/images/default-wallpaper-playlist.jpg";
 import defaultCover from "@/assets/images/default-cover.png";
-// @ts-expect-error Toujours aucune idée de pourquoi il pense que c'est un module
 import UnifiedMenu from "@/components/menus/UnifiedMenu.vue";
 
 const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;

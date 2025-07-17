@@ -7,6 +7,7 @@ import Login from "../pages/LoginPage.vue";
 import ForgotPassword from "../pages/ForgotPasswordPage.vue";
 import ResetPassword from "../pages/ResetPasswordPage.vue";
 import PlaylistPage from "../pages/PlaylistPage.vue";
+import PlaylistFavoritePage from "../pages/PlaylistFavoritePage.vue";
 import AlbumPage from "../pages/AlbumPage.vue";
 import ArtistPage from "../pages/ArtistPage.vue";
 import NotFound from "../pages/NotFoundPage.vue";
@@ -18,6 +19,11 @@ const routes: RouteRecordRaw[] = [
     path: "/",
     component: RootPage,
     name: "Root",
+  },
+  {
+    path: "/playlist/favoris",
+    component: PlaylistFavoritePage,
+    name: "PlaylistFavorite",
   },
   {
     path: "/playlist/:id",

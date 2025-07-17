@@ -21,6 +21,5 @@
 </template>
 
 <script setup lang="ts">
-// @ts-expect-error Aucune idée de pourquoi ts le détecte en module
 import UnifiedMenu from "../../menus/UnifiedMenu.vue";
 </script>

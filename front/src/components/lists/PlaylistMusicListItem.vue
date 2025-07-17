@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { defineProps, ref, watch, onMounted } from "vue";
 import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
-// @ts-expect-error Aucune idée de pourquoi il détecte UnifiedMenu comme un module
 import UnifiedMenu from "../menus/UnifiedMenu.vue";
 import defaultCover from "@/assets/images/default-cover.png";
 import { usePlayerStore } from "@/stores/player";
@@ -127,9 +126,13 @@ onMounted(() => {
       </div>
       <div class="flex flex-col">
         <span class="font-medium text-white">{{ music.title }}</span>
-        <p v-if="origin === 'playlist'" class="font-medium text-white">
-          <span v-for="artist in music.artists" :key="artist.id" class="text-white/70 text-sm">
-            {{ artist.name }}
+        <p v-if="origin === 'playlist' || origin === 'favorites'" class="font-medium text-white">
+          <span v-if="music.mainArtist" class="text-white/70 text-sm">
+            {{ music.mainArtist.name }}
+          </span>
+          <span v-if="music.mainArtist.name && music.album" class="text-sm font-bold"> • </span>
+          <span class="text-white/70 text-sm">
+            {{ music.album.title }}
           </span>
         </p>
       </div>
@@ -137,9 +140,9 @@ onMounted(() => {
     <div class="text-gray-500 font-normal">
       <UnifiedMenu
         ref="menuRef"
-        type="playlistTitle"
+        :type="origin === 'favorites' ? 'favorites' : 'playlistTitle'"
         :element="music"
-        :isFavorite="music.isFavorite"
+        :isFavorite="origin === 'favorites' ? true : music.isFavorite"
         :showMenuIcon="isHovered || isCurrentSongPlaying"
       />
     </div>

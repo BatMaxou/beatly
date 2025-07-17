@@ -54,8 +54,8 @@ if (authStore.loginSuccess) {
         <div
           :class="
             loading
-              ? 'opacity-0 transition ease duration-700'
-              : 'opacity-1 transition ease duration-700'
+              ? 'opacity-0 transition ease duration-700 pb-8'
+              : 'opacity-1 transition ease duration-700 pb-8'
           "
         >
           <slot v-if="!loading"></slot>
