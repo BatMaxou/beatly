@@ -55,7 +55,7 @@ const { createMenuHandlers } = useUnifiedMenu();
 // Création des évènements du menu depuis le composable
 const handlers = computed(() => {
   if (!props.element) return {};
-  return createMenuHandlers(props.element, props);
+  return createMenuHandlers(props.element, props.type);
 });
 
 // useMenuManager == Sert a gérer l'id du menu ouvert
@@ -115,7 +115,7 @@ const menuClasses = computed(() => {
 // Placeholder pour le positionnement manuel selon l'élément
 const getMenuPosition = () => {
   let fixedMenuPosition;
-  if ("albumTitle" === props.type || "playlistTitle" === props.type) {
+  if ("albumTitle" === props.type || "playlistTitle" === props.type || "favorites" === props.type) {
     fixedMenuPosition = "top-right";
   }
   if ("album" === props.type || "playlist" === props.type || "queue" === props.type) {

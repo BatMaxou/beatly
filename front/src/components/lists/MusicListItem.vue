@@ -2,7 +2,6 @@
 import { defineProps, onMounted, ref, watch } from "vue";
 import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
 import type { Music } from "@/utils/types";
-// @ts-expect-error Aucune idée de pourquoi il détecte UnifiedMenu comme un module
 import UnifiedMenu from "@/components/menus/UnifiedMenu.vue";
 import { usePlayerStore } from "@/stores/player";
 

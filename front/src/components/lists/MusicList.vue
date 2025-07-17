@@ -2,11 +2,11 @@
 import { defineProps, computed } from "vue";
 import MusicListItem from "@/components/lists/MusicListItem.vue";
 import PlaylistMusicListItem from "@/components/lists/PlaylistMusicListItem.vue";
-import type { PlaylistMusic, Music } from "@/utils/types";
+import type { PlaylistMusic, Music, Favorite } from "@/utils/types";
 
 const props = defineProps({
   musicList: {
-    type: Array as () => PlaylistMusic[] | Music[],
+    type: Array as () => PlaylistMusic[] | Music[] | Favorite<Music>[],
     required: true,
   },
   parentId: {
@@ -27,38 +27,41 @@ const props = defineProps({
   },
 });
 
-const musicList = props.musicList;
-
 const extractedMusics = computed(() => {
-  if (props.origin === "top-titles") {
-    return musicList as { music: Music }[];
-  }
   return null;
 });
 
 const albumMusics = computed(() => {
   if (props.origin === "album") {
-    return musicList as Music[];
+    return props.musicList as Music[];
   }
   return [];
 });
 
 const playlistMusics = computed(() => {
   if (props.origin === "playlist") {
-    return musicList as PlaylistMusic[];
+    return props.musicList as PlaylistMusic[];
   }
   return [];
 });
 
 const topTitlesMusics = computed(() => {
   if (props.origin === "top-titles") {
-    return musicList as PlaylistMusic[];
+    return props.musicList as PlaylistMusic[];
   }
   return [];
 });
 
-// Quand la clé popularity sera en place, si l'origin est top-titles, on trie par popularité
-// Quand le clé playlistIndex sera en place, si l'origin est playlist, on trie par index de la playlist
+const favoriteMusics = computed(() => {
+  if (props.origin === "favorites") {
+    const favorites = props.musicList as Favorite<Music>[];
+    const sorted = favorites.sort(
+      (a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime(),
+    );
+    return sorted;
+  }
+  return [];
+});
 </script>
 
 <template>
@@ -118,7 +121,25 @@ const topTitlesMusics = computed(() => {
   </div>
 
   <div
-    v-if="musicList.length === 0"
+    v-if="favoriteMusics.length > 0 && origin === 'favorites'"
+    class="flex flex-col"
+    :style="props.customStyles.musicList"
+  >
+    <PlaylistMusicListItem
+      v-for="(music, index) in favoriteMusics"
+      :key="music.target.id"
+      :music="music.target"
+      :index="index"
+      :position="index + 1"
+      :origin="origin"
+      :musics="extractedMusics"
+      :customStyles="props.customStyles"
+      :theme="props.theme"
+    />
+  </div>
+
+  <div
+    v-if="props.musicList.length === 0"
     class="flex flex-col items-center justify-center py-8 text-gray-500 dark:text-gray-400"
     :style="props.customStyles.emptyMusicList"
   >

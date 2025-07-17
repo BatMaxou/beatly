@@ -4,7 +4,6 @@ import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
 import type { Music } from "@/utils/types";
 import defaultCover from "@/assets/images/default-cover.png";
 import { usePlayerStore } from "@/stores/player";
-// @ts-expect-error Aucune idée de pourquoi il détecte UnifiedMenu comme un module
 import UnifiedMenu from "../menus/UnifiedMenu.vue";
 
 const props = defineProps<{

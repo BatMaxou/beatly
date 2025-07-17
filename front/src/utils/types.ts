@@ -56,8 +56,8 @@ export type Music = {
   id: number;
   title: string;
   addedAt: string;
-  album: Album;
-  mainArtist: Artist;
+  album: Album | string;
+  mainArtist: Artist | string;
   artists: Artist[];
   categories: Category[];
   file?: string;

@@ -12,37 +12,38 @@ const playerStore = usePlayerStore();
 const router = useRouter();
 
 const goToHome = () => {
-  router.push('/');
+  router.push("/");
 };
-
 </script>
 
 <template>
-  <div :class="playerStore.isPlayerActive ? 'flex flex-col justify-between playingHeight bg-black/50 transition-all duration-300 ease' : 'flex flex-col justify-between h-screen bg-black/50 transition-all duration-300 ease'">
+  <div
+    :class="
+      playerStore.isPlayerActive
+        ? 'flex flex-col justify-between playingHeight bg-black/50 transition-all duration-300 ease'
+        : 'flex flex-col justify-between h-screen bg-black/50 transition-all duration-300 ease'
+    "
+  >
     <div class="p-4">
-      <img :src="logo" alt="Logo Beatly" class="h-24 mb-4 mx-auto mt-4 object-contain cursor-pointer" @click="goToHome"/>
+      <img
+        :src="logo"
+        alt="Logo Beatly"
+        class="h-24 mb-4 mx-auto mt-4 object-contain cursor-pointer"
+        @click="goToHome"
+      />
     </div>
     <!-- Barre de recherche -->
     <div>
-      <SearchBar/>
+      <SearchBar />
     </div>
 
     <!-- Menu -->
     <div class="flex-1 overflow-y-auto">
-      <NavItem
-      label="Coups de cœur"
-      :icon="heart"
-      />
-      <NavItem
-      label="Bibliothèque"
-      :icon="library"
-      />
+      <NavItem label="Coups de cœur" :icon="heart" @click="router.push('/playlist/favoris')" />
+      <NavItem label="Bibliothèque" :icon="library" @click="router.push('/bibliotheque')" />
     </div>
     <div>
-      <NavItem
-      label="Mon compte"
-      :icon="user"
-      />
+      <NavItem label="Mon compte" :icon="user" />
     </div>
   </div>
 </template>
