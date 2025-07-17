@@ -47,13 +47,15 @@ class LastListenedRepository extends ServiceEntityRepository
     public function deleteDuplicates(ListenableEntityInterface $listened, User $user): void
     {
         $em = $this->getEntityManager();
-        $class = self::MAPPING[$listened::class];
+        // Handle Proxy given by Normalizer
+        $realClass = $em->getClassMetadata($listened::class)->getName();
+        $class = self::MAPPING[$realClass];
 
         $duplicates = $em->createQueryBuilder()
             ->select('listened')
             ->from($class, 'listened')
             ->where('listened.user = :user')
-            ->andWhere(\sprintf('listened.%s = :listened', self::ATTR_MAPPING[$listened::class]))
+            ->andWhere(\sprintf('listened.%s = :listened', self::ATTR_MAPPING[$realClass]))
             ->setParameter('user', $user)
             ->setParameter('listened', $listened)
             ->getQuery()
@@ -86,7 +88,11 @@ class LastListenedRepository extends ServiceEntityRepository
 
     public function create(ListenableEntityInterface $listened, User $user): void
     {
-        $class = self::MAPPING[$listened::class];
+        $em = $this->getEntityManager();
+        // Handle Proxy given by Normalizer
+        $realClass = $em->getClassMetadata($listened::class)->getName();
+        $class = self::MAPPING[$realClass];
+
         $lastListened = new $class();
         $lastListened->setUser($user);
         $lastListened->setTarget($listened);
