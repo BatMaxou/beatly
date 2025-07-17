@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
@@ -22,17 +22,42 @@ const handleBack = () => {
   router.go(-1);
 };
 
-onMounted(async () => {
+const loadFavoritesFromApi = async () => {
   loading.value = true;
   try {
     const response = await apiClient.favorite.getMusics();
     if (response && response.musics) {
       favoritesStore.setFavorites(response.musics);
     }
-    loading.value = false;
   } catch (error) {
-    console.error("Erreur lors du chargement de l'album:", error);
+    console.error("Erreur lors du chargement des favoris:", error);
+  } finally {
     loading.value = false;
+  }
+};
+
+watch(
+  () => favoritesStore.hasLocalChanges,
+  async (newValue) => {
+    if (newValue) {
+      const response = await apiClient.favorite.getMusics();
+      if (response && response.musics) {
+        favoritesStore.setFavorites(response.musics);
+      }
+    }
+  },
+);
+
+onMounted(async () => {
+  // Vérifier si on a des données dans le store et si elles sont à jour
+  const shouldReload =
+    favoritesStore.favorites.length === 0 || // Pas de données
+    favoritesStore.hasLocalChanges || // Changements locaux depuis le dernier sync
+    !favoritesStore.lastApiSync || // Jamais synchronisé
+    new Date().getTime() - favoritesStore.lastApiSync.getTime() > 5 * 60 * 1000; // Plus de 5 minutes
+
+  if (shouldReload) {
+    await loadFavoritesFromApi();
   }
 });
 </script>

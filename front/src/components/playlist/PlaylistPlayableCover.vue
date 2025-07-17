@@ -5,12 +5,16 @@ import type { Playlist } from "@/utils/types";
 
 defineProps({
   playlist: {
-    type: Object as () => Playlist,
+    type: Object as () => Playlist | { title: string; "@id": string },
     required: true,
   },
   playlistCover: {
     type: String,
     required: true,
+  },
+  isPlayable: {
+    type: Boolean,
+    default: true,
   },
 });
 const isClickedToPlay = ref(false);
@@ -31,17 +35,19 @@ const handleResetClickedToPlay = () => {
       :alt="playlist.title"
       class="w-full block transition-transform duration-300 ease-in-out w-[160px] h-[160px] object-cover group-hover:scale-110"
     />
-    <div
-      class="absolute bottom-2 right-2 p-4 w-[50px] h-[50px] bg-black/80 rounded-full flex justify-center items-center opacity-0 transition-all duration-300 ease-in-out hover:bg-black group-hover:opacity-100"
-      data-play-button
-      @click="handlePlaySong"
-    >
-      <FastPlayButton
-        origin="playlist"
-        :parentId="playlist['@id']"
-        :isClickedToPlay="isClickedToPlay"
-        @update:isClickedToPlay="handleResetClickedToPlay"
-      />
+    <div v-if="isPlayable">
+      <div
+        class="absolute bottom-2 right-2 p-4 w-[50px] h-[50px] bg-black/80 rounded-full flex justify-center items-center opacity-0 transition-all duration-300 ease-in-out hover:bg-black group-hover:opacity-100"
+        data-play-button
+        @click="handlePlaySong"
+      >
+        <FastPlayButton
+          origin="playlist"
+          :parentId="playlist['@id']"
+          :isClickedToPlay="isClickedToPlay"
+          @update:isClickedToPlay="handleResetClickedToPlay"
+        />
+      </div>
     </div>
   </div>
 </template>
