@@ -45,7 +45,7 @@ class RecommendationProvider implements ProviderInterface
         }
 
         $qdrantRecommendations = $this->qdrantClient->recommend(array_map(
-            fn ($lastMusic) => $lastMusic->getTarget()->getId(),
+            fn ($lastMusic) => $lastMusic->getTarget()->getUuid(),
             $lastMusicsListened
         ), 20);
 
@@ -56,8 +56,8 @@ class RecommendationProvider implements ProviderInterface
         $response = $this->ollamaClient->ask($prompt);
 
         $matches = [];
-        preg_match_all('/\d+/', $response, $matches);
-        $recommendations = $this->musicRepository->findBy(['id' => $matches[0]]);
+        preg_match_all('/"([a-z0-9\-]+)"/', $response, $matches);
+        $recommendations = $this->musicRepository->findBy(['uuid' => $matches[1]]);
 
         return new Recommendation($recommendations);
     }
