@@ -20,7 +20,7 @@ const props = defineProps({
   },
   artistName: {
     type: String,
-    default: "Artiste inconnu",
+    default: "",
   },
 });
 

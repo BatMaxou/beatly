@@ -1,5 +1,5 @@
 import { useRouter } from "vue-router";
-import type { Music, Album, Playlist, Artist } from "@/utils/types";
+import type { Music, Album, Playlist } from "@/utils/types";
 
 // Icônes
 import dotsLight from "@/assets/icons/dots-light.svg";
@@ -221,7 +221,11 @@ export function useUnifiedMenu() {
         } else {
           await apiClient.favorite.add({ [targetType]: element["@id"] });
           if (targetType === "music") {
-            favoritesStore.addFavorite(element as Music);
+            if (menuType === "favorites") {
+              favoritesStore.addFavorite(element as Music);
+            } else {
+              favoritesStore.markForResync();
+            }
           }
           showSuccess("Titre ajouté aux favoris");
         }
@@ -253,22 +257,16 @@ export function useUnifiedMenu() {
     },
 
     goToArtist: (element: Music) => {
-      if (element.mainArtist && (element.mainArtist as Artist).id) {
-        router.push(`/artiste/${(element.mainArtist as Artist).id}`);
-      } else if ((element.mainArtist as string).startsWith("/api/artists/")) {
-        const mainArtistId = (element.mainArtist as string).split("/").pop();
-        router.push(`/artiste/${mainArtistId}`);
+      if (element.mainArtist.id) {
+        router.push(`/artiste/${element.mainArtist.id}`);
       } else {
         showError("Nous ne parvenons pas à trouver l'artiste...");
       }
     },
 
     goToAlbum: (element: Music) => {
-      if (element.album && (element.album as Album).id) {
-        router.push(`/album/${(element.album as Album).id}`);
-      } else if ((element.album as string).startsWith("/api/albums/")) {
-        const albumId = (element.album as string).split("/").pop();
-        router.push(`/album/${albumId}`);
+      if (element.album.id) {
+        router.push(`/album/${element.album.id}`);
       } else {
         showError("Nous ne parvenons pas à trouver l'album...");
       }

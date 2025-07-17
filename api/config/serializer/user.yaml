@@ -2,51 +2,52 @@ App\Entity\User:
   attributes:
     id:
       groups:
-        - 'user:read'
-        - 'user:collection:read'
-        - 'artist:read'
-        - 'artist:collection:read'
-        - 'album:read'
-        - 'music:read'
-        - 'playlist:read'
-        - 'recommendation:read'
-        - 'queue:read'
-        - 'search:read'
+        - "user:read"
+        - "user:collection:read"
+        - "artist:read"
+        - "artist:collection:read"
+        - "album:read"
+        - "music:read"
+        - "playlist:read"
+        - "recommendation:read"
+        - "queue:read"
+        - "search:read"
+        - "favorite:read"
     name:
       groups:
-        - 'user:read'
-        - 'user:collection:read'
-        - 'user:update'
-        - 'artist:read'
-        - 'artist:collection:read'
-        - 'album:read'
-        - 'music:read'
-        - 'playlist:read'
-        - 'recommendation:read'
-        - 'queue:read'
-        - 'search:read'
+        - "user:read"
+        - "user:collection:read"
+        - "user:update"
+        - "artist:read"
+        - "artist:collection:read"
+        - "album:read"
+        - "music:read"
+        - "playlist:read"
+        - "recommendation:read"
+        - "queue:read"
+        - "search:read"
+        - "favorite:read"
     email:
       groups:
-        - 'user:read'
-        - 'user:collection:read'
-        - 'user:update'
+        - "user:read"
+        - "user:collection:read"
+        - "user:update"
     roles:
       groups:
-        - 'user:read'
+        - "user:read"
     avatarName:
       groups:
-        - 'user:read'
-        - 'user:collection:read'
-        - 'artist:read'
-        - 'artist:collection:read'
-        - 'album:read'
-        - 'queue:read'
-        - 'search:read'
+        - "user:read"
+        - "user:collection:read"
+        - "artist:read"
+        - "artist:collection:read"
+        - "album:read"
+        - "queue:read"
+        - "search:read"
     wallpaperName:
       groups:
-        - 'user:read'
-        - 'artist:read'
+        - "user:read"
+        - "artist:read"
     password:
       groups:
-        - 'user:update'
-
+        - "user:update"

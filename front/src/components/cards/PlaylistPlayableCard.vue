@@ -7,7 +7,9 @@ import type { Playlist } from "@/utils/types";
 
 const props = defineProps({
   playlist: {
-    type: Object as () => Playlist,
+    type: Object as () =>
+      | Playlist
+      | { title: string; origin: string; "@id": string; cover: string },
     required: true,
   },
 });
@@ -19,7 +21,14 @@ const handleCardClick = (event: Event) => {
   const isPlayButton = target.closest("[data-play-button]");
 
   if (!isPlayButton) {
-    router.push({ name: "Playlist", params: { id: props.playlist.id.toString() } });
+    if (props.playlist.title === "Titres likés") {
+      router.push({ name: "PlaylistFavorite" });
+      return;
+    }
+    const playlist = props.playlist as Playlist;
+    if (playlist.id) {
+      router.push({ name: "Playlist", params: { id: playlist.id.toString() } });
+    }
   }
 };
 </script>
