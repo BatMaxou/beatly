@@ -10,6 +10,7 @@ App\Entity\Album:
         - 'artist:read'
         - 'search:read'
         - 'favorite:read'
+        - 'last_listend:collection:read'
     title:
       groups:
         - 'album:read'
@@ -23,6 +24,7 @@ App\Entity\Album:
         - 'artist:read'
         - 'search:read'
         - 'favorite:read'
+        - 'last_listend:collection:read'
     artist:
       groups:
         - 'album:read'
@@ -31,6 +33,7 @@ App\Entity\Album:
         - 'dashboard:read'
         - 'search:read'
         - 'favorite:read'
+        - 'last_listend:collection:read'
     releaseDate:
       groups:
         - 'album:read'
@@ -45,6 +48,8 @@ App\Entity\Album:
         - 'artist:read'
         - 'search:read'
         - 'favorite:read'
+        - 'dashboard:read'
+        - 'last_listend:collection:read'
     cover:
       groups:
         - 'album:write'

@@ -3,7 +3,9 @@ App\Entity\LastListened:
     target:
       groups:
         - 'dashboard:read'
+        - 'last_listend:collection:read'
     listenedAt:
       groups:
         - 'dashboard:read'
+        - 'last_listend:collection:read'
 
