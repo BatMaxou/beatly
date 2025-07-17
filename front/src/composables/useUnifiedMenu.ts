@@ -214,11 +214,15 @@ export function useUnifiedMenu() {
 
         if (isCurrentlyFavorite) {
           await apiClient.favorite.remove({ [targetType]: element["@id"] });
-          targetType === "music" && favoritesStore.removeFavorite(element as Music);
+          if (targetType === "music") {
+            favoritesStore.removeFavorite(element as Music);
+          }
           showSuccess("Titre supprimé des favoris");
         } else {
           await apiClient.favorite.add({ [targetType]: element["@id"] });
-          targetType === "music" && favoritesStore.addFavorite(element as Music);
+          if (targetType === "music") {
+            favoritesStore.addFavorite(element as Music);
+          }
           showSuccess("Titre ajouté aux favoris");
         }
         element.isFavorite = !element.isFavorite;
