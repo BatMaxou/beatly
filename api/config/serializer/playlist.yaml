@@ -8,6 +8,7 @@ App\Entity\Playlist:
         - "dashboard:read"
         - 'search:read'
         - 'favorite:read'
+        - 'last_listend:collection:read'
     title:
       groups:
         - "playlist:read"
@@ -18,6 +19,7 @@ App\Entity\Playlist:
         - "dashboard:read"
         - 'search:read'
         - 'favorite:read'
+        - 'last_listend:collection:read'
     musics:
       groups:
         - "playlist:read"
@@ -28,6 +30,8 @@ App\Entity\Playlist:
         - "playlist:read"
         - 'search:read'
         - 'favorite:read'
+        - 'dashboard:read'
+        - 'last_listend:collection:read'
     cover:
       groups:
         - "playlist:write"

@@ -2,7 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use App\Api\Provider\LastListenedCollectionProvider;
 use App\Entity\Interface\ListenableEntityInterface;
+use App\Enum\ApiReusableRoute;
 use App\Repository\LastListenedRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
@@ -20,6 +26,17 @@ use Doctrine\ORM\Mapping\InheritanceType;
     'playlist' => LastPlaylistListened::class,
     'album' => LastAlbumListened::class,
 ])]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            uriTemplate: '/last_listened',
+            name: ApiReusableRoute::GET_COLLECTION_LAST_LISTENED->value,
+            normalizationContext: ['groups' => ['last_listend:collection:read']],
+            provider: LastListenedCollectionProvider::class,
+        ),
+    ]
+)]
+#[ApiFilter(SearchFilter::class, properties: ['user' => 'exact'])]
 abstract class LastListened
 {
     #[ORM\Id]
