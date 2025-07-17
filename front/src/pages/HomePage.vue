@@ -5,7 +5,7 @@ import { useApiClient } from "@/stores/api-client";
 import PlaylistPlayable from "@/components/cards/PlaylistPlayableCard.vue";
 import AlbumPlayableCard from "@/components/cards/AlbumPlayableCard.vue";
 import HorizontalScroller from "@/components/ui/HorizontalScroller.vue";
-import type { Album, Music, Playlist, LastListened, Category, Recommendation } from "@/utils/types";
+import type { Album, Music, Playlist, LastListened, Recommendation } from "@/utils/types";
 
 const { apiClient } = useApiClient();
 
