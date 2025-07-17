@@ -210,7 +210,6 @@ export function useUnifiedMenu() {
             : element["@id"].split("/")[2];
 
       try {
-        // Pour les favoris, on sait qu'on veut toujours supprimer
         const isCurrentlyFavorite = menuType === "favorites" ? true : element.isFavorite;
 
         if (isCurrentlyFavorite) {
