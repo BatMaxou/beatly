@@ -21,11 +21,14 @@ const handleCardClick = (event: Event) => {
   const isPlayButton = target.closest("[data-play-button]");
 
   if (!isPlayButton) {
-    if (props.playlist.title === "Titre likés") {
+    if (props.playlist.title === "Titres likés") {
       router.push({ name: "PlaylistFavorite" });
       return;
     }
-    router.push({ name: "Playlist", params: { id: (props.playlist as Playlist).id.toString() } });
+    const playlist = props.playlist as Playlist;
+    if (playlist.id) {
+      router.push({ name: "Playlist", params: { id: playlist.id.toString() } });
+    }
   }
 };
 </script>

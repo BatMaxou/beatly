@@ -1,5 +1,5 @@
 import { useRouter } from "vue-router";
-import type { Music, Album, Playlist, Artist } from "@/utils/types";
+import type { Music, Album, Playlist } from "@/utils/types";
 
 // Icônes
 import dotsLight from "@/assets/icons/dots-light.svg";

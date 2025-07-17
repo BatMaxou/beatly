@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useApiClient } from "@/stores/api-client";
 import AlbumPlayableCard from "@/components/cards/AlbumPlayableCard.vue";
@@ -34,6 +34,21 @@ const handlePlayAlbum = (event: Event) => {
     isClickedToPlay.value = true;
   }
 };
+// Ajout de la playlist titre likés par défaut
+const allFavoritePlaylists = computed(() => {
+  const playlists = [];
+  playlists.push({
+    title: "Titres likés",
+    origin: "favorite",
+    "@id": "/api/favorite_playlists",
+    cover: favoriteCover,
+  });
+  if (favoriteCollection.value?.playlists && favoriteCollection.value.playlists.length > 0) {
+    playlists.push(...favoriteCollection.value.playlists.map((playlist) => playlist.target));
+  }
+
+  return playlists;
+});
 
 onBeforeMount(async () => {
   loading.value = true;
@@ -63,18 +78,9 @@ onBeforeMount(async () => {
       <h2 class="ps-10 text-white text-3xl font-bold mb-4">Vos playlists préférées</h2>
       <HorizontalScroller :gap="64" :scroll-amount="3">
         <PlaylistPlayableCard
-          :playlist="{
-            title: 'Titre likés',
-            origin: 'favorite',
-            '@id': '/api/favorite_playlists',
-            cover: favoriteCover,
-          }"
-        />
-        <PlaylistPlayableCard
-          v-if="favoriteCollection?.playlists && favoriteCollection.playlists.length > 0"
-          v-for="playlist in favoriteCollection?.playlists"
-          :key="playlist.addedAt"
-          :playlist="playlist.target"
+          v-for="(playlist, index) in allFavoritePlaylists"
+          :key="playlist['@id'] || index"
+          :playlist="playlist"
         />
       </HorizontalScroller>
     </div>
