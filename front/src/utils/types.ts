@@ -28,6 +28,7 @@ export interface Artist extends User {
 
 export type Album = {
   "@id": string;
+  "@type": string;
   id: number;
   title: string;
   releaseDate: string;
@@ -53,6 +54,7 @@ export type MusicFile = {
 
 export type Music = {
   "@id": string;
+  "@type": string;
   id: number;
   title: string;
   addedAt: string;

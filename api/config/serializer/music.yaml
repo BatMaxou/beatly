@@ -10,8 +10,8 @@ App\Entity\Music:
         - "queue:read"
         - "search:read"
         - "favorite:read"
-        - 'dashboard:read'
-        - 'last_listend:collection:read'
+        - "dashboard:read"
+        - "last_listend:collection:read"
     title:
       groups:
         - "music:read"
@@ -25,7 +25,7 @@ App\Entity\Music:
         - "queue:read"
         - "search:read"
         - "favorite:read"
-        - 'last_listend:collection:read'
+        - "last_listend:collection:read"
     coverName:
       groups:
         - "music:read"
@@ -36,8 +36,8 @@ App\Entity\Music:
         - "queue:read"
         - "search:read"
         - "favorite:read"
-        - 'dashboard:read'
-        - 'last_listend:collection:read'
+        - "dashboard:read"
+        - "last_listend:collection:read"
     cover:
       groups:
         - "music:write"
@@ -48,7 +48,7 @@ App\Entity\Music:
         - "artist:read"
         - "dashboard:read"
         - "favorite:read"
-        - 'last_listend:collection:read'
+        - "last_listend:collection:read"
     file:
       groups:
         - "music:read"
@@ -60,7 +60,7 @@ App\Entity\Music:
         - "artist:read"
         - "recommendation:read"
         - "queue:read"
-        - 'last_listend:collection:read'
+        - "last_listend:collection:read"
     mainArtist:
       groups:
         - "music:read"
@@ -70,8 +70,7 @@ App\Entity\Music:
         - "queue:read"
         - "search:read"
         - "favorite:read"
-        - 'dashboard:read'
-        - 'last_listend:collection:read'
+        - "last_listend:collection:read"
     artists:
       groups:
         - "music:read"
@@ -88,6 +87,8 @@ App\Entity\Music:
         - "artist:read"
         - "search:read"
         - "favorite:read"
+        - "dashboard:read"
+        - "last_listend:collection:read"
     categories:
       groups:
         - "music:read"
@@ -107,12 +108,14 @@ App\Entity\Music:
         - "artist:read"
         - "recommendation:read"
         - "queue:read"
-        - 'last_listend:collection:read'
+        - "last_listend:collection:read"
     albumPosition:
       groups:
         - "album:read"
         - "music:write"
         - "music:update"
+        - "queue:read"
+        - "dashboard:read"
     addedAt:
       groups:
         - "album:read"

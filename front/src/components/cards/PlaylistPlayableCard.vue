@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps } from "vue";
+import { computed, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import PlaylistPlayableCover from "@/components/playlist/PlaylistPlayableCover.vue";
 import defaultCover from "@/assets/images/default-cover.png";
@@ -14,7 +14,7 @@ const props = defineProps({
   },
 });
 const router = useRouter();
-
+const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const handleCardClick = (event: Event) => {
   // Vérifier si le clic provient du bouton de lecture
   const target = event.target as HTMLElement;
@@ -31,6 +31,15 @@ const handleCardClick = (event: Event) => {
     }
   }
 };
+const playlistCover = computed(() => {
+  if (props.playlist.cover && props.playlist.cover.startsWith("/uploads")) {
+    return ressourceUrl + props.playlist.cover;
+  } else if (props.playlist.cover) {
+    return props.playlist.cover;
+  } else {
+    return defaultCover;
+  }
+});
 </script>
 
 <template>
@@ -38,10 +47,7 @@ const handleCardClick = (event: Event) => {
     class="flex flex-wrap min-w-[160px] w-full max-w-[160px] my-4 cursor-pointer transition-transform duration-200"
     @click="handleCardClick"
   >
-    <PlaylistPlayableCover
-      :playlist="playlist"
-      :playlistCover="playlist.cover ? playlist.cover : defaultCover"
-    />
+    <PlaylistPlayableCover :playlist="playlist" :playlistCover="playlistCover" />
     <div class="w-full mt-2">
       <h4 class="font-medium text-sm truncate">{{ playlist.title }}</h4>
     </div>

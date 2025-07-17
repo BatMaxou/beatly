@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { defineProps, ref } from "vue";
+import { defineProps, ref, computed } from "vue";
 import FastPlayButton from "../buttons/FastPlayButton.vue";
+import { usePlayerStore } from "@/stores/player";
 import type { Playlist } from "@/utils/types";
 
-defineProps({
+const props = defineProps({
   playlist: {
     type: Object as () => Playlist | { title: string; "@id": string },
     required: true,
@@ -17,7 +18,17 @@ defineProps({
     default: true,
   },
 });
+
+const playerStore = usePlayerStore();
 const isClickedToPlay = ref(false);
+
+const isCurrentParent = computed(() => {
+  return playerStore.queueParent === props.playlist["@id"];
+});
+
+const shouldShowButton = computed(() => {
+  return isClickedToPlay.value || isCurrentParent.value;
+});
 
 const handlePlaySong = () => {
   isClickedToPlay.value = true;
@@ -33,11 +44,12 @@ const handleResetClickedToPlay = () => {
     <img
       :src="playlistCover"
       :alt="playlist.title"
-      class="w-full block transition-transform duration-300 ease-in-out w-[160px] h-[160px] object-cover group-hover:scale-110"
+      class="block transition-transform duration-300 ease-in-out w-[160px] h-[160px] object-cover group-hover:scale-110"
     />
     <div v-if="isPlayable">
       <div
-        class="absolute bottom-2 right-2 p-4 w-[50px] h-[50px] bg-black/80 rounded-full flex justify-center items-center opacity-0 transition-all duration-300 ease-in-out hover:bg-black group-hover:opacity-100"
+        class="absolute bottom-2 right-2 p-4 w-[50px] h-[50px] bg-black/80 rounded-full flex justify-center items-center transition-all duration-300 ease-in-out hover:bg-black"
+        :class="shouldShowButton ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"
         data-play-button
         @click="handlePlaySong"
       >

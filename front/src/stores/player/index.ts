@@ -148,7 +148,7 @@ export const usePlayerStore = defineStore("player", {
       if (music) {
         const { apiClient } = useApiClient();
         const listenData: Listen = {
-          music: music["@id"] ? music["@id"] : music.id ? "/api/music/" + music.id : music["@id"],
+          music: music["@id"],
           ...(id && id.startsWith("/api/albums/") && { album: id }),
           ...(id && id.startsWith("/api/playlists/") && { playlist: id }),
         };

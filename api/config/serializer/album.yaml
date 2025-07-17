@@ -2,66 +2,67 @@ App\Entity\Album:
   attributes:
     id:
       groups:
-        - 'album:read'
-        - 'album:collection:read'
-        - 'music:read'
-        - 'dashboard:read'
-        - 'playlist:read'
-        - 'artist:read'
-        - 'search:read'
-        - 'favorite:read'
-        - 'last_listend:collection:read'
+        - "album:read"
+        - "album:collection:read"
+        - "music:read"
+        - "dashboard:read"
+        - "playlist:read"
+        - "artist:read"
+        - "search:read"
+        - "favorite:read"
+        - "last_listend:collection:read"
     title:
       groups:
-        - 'album:read'
-        - 'album:collection:read'
-        - 'album:write'
-        - 'album:update'
-        - 'music:read'
-        - 'playlist:read'
-        - 'playlist:collection:read'
-        - 'dashboard:read'
-        - 'artist:read'
-        - 'search:read'
-        - 'favorite:read'
-        - 'last_listend:collection:read'
+        - "album:read"
+        - "album:collection:read"
+        - "album:write"
+        - "album:update"
+        - "music:read"
+        - "playlist:read"
+        - "playlist:collection:read"
+        - "dashboard:read"
+        - "artist:read"
+        - "search:read"
+        - "favorite:read"
+        - "last_listend:collection:read"
     artist:
       groups:
-        - 'album:read'
-        - 'album:collection:read'
-        - 'playlist:read'
-        - 'dashboard:read'
-        - 'search:read'
-        - 'favorite:read'
-        - 'last_listend:collection:read'
+        - "album:read"
+        - "album:collection:read"
+        - "playlist:read"
+        - "dashboard:read"
+        - "search:read"
+        - "favorite:read"
+        - "last_listend:collection:read"
     releaseDate:
       groups:
-        - 'album:read'
-        - 'album:write'
-        - 'album:update'
-        - 'artist:read'
-        - 'search:read'
-        - 'favorite:read'
+        - "album:read"
+        - "album:write"
+        - "album:update"
+        - "artist:read"
+        - "search:read"
+        - "favorite:read"
+        - "dashboard:read"
     coverName:
       groups:
-        - 'album:read'
-        - 'artist:read'
-        - 'search:read'
-        - 'favorite:read'
-        - 'dashboard:read'
-        - 'last_listend:collection:read'
+        - "album:read"
+        - "artist:read"
+        - "search:read"
+        - "favorite:read"
+        - "dashboard:read"
+        - "last_listend:collection:read"
     cover:
       groups:
-        - 'album:write'
+        - "album:write"
+        - "dashboard:read"
     wallpaperName:
       groups:
-        - 'album:read'
+        - "album:read"
     wallpaper:
       groups:
-        - 'album:write'
+        - "album:write"
     musics:
       groups:
-        - 'album:read'
-        - 'album:write'
-        - 'album:update'
-
+        - "album:read"
+        - "album:write"
+        - "album:update"

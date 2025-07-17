@@ -1,18 +1,26 @@
 <script setup lang="ts">
-import { defineProps } from "vue";
+import { computed, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import AlbumPlayableCover from "@/components/albums/AlbumPlayableCover.vue";
 import defaultCover from "@/assets/images/default-cover.png";
-import type { Album } from "@/utils/types";
+import type { Album, Music } from "@/utils/types";
 
 const props = defineProps({
   album: {
     type: Object as () => Album,
-    required: true,
+    default: null,
+  },
+  music: {
+    type: Object as () => Music,
+    default: null,
+  },
+  type: {
+    type: String,
+    default: "album",
   },
   releaseYear: {
     type: Number,
-    required: true,
+    default: null,
   },
   isPlayable: {
     type: Boolean,
@@ -25,6 +33,7 @@ const props = defineProps({
 });
 
 const router = useRouter();
+const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 
 const handleCardClick = (event: Event) => {
   // Vérifier si le clic provient du bouton de lecture
@@ -32,9 +41,33 @@ const handleCardClick = (event: Event) => {
   const isPlayButton = target.closest("[data-play-button]");
 
   if (!isPlayButton) {
-    router.push({ name: "Album", params: { id: props.album.id.toString() } });
+    if (props.music) {
+      router.push({ name: "Album", params: { id: props.music.album.id.toString() } });
+    } else {
+      router.push({ name: "Album", params: { id: props.album.id.toString() } });
+    }
   }
 };
+
+const musicCover = computed(() => {
+  if (props.music.album.cover && props.music.album.cover.startsWith("/uploads")) {
+    return ressourceUrl + props.music.album.cover;
+  } else if (props.music.album.cover) {
+    return props.music.album.cover;
+  } else {
+    return defaultCover;
+  }
+});
+
+const albumCover = computed(() => {
+  if (props.album.cover && props.album.cover.startsWith("/uploads")) {
+    return ressourceUrl + props.album.cover;
+  } else if (props.album.cover) {
+    return props.album.cover;
+  } else {
+    return defaultCover;
+  }
+});
 </script>
 
 <template>
@@ -43,14 +76,33 @@ const handleCardClick = (event: Event) => {
     @click="handleCardClick"
   >
     <AlbumPlayableCover
-      :albumCover="album.cover ? album.cover : defaultCover"
+      v-if="album"
+      :albumCover="albumCover"
       :album="album"
       :isPlayable="isPlayable"
+      :type="type"
+    />
+    <AlbumPlayableCover
+      v-else-if="music"
+      :albumCover="musicCover"
+      :album="music.album"
+      :isPlayable="isPlayable"
+      :type="type"
+      :music="music"
     />
     <div class="w-full mt-2">
-      <h4 class="font-medium text-sm truncate">{{ album.title }}</h4>
+      <h4 class="font-medium text-sm truncate text-bold">
+        {{ album ? album.title : music.title }}
+      </h4>
       <p class="text-xs text-white dark:text-gray-400 truncate">
-        {{ artistName }} &middot; {{ releaseYear }}
+        {{ artistName }}
+        {{
+          album
+            ? `&middot; ${new Date(album.releaseDate).getFullYear()}`
+            : music
+              ? `&middot; ${music.album.title}`
+              : ""
+        }}
       </p>
     </div>
   </div>

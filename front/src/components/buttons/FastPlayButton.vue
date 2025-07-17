@@ -15,7 +15,7 @@ const { loadQueue, loadRandomQueue, storeAdjacentMusicInQueue, loadQueueFile } =
   usePlayerPreparation();
 const emit = defineEmits(["update:isClickedToPlay"]);
 
-const { origin, parentId, isClickedToPlay } = defineProps({
+const { origin, parentId, isClickedToPlay, albumPosition } = defineProps({
   origin: {
     type: String,
     required: true,
@@ -28,6 +28,10 @@ const { origin, parentId, isClickedToPlay } = defineProps({
     type: Boolean,
     default: false,
   },
+  albumPosition: {
+    type: Number,
+    default: null,
+  },
 });
 
 const resetPlayState = () => {
@@ -39,18 +43,24 @@ watch(
   async (newVal) => {
     if (newVal && parentId !== playerStore.queueParent) {
       if (parentId) {
-        await loadQueue(origin, parentId, 1, null);
+        await loadQueue(origin, parentId, albumPosition || 1, null);
         if (playerStore.queue) {
           await loadQueueFile();
           let firstMusic;
           if (playerStore.isRandomQueue) {
-            await loadRandomQueue(0);
+            await loadRandomQueue(albumPosition || 0);
             firstMusic =
               (playerStore.randomQueue &&
                 Object.entries(playerStore.randomQueue?.queueItems)[0][1]) ||
               null;
           } else {
-            firstMusic = Object.entries(playerStore.queue.queueItems)[0][1];
+            if (albumPosition) {
+              firstMusic = Object.values(playerStore.queue.queueItems).find(
+                (item) => item.music.albumPosition === albumPosition,
+              );
+            } else {
+              firstMusic = Object.entries(playerStore.queue.queueItems)[0][1];
+            }
           }
 
           if (firstMusic) {
@@ -58,21 +68,23 @@ watch(
               (item) => item.musicId === firstMusic.music.id,
             );
             if (queueFile) {
-              playerStore.setListen(
+              await playerStore.setListen(
                 firstMusic.music,
                 queueFile.file,
                 firstMusic.position,
                 parentId,
               );
+              await storeAdjacentMusicInQueue();
             } else {
               apiClient.music.getFile(firstMusic.music.id).then(async (response) => {
                 if (response) {
-                  playerStore.setListen(
+                  await playerStore.setListen(
                     firstMusic.music,
                     await streamToAudioUrl(response),
                     firstMusic.position,
                     parentId,
                   );
+                  await storeAdjacentMusicInQueue();
                 } else {
                   showError("Ce titre n'est pas disponible");
                 }
@@ -81,7 +93,6 @@ watch(
           }
         }
 
-        storeAdjacentMusicInQueue();
         resetPlayState();
       } else {
         showError("Ce titre n'est pas disponible");
