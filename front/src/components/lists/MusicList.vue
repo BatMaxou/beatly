@@ -27,10 +27,6 @@ const props = defineProps({
   },
 });
 
-const extractedMusics = computed(() => {
-  return null;
-});
-
 const albumMusics = computed(() => {
   if (props.origin === "album") {
     return props.musicList as Music[];
@@ -113,8 +109,9 @@ const favoriteMusics = computed(() => {
       :music="music.music"
       :index="index"
       :position="index + 1"
+      :parentId="parentId"
       :origin="origin"
-      :musics="extractedMusics"
+      :musics="topTitlesMusics"
       :customStyles="props.customStyles"
       :theme="props.theme"
     />
@@ -131,8 +128,9 @@ const favoriteMusics = computed(() => {
       :music="music.target"
       :index="index"
       :position="index + 1"
+      :parentId="parentId"
       :origin="origin"
-      :musics="extractedMusics"
+      :musics="favoriteMusics"
       :customStyles="props.customStyles"
       :theme="props.theme"
     />

@@ -12,7 +12,7 @@ const props = defineProps<{
   position: number;
   parentId?: string;
   origin: string;
-  musics: { music: Music }[] | null;
+  musics: { music: Music }[] | { target: Music }[] | null;
 }>();
 
 const isHovered = ref(false);
@@ -70,10 +70,7 @@ const handlePlayStateChange = (newState: boolean) => {
 };
 
 const setIsCurrentSongPlaying = () => {
-  if (
-    props.music.id === playerStore.currentMusic?.id &&
-    (!playerStore.queueParent || props.parentId === playerStore.queueParent)
-  ) {
+  if (props.music.id === playerStore.currentMusic?.id) {
     isCurrentSongPlaying.value = true;
   } else {
     isCurrentSongPlaying.value = false;
@@ -118,7 +115,13 @@ onMounted(() => {
             :isClickedToPlay="isClickedToPlay"
             :position="position"
             :parentId="parentId"
-            :musics="origin === 'top-titles' ? musics : null"
+            :musics="
+              origin === 'top-titles'
+                ? (musics as { music: Music }[])
+                : origin === 'favorites'
+                  ? (musics as { target: Music }[])
+                  : null
+            "
             :origin="origin"
             @update:isClickedToPlay="handlePlayStateChange"
           />

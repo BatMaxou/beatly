@@ -39,7 +39,7 @@ const { music, position, origin, isClickedToPlay, parentId, musics, isCurrentSon
       default: false,
     },
     musics: {
-      type: Array as () => { music: Music }[] | null,
+      type: Array as () => { music: Music }[] | { target: Music }[] | null,
       default: null,
     },
     isCurrentSongPlaying: {

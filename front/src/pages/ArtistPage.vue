@@ -215,7 +215,7 @@ onMounted(async () => {
               <MusicList
                 :musicList="bestListenedSongList"
                 :origin="`top-titles`"
-                :parentId="artist['@id']"
+                parentId="top_titles"
               />
             </div>
           </div>
