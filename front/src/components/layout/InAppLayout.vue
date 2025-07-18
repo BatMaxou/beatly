@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import SideBar from "@/components/sidebar/SideBar.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "@/composables/useToast";
-import loadingIcon from "@/assets/icons/loading-light.svg";
 import PlayerSection from "@/components/player/PlayerSection.vue";
 import { usePlayerStore } from "@/stores/player";
-import SideBarQueue from "../sidebar/SideBarQueue.vue";
 import PlaylistSelectorModal from "../modals/PlaylistSelectorModal.vue";
+import ContentLayout from "./ContentLayout.vue";
 import { useModalsStore } from "@/stores/modals";
 
 // Props
@@ -26,6 +26,17 @@ const authStore = useAuthStore();
 const { showSuccess } = useToast();
 const modalsStore = useModalsStore();
 
+const contentLayoutRef = ref<InstanceType<typeof ContentLayout>>();
+const sideBarRef = ref<InstanceType<typeof SideBar>>();
+
+const handleSearch = (query: string) => {
+  contentLayoutRef.value?.handleSearch(query);
+};
+
+const closeSearch = () => {
+  contentLayoutRef.value?.closeSearch();
+};
+
 if (authStore.loginSuccess) {
   showSuccess("Vous êtes connecté !");
   authStore.setLoginSuccess(false);
@@ -41,55 +52,40 @@ if (authStore.loginSuccess) {
 
     <div
       :class="
-        playerStore.isPlayerActive ? 'pb-[80px] min-h-screen z-20 flex' : 'min-h-screen z-20 flex'
+        playerStore.isPlayerActive
+          ? 'pb-[80px] min-h-screen z-20 flex scrollbar-hide'
+          : 'min-h-screen z-20 flex scrollbar-hide'
       "
     >
-      <SideBar class="fixed left-0 top-0 min-w-[250px] w-full max-w-[250px] z-20" />
+      <SideBar
+        ref="sideBarRef"
+        class="fixed left-0 top-0 min-w-[250px] w-full max-w-[250px] z-20"
+        @search="handleSearch"
+        @close-search="closeSearch"
+      />
 
-      <!-- Emplacement du contenu de la page -->
-      <div :class="'ms-[250px] z-20 w-full overflow-x-hidden relative ' + padding">
-        <div v-if="loading" class="absolute inset-0 flex flex-col items-center justify-center">
-          <img :src="loadingIcon" alt="Chargement" class="h-12 w-12 animate-spin mb-4" />
-        </div>
-        <div
-          :class="
-            loading
-              ? 'opacity-0 transition ease duration-700 pb-8'
-              : 'opacity-1 transition ease duration-700 pb-8'
-          "
-        >
-          <slot v-if="!loading"></slot>
-        </div>
-      </div>
+      <!-- Contenu et modals -->
+      <ContentLayout
+        ref="contentLayoutRef"
+        :class="
+          'ms-[250px] z-20 w-full overflow-x-hidden overflow-y-scroll scrollbar-hide relative ' +
+          padding
+        "
+        :loading="loading"
+      >
+        <slot />
+      </ContentLayout>
     </div>
+
     <!-- Player en bas de page -->
     <div class="fixed bottom-0 left-0 right-0 z-50 bg-[#2E0B40] flex justify-center items-center">
       <PlayerSection />
     </div>
 
-    <!-- Sidebar File d'attente -->
-    <Transition name="slide-right">
-      <div
-        v-if="playerStore.showQueue"
-        class="fixed inset-0 bg-black/50 z-30"
-        :class="playerStore.isPlayerActive ? 'pb-[80px]' : 'min-h-screen'"
-        @click="playerStore.setShowQueue(false)"
-      ></div>
-    </Transition>
-
-    <Transition name="slide-right">
-      <SideBarQueue
-        v-if="playerStore.showQueue"
-        :class="playerStore.isPlayerActive ? 'pb-[80px]' : 'min-h-screen'"
-        class="fixed top-0 right-0 min-w-[500px] h-full z-40 shadow-2xl"
-        style="background: linear-gradient(to top, #5523bf, #b00d72); opacity: 1"
-      />
-    </Transition>
-
     <!-- Modale de sélection de playlist -->
     <PlaylistSelectorModal
       :isVisible="modalsStore.isPlaylistSelectorVisible"
-      :element="modalsStore.playlistSelectorElement"
+      :element="modalsStore.playlistSelectorElement as any"
       @close="modalsStore.closePlaylistSelector"
     />
   </div>
@@ -102,7 +98,11 @@ if (authStore.loginSuccess) {
 
 /* Animation pour la sidebar coulissante */
 .slide-right-enter-active,
-.slide-right-leave-active {
+.slide-right-leave-active,
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-up-enter-active,
+.slide-up-leave-active {
   transition: transform 0.3s ease-in-out;
 }
 
@@ -114,5 +114,25 @@ if (authStore.loginSuccess) {
 .slide-right-enter-to,
 .slide-right-leave-from {
   transform: translateX(0);
+}
+
+.slide-left-enter-from,
+.slide-left-leave-to {
+  transform: translateX(-100%);
+}
+
+.slide-left-enter-to,
+.slide-left-leave-from {
+  transform: translateX(0);
+}
+
+.slide-up-enter-from,
+.slide-up-leave-to {
+  transform: translateY(100%);
+}
+
+.slide-up-enter-to,
+.slide-up-leave-from {
+  transform: translateY(0);
 }
 </style>

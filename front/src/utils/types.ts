@@ -21,6 +21,7 @@ export interface User {
 
 export interface Artist extends User {
   "@id": string;
+  "@type": string;
   musics?: Music[];
   featuredMusics?: Music[];
   albums?: Album[];

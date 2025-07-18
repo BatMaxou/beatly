@@ -8,14 +8,16 @@ interface Props {
   gap?: number; // Gap entre les éléments en px
   showArrows?: boolean; // Afficher ou masquer les flèches
   arrowClasses?: string; // Classes CSS personnalisées pour les flèches
+  inlinePadding?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   scrollAmount: 3,
-  gap: 64,
+  gap: 32,
   showArrows: true,
   arrowClasses:
-    "absolute top-1/2 p-6 transform -translate-y-1/2 bg-black opacity-70 rounded-full shadow-md hover:opacity-90 transition-opacity",
+    "absolute top-1/2 p-2 transform -translate-y-1/2 bg-black opacity-70 rounded-full shadow-md hover:opacity-90 transition-opacity",
+  inlinePadding: "px-10",
 });
 
 const scrollContainer = ref<HTMLElement | null>(null);
@@ -69,7 +71,7 @@ onMounted(() => {
   <div class="relative">
     <div
       ref="scrollContainer"
-      class="flex flex-row justify-start overflow-x-auto scrollbar-hide px-10"
+      :class="'flex flex-row justify-start overflow-x-auto scrollbar-hide ' + inlinePadding"
       :style="{ gap: `${gap}px` }"
       @scroll="checkScrollPosition"
     >

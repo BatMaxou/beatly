@@ -115,6 +115,7 @@ App\Entity\Music:
         - "music:write"
         - "music:update"
         - "queue:read"
+        - "search:read"
         - "dashboard:read"
         - "last_listened:collection:read"
     addedAt:
