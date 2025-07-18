@@ -18,8 +18,8 @@ const favoritesList = computed(() => {
   return favoritesStore.favorites;
 });
 
-const handleBack = () => {
-  router.go(-1);
+const handleGoHome = () => {
+  router.push("/");
 };
 
 const loadFavoritesFromApi = async () => {
@@ -64,7 +64,7 @@ onMounted(async () => {
 
 <template>
   <InAppLayout :loading="loading" padding="p-0">
-    <div v-if="favoritesList.length > 0">
+    <div>
       <div
         :style="{
           backgroundImage: `url(${defaultWallpaper})`,
@@ -98,25 +98,25 @@ onMounted(async () => {
           <MusicList
             :musicList="favoritesList"
             origin="favorites"
-            parentId="/api/favorite_playlists/musics"
+            parentId="favorite_playlist"
             :theme="`light`"
             isFavorite="true"
           />
         </div>
       </div>
-    </div>
-    <div
-      v-else
-      class="absolute inset-0 flex flex-col justify-center items-center gap-2 text-white text-center"
-    >
-      <p class="text-2xl">Oups...</p>
-      <p class="text-lg">Nous ne parvenons pas à trouver cette album.</p>
-      <LandingButton
-        label="Revenir en arrière"
-        :icon="arrowLeft"
-        type="button"
-        @click="handleBack"
-      />
+      <div
+        v-else
+        class="absolute inset-0 flex flex-col justify-center items-center gap-2 text-white text-center"
+      >
+        <p class="text-3xl font-bold">Vous n'avez aimé aucun titre</p>
+        <p class="text-lg">Il faut y remédier ! Vous aimez bien quelque chose non ?</p>
+        <LandingButton
+          label="Retour à l'accueil"
+          :icon="arrowLeft"
+          type="button"
+          @click="handleGoHome"
+        />
+      </div>
     </div>
   </InAppLayout>
 </template>

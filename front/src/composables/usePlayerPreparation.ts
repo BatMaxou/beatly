@@ -23,7 +23,7 @@ export function usePlayerPreparation() {
     origin: string,
     parentId: string,
     position: number,
-    musics?: { music: Music }[] | null,
+    musics?: { music: Music }[] | { target: Music }[] | null,
   ) => {
     if (playerStore.queue) {
       await playerStore.clearQueue();
@@ -33,9 +33,16 @@ export function usePlayerPreparation() {
       queue = await apiClient.queue.add({ album: parentId, currentPosition: position });
     } else if (origin === "playlist") {
       queue = await apiClient.queue.add({ playlist: parentId, currentPosition: position });
-    } else if (origin === "top-titles" && musics) {
+    } else if ((origin === "top-titles" || origin === "favorites") && musics) {
       const musicIds = musics
-        .map((music) => music.music["@id"])
+        .map((music) => {
+          if ("music" in music && music.music) {
+            return music.music["@id"];
+          } else if ("target" in music && music.target) {
+            return music.target["@id"];
+          }
+          return null;
+        })
         .filter((id) => id !== undefined && id !== null);
       queue = await apiClient.queue.add({ musics: musicIds, currentPosition: position });
     }
