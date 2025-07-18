@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import { usePlayerStore } from "@/stores/player";
 import CrossIcon from "@/assets/icons/cross-light.svg";
 import QueueList from "../lists/QueueList.vue";
@@ -10,10 +10,43 @@ const activeTab = ref<"queue" | "lyrics">("queue");
 const setActiveTab = (tab: "queue" | "lyrics") => {
   activeTab.value = tab;
 };
+
+const handleBodyScroll = () => {
+  if (playerStore.showQueue) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "";
+  }
+};
+
+watch(
+  () => playerStore.showQueue,
+  (newValue) => {
+    if (newValue) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  },
+  { immediate: true },
+);
+
+onMounted(() => {
+  handleBodyScroll();
+});
+
+onUnmounted(() => {
+  document.body.style.overflow = "";
+});
 </script>
 
 <template>
-  <div class="p-6 h-full flex flex-col">
+  <div
+    class="p-6 h-full flex flex-col bg-gradient-to-b from-[#1a0b2e] to-[#16213e] overflow-hidden"
+    @click.stop
+    @wheel.stop
+    @scroll.stop
+  >
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-xl font-bold">Lecteur</h2>
       <button
@@ -51,7 +84,7 @@ const setActiveTab = (tab: "queue" | "lyrics") => {
     </div>
 
     <!-- Onglets -->
-    <div class="flex-1 overflow-y-scroll scrollbar-hide">
+    <div class="flex-1 overflow-y-auto h-full scrollbar-hide" @click.stop @wheel.stop>
       <!-- File d'attente -->
       <div v-if="activeTab === 'queue'">
         <ul class="space-y-2">
@@ -73,3 +106,13 @@ const setActiveTab = (tab: "queue" | "lyrics") => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.overflow-hidden {
+  pointer-events: auto;
+}
+
+.overflow-y-auto {
+  pointer-events: auto;
+}
+</style>

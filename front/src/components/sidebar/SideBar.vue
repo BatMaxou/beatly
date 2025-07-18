@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { ref } from "vue";
 import logo from "@/assets/beatly-logo-white.png";
 import NavItem from "../navigation/NavItem.vue";
 import { useRouter } from "vue-router";
@@ -10,9 +11,20 @@ import { usePlayerStore } from "@/stores/player";
 
 const playerStore = usePlayerStore();
 const router = useRouter();
+const searchBarRef = ref<InstanceType<typeof SearchBar>>();
+
+const emit = defineEmits(["search", "close-search"]);
 
 const goToHome = () => {
   router.push("/");
+};
+
+const handleSearch = (query: string) => {
+  emit("search", query);
+};
+
+const closeSearch = () => {
+  emit("close-search");
 };
 </script>
 
@@ -34,7 +46,7 @@ const goToHome = () => {
     </div>
     <!-- Barre de recherche -->
     <div>
-      <SearchBar />
+      <SearchBar ref="searchBarRef" @search="handleSearch" @close-search="closeSearch" />
     </div>
 
     <!-- Menu -->
