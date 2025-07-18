@@ -23,6 +23,7 @@ class OllamaClient
                 'stream' => false,
                 'model' => 'llama3.2',
             ],
+            'timeout' => 300,
         ]);
 
         $data = $response->toArray();
