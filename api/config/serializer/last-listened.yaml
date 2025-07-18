@@ -2,10 +2,9 @@ App\Entity\LastListened:
   attributes:
     target:
       groups:
-        - 'dashboard:read'
-        - 'last_listend:collection:read'
+        - "dashboard:read"
+        - "last_listened:collection:read"
     listenedAt:
       groups:
-        - 'dashboard:read'
-        - 'last_listend:collection:read'
-
+        - "dashboard:read"
+        - "last_listened:collection:read"

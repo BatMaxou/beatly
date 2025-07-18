@@ -7,12 +7,13 @@ import PlaylistPlayableCard from "@/components/cards/PlaylistPlayableCard.vue";
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import HorizontalScroller from "@/components/ui/HorizontalScroller.vue";
 import favoriteCover from "@/assets/images/favorites-cover.png";
-import type { Favorites } from "@/utils/types";
+import type { Album, Favorites, LastListened, Music, Playlist } from "@/utils/types";
+import type { CollectionResponse } from "@/stores/api-client/model";
 
 const { apiClient } = useApiClient();
 const router = useRouter();
 
-const recentlyListened = ref([]);
+const lastListened = ref<CollectionResponse<LastListened<Music | Album | Playlist>> | null>(null);
 const favoriteCollection = ref<Favorites | null>(null);
 const recommandations = ref<null>(null);
 const loading = ref(false);
@@ -53,7 +54,9 @@ const allFavoritePlaylists = computed(() => {
 onBeforeMount(async () => {
   loading.value = true;
   try {
+    const lastListenedResponse = await apiClient.lastListened.getAll();
     const favoriteResponse = await apiClient.favorite.getAll();
+    lastListened.value = lastListenedResponse;
     favoriteCollection.value = favoriteResponse;
   } catch (error) {
     console.error("Erreur lors de la récupération des playlists:", error);
@@ -67,44 +70,65 @@ onBeforeMount(async () => {
 <template>
   <InAppLayout :loading="loading" padding="pt-10">
     <h2 class="ps-10 text-white text-5xl font-bold md:mb-[50px] mb-[100px]">Bibliothèque</h2>
+    <div class="flex flex-col gap-8">
+      <!-- Écoutes récentes si il y en a -->
+      <div v-if="lastListened && lastListened.member.length > 0">
+        <h2 class="ps-10 text-white text-3xl font-bold mb-4">Dernières écoutes</h2>
+        <HorizontalScroller :gap="32" :scroll-amount="3">
+          <div v-for="item in lastListened.member" :key="item.target['@id']">
+            <PlaylistPlayableCard
+              v-if="(item.target as Playlist)['@type'] === 'Playlist'"
+              :playlist="item.target as Playlist"
+            />
+            <AlbumPlayableCard
+              v-else-if="(item.target as Album)['@type'] === 'Album'"
+              :album="item.target as Album"
+              :artistName="(item.target as Album).artist?.name"
+              :releaseYear="new Date((item.target as Album).releaseDate).getFullYear()"
+            />
+            <AlbumPlayableCard
+              v-else-if="(item.target as Music)['@type'] === 'Music'"
+              :music="item.target as Music"
+              :artistName="(item.target as Music).album.artist?.name"
+              type="single"
+            />
+          </div>
+        </HorizontalScroller>
+      </div>
 
-    <!-- Écoutes récentes si il y en a -->
-    <div v-if="recentlyListened.length > 0">
-      <h2 class="ps-10 text-white text-3xl font-bold mb-4">Écoutes récentes</h2>
-    </div>
+      <!-- Les playlist favorites  -->
+      <div>
+        <h2 class="ps-10 text-white text-3xl font-bold mb-4">Vos playlists préférées</h2>
+        <HorizontalScroller :gap="32" :scroll-amount="3">
+          <PlaylistPlayableCard
+            v-for="(playlist, index) in allFavoritePlaylists"
+            :key="playlist['@id'] || index"
+            :playlist="playlist"
+          />
+        </HorizontalScroller>
+      </div>
 
-    <!-- Les playlist favorites  -->
-    <div>
-      <h2 class="ps-10 text-white text-3xl font-bold mb-4">Vos playlists préférées</h2>
-      <HorizontalScroller :gap="32" :scroll-amount="3">
-        <PlaylistPlayableCard
-          v-for="(playlist, index) in allFavoritePlaylists"
-          :key="playlist['@id'] || index"
-          :playlist="playlist"
-        />
-      </HorizontalScroller>
-    </div>
+      <!-- Recommandations -->
+      <div v-if="recommandations">
+        <h2 class="ps-10 text-white text-3xl font-bold mb-4">Selon votre beat</h2>
+      </div>
 
-    <!-- Recommandations -->
-    <div v-if="recommandations">
-      <h2 class="ps-10 text-white text-3xl font-bold mb-4">Selon votre beat</h2>
-    </div>
-
-    <!-- Les albums favoris  -->
-    <div v-if="favoriteCollection?.albums && favoriteCollection.albums.length > 0">
-      <h2 class="ps-10 text-white text-3xl font-bold mb-4">Albums favoris</h2>
-      <HorizontalScroller :gap="32" :scroll-amount="3">
-        <AlbumPlayableCard
-          v-for="(album, index) in favoriteCollection.albums"
-          :key="album.addedAt"
-          :index="index"
-          :album="album.target"
-          :artistName="album.target.artist?.name"
-          :releaseYear="new Date(album.target.releaseDate).getFullYear()"
-          @click="handlePlayAlbum"
-          data-album
-        />
-      </HorizontalScroller>
+      <!-- Les albums favoris  -->
+      <div v-if="favoriteCollection?.albums && favoriteCollection.albums.length > 0">
+        <h2 class="ps-10 text-white text-3xl font-bold mb-4">Albums favoris</h2>
+        <HorizontalScroller :gap="32" :scroll-amount="3">
+          <AlbumPlayableCard
+            v-for="(album, index) in favoriteCollection.albums"
+            :key="album.addedAt"
+            :index="index"
+            :album="album.target"
+            :artistName="album.target.artist?.name"
+            :releaseYear="new Date(album.target.releaseDate).getFullYear()"
+            @click="handlePlayAlbum"
+            data-album
+          />
+        </HorizontalScroller>
+      </div>
     </div>
   </InAppLayout>
 </template>
