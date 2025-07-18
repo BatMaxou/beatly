@@ -11,7 +11,7 @@ App\Entity\Music:
         - "search:read"
         - "favorite:read"
         - "dashboard:read"
-        - "last_listend:collection:read"
+        - "last_listened:collection:read"
     title:
       groups:
         - "music:read"
@@ -25,7 +25,7 @@ App\Entity\Music:
         - "queue:read"
         - "search:read"
         - "favorite:read"
-        - "last_listend:collection:read"
+        - "last_listened:collection:read"
     coverName:
       groups:
         - "music:read"
@@ -37,7 +37,7 @@ App\Entity\Music:
         - "search:read"
         - "favorite:read"
         - "dashboard:read"
-        - "last_listend:collection:read"
+        - "last_listened:collection:read"
     cover:
       groups:
         - "music:write"
@@ -48,7 +48,7 @@ App\Entity\Music:
         - "artist:read"
         - "dashboard:read"
         - "favorite:read"
-        - "last_listend:collection:read"
+        - "last_listened:collection:read"
     file:
       groups:
         - "music:read"
@@ -60,7 +60,7 @@ App\Entity\Music:
         - "artist:read"
         - "recommendation:read"
         - "queue:read"
-        - "last_listend:collection:read"
+        - "last_listened:collection:read"
     mainArtist:
       groups:
         - "music:read"
@@ -70,7 +70,7 @@ App\Entity\Music:
         - "queue:read"
         - "search:read"
         - "favorite:read"
-        - "last_listend:collection:read"
+        - "last_listened:collection:read"
     artists:
       groups:
         - "music:read"
@@ -88,7 +88,7 @@ App\Entity\Music:
         - "search:read"
         - "favorite:read"
         - "dashboard:read"
-        - "last_listend:collection:read"
+        - "last_listened:collection:read"
     categories:
       groups:
         - "music:read"
@@ -108,7 +108,7 @@ App\Entity\Music:
         - "artist:read"
         - "recommendation:read"
         - "queue:read"
-        - "last_listend:collection:read"
+        - "last_listened:collection:read"
     albumPosition:
       groups:
         - "album:read"
@@ -116,6 +116,7 @@ App\Entity\Music:
         - "music:update"
         - "queue:read"
         - "dashboard:read"
+        - "last_listened:collection:read"
     addedAt:
       groups:
         - "album:read"

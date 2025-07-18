@@ -31,7 +31,7 @@ use Doctrine\ORM\Mapping\InheritanceType;
         new GetCollection(
             uriTemplate: '/last_listened',
             name: ApiReusableRoute::GET_COLLECTION_LAST_LISTENED->value,
-            normalizationContext: ['groups' => ['last_listend:collection:read']],
+            normalizationContext: ['groups' => ['last_listened:collection:read']],
             provider: LastListenedCollectionProvider::class,
         ),
     ]

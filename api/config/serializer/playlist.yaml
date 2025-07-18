@@ -6,9 +6,9 @@ App\Entity\Playlist:
         - "playlist:collection:read"
         - "music:read"
         - "dashboard:read"
-        - 'search:read'
-        - 'favorite:read'
-        - 'last_listend:collection:read'
+        - "search:read"
+        - "favorite:read"
+        - "last_listened:collection:read"
     title:
       groups:
         - "playlist:read"
@@ -17,9 +17,9 @@ App\Entity\Playlist:
         - "playlist:update"
         - "music:read"
         - "dashboard:read"
-        - 'search:read'
-        - 'favorite:read'
-        - 'last_listend:collection:read'
+        - "search:read"
+        - "favorite:read"
+        - "last_listened:collection:read"
     musics:
       groups:
         - "playlist:read"
@@ -28,10 +28,10 @@ App\Entity\Playlist:
     coverName:
       groups:
         - "playlist:read"
-        - 'search:read'
-        - 'favorite:read'
-        - 'dashboard:read'
-        - 'last_listend:collection:read'
+        - "search:read"
+        - "favorite:read"
+        - "dashboard:read"
+        - "last_listened:collection:read"
     cover:
       groups:
         - "playlist:write"

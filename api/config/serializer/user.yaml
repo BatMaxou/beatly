@@ -28,6 +28,7 @@ App\Entity\User:
         - "search:read"
         - "favorite:read"
         - "dashboard:read"
+        - "last_listened:collection:read"
     email:
       groups:
         - "user:read"
