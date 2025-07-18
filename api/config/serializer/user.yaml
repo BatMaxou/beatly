@@ -27,6 +27,7 @@ App\Entity\User:
         - "queue:read"
         - "search:read"
         - "favorite:read"
+        - "dashboard:read"
     email:
       groups:
         - "user:read"

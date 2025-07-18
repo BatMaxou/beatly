@@ -1,7 +1,7 @@
 import type { LastListened as LastListenedType, Playlist, Music, Album } from "@/utils/types";
 import type { ApiClient, CollectionResponse } from "../model";
 
-interface LastListenedResource extends LastListenedType<Music | Playlist | Album> {};
+type LastListenedResource = LastListenedType<Music | Playlist | Album>;
 
 const ApiRessourcePath = "/last_listened";
 
@@ -13,6 +13,8 @@ export default class LastListened {
   }
 
   async getAll(): Promise<CollectionResponse<LastListenedResource>> {
-    return this.apiClient.get<CollectionResponse<LastListenedResource>>(ApiRessourcePath, { Accept: "application/ld+json" });
+    return this.apiClient.get<CollectionResponse<LastListenedResource>>(ApiRessourcePath, {
+      Accept: "application/ld+json",
+    });
   }
 }

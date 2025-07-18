@@ -76,7 +76,7 @@ onBeforeMount(async () => {
     <!-- Les playlist favorites  -->
     <div>
       <h2 class="ps-10 text-white text-3xl font-bold mb-4">Vos playlists préférées</h2>
-      <HorizontalScroller :gap="64" :scroll-amount="3">
+      <HorizontalScroller :gap="32" :scroll-amount="3">
         <PlaylistPlayableCard
           v-for="(playlist, index) in allFavoritePlaylists"
           :key="playlist['@id'] || index"
@@ -93,7 +93,7 @@ onBeforeMount(async () => {
     <!-- Les albums favoris  -->
     <div v-if="favoriteCollection?.albums && favoriteCollection.albums.length > 0">
       <h2 class="ps-10 text-white text-3xl font-bold mb-4">Albums favoris</h2>
-      <HorizontalScroller :gap="32" :scroll-amount="4">
+      <HorizontalScroller :gap="32" :scroll-amount="3">
         <AlbumPlayableCard
           v-for="(album, index) in favoriteCollection.albums"
           :key="album.addedAt"
