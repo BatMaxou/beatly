@@ -1,4 +1,4 @@
-import type { Playlist as PlaylistType } from "@/utils/types";
+import type { PlaylistMusicUpdate, Playlist as PlaylistType } from "@/utils/types";
 import type { ApiClient, CollectionResponse, DeleteResponse } from "../model";
 
 interface ResourceResponse extends Partial<PlaylistType> {
@@ -33,7 +33,7 @@ export default class Playlist {
     });
   }
 
-  async update(id: number | string, data: Partial<PlaylistType>): Promise<ResourceResponse> {
+  async update(id: number | string, data: Partial<PlaylistMusicUpdate>): Promise<ResourceResponse> {
     return this.apiClient.patch<ResourceResponse>(`${ApiRessourcePath}/${id}`, data, {
       Accept: "application/ld+json",
     });

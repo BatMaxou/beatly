@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from "vue";
+import { ref, onMounted, onUnmounted, watch, computed } from "vue";
 import { useApiClient } from "@/stores/api-client";
 import { useModalsStore } from "@/stores/modals";
 import { useToast } from "@/composables/useToast";
 import type { Album, Music, Playlist } from "@/utils/types";
+import type { CollectionResponse } from "@/stores/api-client/model";
+import defaultCover from "@/assets/images/default-cover.png";
 
 const props = defineProps<{
   isVisible: boolean;
-  element?: Music | Album | Playlist; // L'élément à ajouter (Music, Album, etc.)
+  element?: Music | Album | Playlist;
 }>();
 
 const { apiClient } = useApiClient();
 const modalsStore = useModalsStore();
 const { showSuccess, showError } = useToast();
-const playlists = ref<Playlist[]>([]);
+const playlists = ref<CollectionResponse<Playlist> | null>(null);
 const loading = ref(false);
 const showCreateForm = ref(false);
 const formData = ref({ name: "" });
@@ -22,30 +24,101 @@ const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const fetchUserPlaylists = async () => {
   loading.value = true;
   try {
-    // En attente de l'enpoint pour récupérer les playlists de l'utilisateur
-    const response = await apiClient.playlist.getAll();
+    const response = await apiClient.me.getPlaylists();
     playlists.value = response || [];
   } catch (error) {
     console.error("Erreur lors du chargement des playlists:", error);
-    playlists.value = [];
+    playlists.value = null;
   } finally {
     loading.value = false;
   }
 };
 
-const selectPlaylist = async (playlist: Playlist) => {
+const filteredPlaylists = computed(() => {
+  if (!playlists.value?.member) return [];
+
+  if (props.element?.["@type"] === "Playlist") {
+    const currentPlaylistId = (props.element as Playlist).id;
+    return playlists.value.member.filter((playlist) => playlist.id !== currentPlaylistId);
+  }
+
+  return playlists.value.member;
+});
+
+// Ajout a la playlist
+const addToPlaylist = async (playlist: Playlist, musicsToAdd?: string[]) => {
   try {
-    if (props.element?.["@id"]) {
-      // Remplacer par le vrai appel API une fois l'endpoint créé
-      showSuccess(`Ajouté à la playlist "${playlist.title}"`);
-    } else {
+    if (!props.element?.["@id"]) {
       showError("Impossible d'ajouter cet élément");
+      return;
     }
 
-    closeModal();
+    const thisPlaylist = await apiClient.playlist.get(playlist.id);
+    const existingMusics = thisPlaylist.musics || [];
+
+    let musicsToAddToPlaylist: string[] = [];
+
+    if (musicsToAdd) {
+      musicsToAddToPlaylist = musicsToAdd;
+    } else {
+      if (props.element["@type"] === "Music") {
+        musicsToAddToPlaylist = [props.element["@id"]];
+      } else if (props.element["@type"] === "Album") {
+        musicsToAddToPlaylist = (props.element as Album).musics.map((music) => music["@id"]);
+      } else if (props.element["@type"] === "Playlist") {
+        musicsToAddToPlaylist = (props.element as Playlist).musics.map(
+          (playlistMusic) => playlistMusic.music["@id"],
+        );
+      }
+
+      // Détection des doublons pour les playlists existantes
+      const existingMusicIds = existingMusics.map((playlistMusic) => playlistMusic.music["@id"]);
+
+      const duplicateMusics = musicsToAddToPlaylist.filter((musicId) =>
+        existingMusicIds.includes(musicId),
+      );
+      const newMusics = musicsToAddToPlaylist.filter(
+        (musicId) => !existingMusicIds.includes(musicId),
+      );
+
+      if (newMusics.length === 0) {
+        if (duplicateMusics.length === 1) {
+          showError("Ce titre est déjà présent dans la playlist");
+        } else {
+          showError("Les titres sont déjà présents dans la playlist");
+        }
+        return;
+      }
+
+      musicsToAddToPlaylist = newMusics;
+    }
+
+    const addToPlaylistPayload = {
+      title: thisPlaylist.title,
+      musics: [
+        ...existingMusics.map((playlistMusic) => playlistMusic["@id"]),
+        ...musicsToAddToPlaylist.map((musicId) => ({ music: musicId })),
+      ],
+    };
+
+    console.log("addToPlaylistPayload", addToPlaylistPayload);
+    const response = await apiClient.playlist.update(playlist.id, addToPlaylistPayload as any);
+
+    if (response) {
+      if (musicsToAddToPlaylist.length === 1) {
+        showSuccess(`Ajouté à la playlist "${playlist.title}"`);
+      } else {
+        showSuccess(
+          `${musicsToAddToPlaylist.length} titres ajoutés à la playlist "${playlist.title}"`,
+        );
+      }
+    } else {
+      showError("Erreur lors de l'ajout à la playlist");
+    }
   } catch (error) {
     console.error("Erreur lors de l'ajout à la playlist:", error);
     showError("Erreur lors de l'ajout à la playlist");
+    throw error;
   }
 };
 
@@ -66,16 +139,30 @@ const submitCreatePlaylist = async (data: { name: string }) => {
 
     showSuccess(`Playlist "${data.name}" créée avec succès`);
 
-    // Ajouter l'élément à la nouvelle playlist si un élément est sélectionné
     if (props.element?.["@id"] && newPlaylist.id) {
-      // Remplacer par le vrai appel API une fois l'endpoint créé
-      showSuccess(`Élément ajouté à la nouvelle playlist`);
+      const playlist = { id: newPlaylist.id, title: newPlaylist.title } as Playlist;
+      await addToPlaylist(playlist);
     }
 
     closeModal();
   } catch (error) {
     console.error("Erreur lors de la création de la playlist:", error);
     showError("Erreur lors de la création de la playlist");
+  }
+};
+
+// Selection directe d'une playlist
+const selectPlaylist = async (playlist: Playlist) => {
+  try {
+    if (props.element?.["@id"]) {
+      await addToPlaylist(playlist);
+      closeModal();
+    } else {
+      showError("Impossible d'ajouter cet élément");
+    }
+  } catch (error) {
+    console.error("Erreur lors de l'ajout à la playlist:", error);
+    showError("Erreur lors de l'ajout à la playlist");
   }
 };
 
@@ -201,10 +288,16 @@ onUnmounted(() => {
 
         <!-- Empty state -->
         <div
-          v-else-if="playlists.length === 0"
+          v-else-if="playlists && filteredPlaylists.length === 0"
           class="flex-1 flex flex-col items-center justify-center"
         >
-          <div class="text-white/70 mb-4">Aucune playlist trouvée</div>
+          <div class="text-white/70 mb-4">
+            {{
+              props.element?.["@type"] === "Playlist"
+                ? "Aucune autre playlist disponible"
+                : "Aucune playlist trouvée"
+            }}
+          </div>
           <button
             @click="createNewPlaylist"
             class="px-4 py-2 bg-[#440a50] text-white rounded-lg hover:bg-[#5a0f60] transition-colors"
@@ -226,7 +319,7 @@ onUnmounted(() => {
           <div class="flex-1 overflow-y-auto scrollbar-custom">
             <div class="space-y-2 pr-2">
               <div
-                v-for="playlist in playlists"
+                v-for="playlist in filteredPlaylists"
                 :key="playlist.id"
                 @click="selectPlaylist(playlist)"
                 class="flex items-center p-3 rounded-lg hover:bg-[#440a50] cursor-pointer transition-colors group"
@@ -235,8 +328,7 @@ onUnmounted(() => {
                   class="w-12 h-12 rounded bg-gradient-to-br from-purple-500 to-pink-500 flex-shrink-0"
                 >
                   <img
-                    v-if="playlist.cover"
-                    :src="ressourceUrl + playlist.cover"
+                    :src="playlist.cover ? ressourceUrl + playlist.cover : defaultCover"
                     :alt="playlist.title"
                     class="w-full h-full rounded object-cover"
                   />

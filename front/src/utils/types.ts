@@ -11,9 +11,9 @@ export enum PlaylistType {
 }
 
 export enum RequestStatus {
-  PENDING = 'pending',
-  ACCEPTED = 'accepted',
-  DECLINED = 'declined',
+  PENDING = "pending",
+  ACCEPTED = "accepted",
+  DECLINED = "declined",
 }
 
 export interface User {
@@ -78,9 +78,14 @@ export type Music = {
 };
 
 export type PlaylistMusic = {
+  "@id": string;
   id: number;
   music: Music;
   addedAt: string | null;
+};
+
+export type PlaylistMusicUpdate = {
+  musics: (string | PlaylistMusic)[];
 };
 
 export type Playlist = {
