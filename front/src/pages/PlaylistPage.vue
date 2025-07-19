@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
 import type { Playlist } from "@/utils/types";
+import type { CollectionResponse } from "@/stores/api-client/model";
 import MusicList from "@/components/lists/MusicList.vue";
 import LandingButton from "@/components/buttons/LandingButton.vue";
 import arrowLeft from "@/assets/icons/arrow-left-light.svg";
@@ -16,9 +17,14 @@ const router = useRouter();
 const route = useRoute();
 const { apiClient } = useApiClient();
 const playlist = ref<Playlist | null>(null);
+const userPlaylists = ref<CollectionResponse<Playlist> | null>(null);
 const loading = ref(false);
 
 const playlistId = route.params.id as string;
+const isUserPlaylist = computed(() => {
+  if (!playlist.value || !userPlaylists.value?.member) return false;
+  return userPlaylists.value.member.some((userPlaylist) => userPlaylist.id === playlist.value!.id);
+});
 
 const handleBack = () => {
   router.go(-1);
@@ -28,12 +34,19 @@ onMounted(async () => {
   if (playlistId) {
     loading.value = true;
     try {
-      const response = await apiClient.playlist.get(playlistId);
-      if (response.id) {
-        playlist.value = response;
+      const [playlistResponse, userPlaylistsResponse] = await Promise.all([
+        apiClient.playlist.get(playlistId),
+        apiClient.me.getPlaylists(),
+      ]);
+
+      if (playlistResponse.id) {
+        playlist.value = playlistResponse;
       } else {
         playlist.value = null;
       }
+
+      userPlaylists.value = userPlaylistsResponse || null;
+
       loading.value = false;
     } catch (error) {
       console.error("Erreur lors du chargement de la playlist:", error);
@@ -64,9 +77,7 @@ onMounted(async () => {
             <span class="mb-8">Playlist</span>
             <p class="text-white text-4xl font-bold">{{ playlist?.title }}</p>
             <p class="text-md font-bold">
-              <span class="font-bold">{{
-                playlist["@type"] === "Playlist" ? "Beatly" : "Vous"
-              }}</span>
+              <span class="font-bold">{{ isUserPlaylist ? "Vous" : "Beatly" }}</span>
               <span class="text-lg front-bold"> • </span>
               <span class=""
                 >{{ playlist.musics.length }} titre{{ playlist.musics.length > 1 ? "s" : "" }}</span
@@ -80,6 +91,7 @@ onMounted(async () => {
           :playlistId="playlist.id"
           class="me-16 mb-16 h-full z-10"
           :isFavorite="playlist.isFavorite"
+          :isUserPlaylist="isUserPlaylist"
         />
       </div>
       <div v-if="playlist" class="text-white px-10">

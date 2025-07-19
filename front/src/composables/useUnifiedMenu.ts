@@ -115,19 +115,19 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
       separator: true,
     },
     { action: "playNext", icon: queueNextLight, label: "Lire ensuite" },
-    {
-      action: "deletePlaylist",
-      icon: removeLight,
-      label: "Supprimer la playlist",
-      separator: true,
-      condition: (props: MenuProps) => props.isUserPlaylist,
-    },
-    {
-      action: "editPlaylist",
-      icon: editLight,
-      label: "Modifier la playlist",
-      condition: (props: MenuProps) => props.isUserPlaylist,
-    },
+    // {
+    //   action: "deletePlaylist",
+    //   icon: removeLight,
+    //   label: "Supprimer la playlist",
+    //   separator: true,
+    //   condition: (props: MenuProps) => props.isUserPlaylist,
+    // },
+    // {
+    //   action: "editPlaylist",
+    //   icon: editLight,
+    //   label: "Modifier la playlist",
+    //   condition: (props: MenuProps) => props.isUserPlaylist,
+    // },
     // De base fait pour la visibilité des playlist utilisateur mais pas implémenté pour le moment
     // {
     //   action: "togglePrivacy",
@@ -277,16 +277,24 @@ export function useUnifiedMenu() {
       }
     },
 
-    // deletePlaylist: (element: Playlist) => {
-    //   // Afficher confirmation et supprimer
-    //   // if (await confirmDelete(element.title)) {
-    //   //   await apiClient.playlists.delete(element.id);
-    //   // }
+    // deletePlaylist: async (element: Playlist) => {
+    //   try {
+    //     if (confirm(`Êtes-vous sûr de vouloir supprimer la playlist "${element.title}" ?`)) {
+    //       await apiClient.playlist.delete(element.id);
+    //       showSuccess(`Playlist "${element.title}" supprimée avec succès`);
+
+    //       const currentPath = router.currentRoute.value.path;
+    //       if (currentPath.includes(`/playlist/${element.id}`)) {
+    //         router.push("/bibliotheque");
+    //       }
+    //     }
+    //   } catch (error) {
+    //     console.error("Erreur lors de la suppression de la playlist:", error);
+    //     showError("Erreur lors de la suppression de la playlist");
+    //   }
     // },
 
     // editPlaylist: (element: Playlist) => {
-    //   // Ouvrir modal d'édition
-    //   // await openPlaylistEditor(element);
     // },
   };
 
