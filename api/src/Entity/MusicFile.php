@@ -46,6 +46,9 @@ class MusicFile
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'files')]
+    private ?ArtistRequest $artistRequest = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +79,18 @@ class MusicFile
             // Important to update at least one field to trigger the doctrine events
             $this->updatedAt = new \DateTimeImmutable();
         }
+
+        return $this;
+    }
+
+    public function getArtistRequest(): ?ArtistRequest
+    {
+        return $this->artistRequest;
+    }
+
+    public function setArtistRequest(?ArtistRequest $artistRequest): static
+    {
+        $this->artistRequest = $artistRequest;
 
         return $this;
     }

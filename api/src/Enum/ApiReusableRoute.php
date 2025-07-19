@@ -10,6 +10,7 @@ enum ApiReusableRoute: string
     case CREATE_ALBUM = 'api_create_album';
     case CREATE_MUSIC = 'api_create_music';
     case CREATE_PLAYLIST = 'api_create_playlist';
+    case CREATE_ARTIST_REQUEST = 'api_create_artist_request';
 
     case UPDATE_MUSIC = 'api_update_music';
     case UPDATE_ALBUM_FILES = 'api_update_album_files';
@@ -24,6 +25,7 @@ enum ApiReusableRoute: string
     case GET_FAVORITE_MUSICS = 'api_get_favorite_musics';
     case GET_FAVORITE_ALBUMS = 'api_get_favorite_albums';
     case GET_FAVORITE_PLAYLISTS = 'api_get_favorite_playlists';
+    case GET_MY_ARTIST_REQUEST = 'api_get_my_artist_request';
 
     case GET_COLLECTION_LAST_LISTENED = 'api_get_collection_last_listened';
 }

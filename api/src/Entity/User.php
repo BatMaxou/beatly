@@ -152,8 +152,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?RandomQueue $randomQueue = null;
 
-    public function __construct()
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?ArtistRequest $artistRequest = null;
+
+    public function __construct(?int $id = null)
     {
+        $this->id = $id;
         $this->addRole(RoleEnum::USER);
         $this->playlists = new ArrayCollection();
     }
@@ -401,6 +405,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->randomQueue = $randomQueue;
+
+        return $this;
+    }
+
+    public function getArtistRequest(): ?ArtistRequest
+    {
+        return $this->artistRequest;
+    }
+
+    public function setArtistRequest(ArtistRequest $artistRequest): static
+    {
+        // set the owning side of the relation if necessary
+        if ($artistRequest->getUser() !== $this) {
+            $artistRequest->setUser($this);
+        }
+
+        $this->artistRequest = $artistRequest;
 
         return $this;
     }

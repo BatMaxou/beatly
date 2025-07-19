@@ -13,6 +13,8 @@ App\Entity\User:
         - "queue:read"
         - "search:read"
         - "favorite:read"
+        - 'request:read'
+        - 'request:collection:read'
     name:
       groups:
         - "user:read"
@@ -29,11 +31,15 @@ App\Entity\User:
         - "favorite:read"
         - "dashboard:read"
         - "last_listened:collection:read"
+        - 'request:read'
+        - 'request:collection:read'
     email:
       groups:
         - "user:read"
         - "user:collection:read"
         - "user:update"
+        - 'request:read'
+        - 'request:collection:read'
     roles:
       groups:
         - "user:read"
@@ -46,6 +52,8 @@ App\Entity\User:
         - "album:read"
         - "queue:read"
         - "search:read"
+        - 'request:read'
+        - 'request:collection:read'
     wallpaperName:
       groups:
         - "user:read"
@@ -53,3 +61,7 @@ App\Entity\User:
     password:
       groups:
         - "user:update"
+    artistRequest:
+      groups:
+        - "user:read"
+        - "user:collection:read"

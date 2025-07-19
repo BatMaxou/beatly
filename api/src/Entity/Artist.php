@@ -53,11 +53,19 @@ class Artist extends User implements EmbeddableEntityInterface
     public function __construct()
     {
         parent::__construct();
+
+        $this->init();
+    }
+
+    public function init(): static
+    {
         $this->addRole(RoleEnum::ARTIST);
         $this->featuredMusics = new ArrayCollection();
         $this->albums = new ArrayCollection();
         $this->musics = new ArrayCollection();
         $this->uuid = Uuid::v4();
+
+        return $this;
     }
 
     public static function getClassIdentifier(): string
