@@ -61,10 +61,18 @@ services:
     networks:
       - beatly
 
+  analytics:
+    image: matomo
+    volumes:
+      - analytics_data:/var/www/html
+    networks:
+      - beatly
+
 volumes:
   db_data:
   qdrant_data:
   ollama_data:
+  analytics_data:
 
 networks:
   beatly:
