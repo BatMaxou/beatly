@@ -14,6 +14,11 @@ inputs:
     type: string
     required: false
     default: ''
+  build_args:
+    description: 'Build arguments for docker build'
+    type: string
+    required: false
+    default: ''
 
 runs:
   using: composite
@@ -28,3 +33,4 @@ runs:
         tags: ${{ env.IMAGE_PREFIX }}-${{ inputs.image }}:latest
         push: true
         target: ${{ inputs.target }}
+        build-args: ${{ inputs.build_args }}
