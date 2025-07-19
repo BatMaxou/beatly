@@ -13,6 +13,8 @@ services:
             string $publicUploadsPath: '%env(string:PUBLIC_UPLOADS_PATH)%'
             string $privateUploadsPath: '%env(string:PRIVATE_UPLOADS_PATH)%'
             string $ssrPublicUploadsPath: '%env(string:SSR_PUBLIC_UPLOADS_PATH)%'
+            string $frontResetUrl: '%env(string:FRONT_RESET_URL)%'
+            string $frontLoginUrl: '%env(string:FRONT_LOGIN_URL)%'
 
     App\:
         resource: '../src/'
@@ -37,10 +39,6 @@ services:
     App\Service\Prompt\PromptBuilder:
         arguments:
             $basePath: '%kernel.project_dir%/prompt'
-
-    App\Domain\Command\Email\SendForgotPasswordEmailHandler:
-        arguments:
-            $frontResetUrl: '%env(string:FRONT_RESET_URL)%'
 
 when@dev:
     services:

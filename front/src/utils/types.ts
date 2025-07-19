@@ -10,6 +10,12 @@ export enum PlaylistType {
   PLATFORM = "PlatformPlaylist",
 }
 
+export enum RequestStatus {
+  PENDING = 'pending',
+  ACCEPTED = 'accepted',
+  DECLINED = 'declined',
+}
+
 export interface User {
   id: number;
   name: string;
@@ -152,4 +158,11 @@ export type Favorites = {
   musics?: Favorite<Music>[];
   playlists?: Favorite<Playlist>[];
   albums?: Favorite<Album>[];
+};
+
+export type ArtistRequest = {
+  message: string;
+  files: MusicFile[];
+  status: RequestStatus;
+  user?: User;
 };

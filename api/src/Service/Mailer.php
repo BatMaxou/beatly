@@ -28,6 +28,31 @@ class Mailer
         );
     }
 
+    public function sendAcceptArtistRequestEmail(User $user, string $loginUrl): void
+    {
+        $this->send(
+            $user,
+            'Demande d\'artiste acceptée',
+            EmailTypeEnum::ACCEPT_ARTIST_REQUEST,
+            [
+                'name' => $user->getName(),
+                'loginUrl' => $loginUrl,
+            ]
+        );
+    }
+
+    public function sendDeclineArtistRequestEmail(User $user): void
+    {
+        $this->send(
+            $user,
+            'Demande d\'artiste non retenue',
+            EmailTypeEnum::DECLINE_ARTIST_REQUEST,
+            [
+                'name' => $user->getName(),
+            ]
+        );
+    }
+
     /**
      * @param array<string, mixed> $context
      */

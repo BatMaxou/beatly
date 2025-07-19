@@ -1,10 +1,7 @@
 import type { User as UserType } from "@/utils/types";
 import type { ApiClient, DeleteResponse } from "../model";
 
-export type RegisterType = "artist_register" | "user_register";
-
 export type RegisterData = {
-  registerType: RegisterType;
   name: string;
   password: string;
   email: string;

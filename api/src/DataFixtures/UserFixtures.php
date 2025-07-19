@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Faker\FakerFixtureTrait;
+use App\Entity\ArtistRequest;
 use App\Entity\Playlist;
 use App\Entity\PlaylistMusic;
 use App\Entity\User;
@@ -77,6 +78,10 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
             $this->manager->persist($user);
             $this->createPlaylists($user);
+
+            if ($this->faker->boolean(10)) {
+                $user = $this->askArtistRequest($user);
+            }
         }
     }
 
@@ -86,6 +91,18 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ->setEmail($email ?? $this->faker->email())
             ->setName($name ?? $this->faker->name())
             ->setPassword('azerty');
+    }
+
+    private function askArtistRequest(User $user): User
+    {
+        $artistRequest = new ArtistRequest()
+            ->setUser($user)
+            ->setMessage($this->faker->sentence());
+
+        $this->manager->persist($artistRequest);
+        $user->setArtistRequest($artistRequest);
+
+        return $user;
     }
 
     protected function createPlaylists(User $user, ?callable $process = null): User
