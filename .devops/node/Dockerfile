@@ -26,7 +26,10 @@ CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 
 FROM nginx:1.25-alpine as prod
 
+COPY ./.devops/node/nginx.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/assets/main-build.css /usr/share/nginx/html/assets/main-build.css
 
 EXPOSE 80
 

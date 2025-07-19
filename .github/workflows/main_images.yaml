@@ -11,6 +11,7 @@ on:
       - '.devops/php/**'
       - '.devops/nginx/**'
       - '.devops/node/**'
+  pull_request:
 
 env:
   REGISTRY: ghcr.io
