@@ -2,9 +2,9 @@
 import { computed } from "vue";
 import { usePlayerStore } from "@/stores/player";
 import defaultCover from "@/assets/images/default-cover.png";
+import { ressourceUrl } from "@/utils/tools";
 
 const playerStore = usePlayerStore();
-const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 
 const currentMusic = computed(
   () =>

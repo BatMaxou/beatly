@@ -6,6 +6,7 @@ import { useToast } from "@/composables/useToast";
 import type { Album, Music, Playlist } from "@/utils/types";
 import type { CollectionResponse } from "@/stores/api-client/model";
 import defaultCover from "@/assets/images/default-cover.png";
+import { ressourceUrl } from "@/utils/tools";
 
 const props = defineProps<{
   isVisible: boolean;
@@ -19,7 +20,6 @@ const playlists = ref<CollectionResponse<Playlist> | null>(null);
 const loading = ref(false);
 const showCreateForm = ref(false);
 const formData = ref({ name: "" });
-const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 
 const fetchUserPlaylists = async () => {
   loading.value = true;

@@ -10,8 +10,8 @@ import arrowLeft from "@/assets/icons/arrow-left-light.svg";
 import defaultWallpaper from "@/assets/images/default-wallpaper-playlist.jpg";
 import defaultCover from "@/assets/images/default-cover.png";
 import UnifiedMenu from "@/components/menus/UnifiedMenu.vue";
+import { ressourceUrl } from "@/utils/tools";
 
-const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const router = useRouter();
 const route = useRoute();
 const { apiClient } = useApiClient();

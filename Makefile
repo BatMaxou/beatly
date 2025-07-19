@@ -1,20 +1,16 @@
+-include .env
+-include .env.local
+
 # --- HANDLE PARAMS ---
 %:
 	@:
 
 ARGS = `arg="$(filter-out $@,$(MAKECMDGOALS))" && echo $${arg:-${1}}`
 
-# --- DOCKER REGISTRY CONFIG ---
-REGISTRY_HOST = ghcr.io
-REGISTRY_USERNAME = batmaxou
-REGISTRY_PROJECT = beatly
-REGISTRY_REPOSITORY_PREFIX = $(REGISTRY_HOST)/${REGISTRY_USERNAME}/$(REGISTRY_PROJECT)
-
 # --- PHP CS FIXER CONFIG ---
 PHP_CS_FIXER_CONFIGURATION_FILE = ./.devops/lint/.php-cs-fixer.php
 PHP_FIXER_VERSION = 3-php8.4
 phpcsfixer = docker run --rm -v `pwd`:/code ghcr.io/php-cs-fixer/php-cs-fixer:${PHP_FIXER_VERSION}
-
 
 # --- DEV COMMANDS ---
 install: up vendor node-modules jwt uploads-dir database init-qdrant
@@ -127,6 +123,27 @@ push-prod-all:
 	@$(MAKE) push-prod-ollama
 .PHONY: push-prod-all
 
+# --- PROD CONTEXT DEPLOYMENT COMMANDS ---
+context-prod:
+	@docker context create beatly-prod --docker "host=ssh://${SERVER_USER}@${SERVER_HOST}"
+.PHONY: context-prod
+
+context-deploy:
+	@docker context use beatly-prod
+	@echo "Using context: beatly-prod"
+	@${MAKE} down-prod $(ARGS)
+	@docker image prune -f
+	@ssh ${SERVER_USER}@${SERVER_HOST} "cd ${SERVER_APP_PATH} && git pull -fr"
+	@docker login ${REGISTRY_HOST} -u ${REGISTRY_USERNAME} -p ${REGISTRY_TOKEN}
+	@${MAKE} pull-prod $(ARGS)
+	@docker logout ${REGISTRY_HOST}
+	@${MAKE} context-up-prod $(ARGS)
+.PHONY: context-deploy
+
+context-up-prod:
+	@REGISTRY_REPOSITORY_PREFIX=$(REGISTRY_REPOSITORY_PREFIX) docker compose -f compose.prod.yaml -f compose.override.prod.yaml up -d $(ARGS)
+.PHONY: up-prod
+
 # --- PROD DEPLOYMENT COMMANDS ---
 up-prod:
 	@REGISTRY_REPOSITORY_PREFIX=$(REGISTRY_REPOSITORY_PREFIX) docker compose -f compose.prod.yaml -f compose.override.yaml up -d $(ARGS)
@@ -137,13 +154,13 @@ down-prod:
 .PHONY: down-prod
 
 pull-prod:
-	@git pull -fr
 	@REGISTRY_REPOSITORY_PREFIX=$(REGISTRY_REPOSITORY_PREFIX) docker compose -f compose.prod.yaml pull $(ARGS)
 .PHONY: pull-prod
 
 deploy:
 	@make down-prod $(ARGS)
 	@docker image prune -f
+	@git pull -fr
 	@make pull-prod $(ARGS)
 	@make up-prod $(ARGS)
 .PHONY: deploy

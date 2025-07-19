@@ -3,6 +3,7 @@ import { defineProps } from "vue";
 import type { Artist } from "@/utils/types";
 import defaultCover from "@/assets/images/default-cover.png";
 import { useRouter } from "vue-router";
+import { ressourceUrl } from "@/utils/tools";
 
 const props = defineProps({
   artist: {
@@ -11,7 +12,6 @@ const props = defineProps({
   },
 });
 
-const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const router = useRouter();
 
 const goToArtist = () => {

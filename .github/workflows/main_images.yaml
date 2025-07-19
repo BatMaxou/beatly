@@ -48,6 +48,12 @@ jobs:
           dockerfile: ./.devops/node/Dockerfile
           image: front
           target: prod
+          build_args: |
+            VITE_API_BASE_URL=${{ secrets.PROD_FRONT_API_BASE_URL }}
+            VITE_API_RESSOURCES_URL=${{ secrets.PROD_FRONT_API_RESSOURCES_URL }}
+            VITE_MATOMO_URL=${{ secrets.PROD_FRONT_MATOMO_URL }}
+            VITE_MATOMO_SITE_ID=${{ secrets.PROD_FRONT_MATOMO_SITE_ID }}
+
 
   deploy-main-images:
     name: Deploy main images

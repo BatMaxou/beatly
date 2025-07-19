@@ -4,6 +4,7 @@ import { useRouter } from "vue-router";
 import AlbumPlayableCover from "@/components/albums/AlbumPlayableCover.vue";
 import defaultCover from "@/assets/images/default-cover.png";
 import type { Album, Music } from "@/utils/types";
+import { ressourceUrl } from "@/utils/tools";
 
 const props = defineProps({
   album: {
@@ -33,7 +34,6 @@ const props = defineProps({
 });
 
 const router = useRouter();
-const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 
 const handleCardClick = (event: Event) => {
   // Vérifier si le clic provient du bouton de lecture
