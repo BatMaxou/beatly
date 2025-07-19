@@ -1,5 +1,7 @@
-import type { User } from "@/utils/types";
-import type { ApiClient } from "../model";
+import type { Playlist, User } from "@/utils/types";
+import type { ApiClient, CollectionResponse } from "../model";
+
+const ApiRessourcePath = "/me";
 
 export default class Me {
   apiClient: ApiClient;
@@ -9,6 +11,10 @@ export default class Me {
   }
 
   async get(): Promise<User> {
-    return this.apiClient.get<User>(`/me`);
+    return this.apiClient.get<User>(`${ApiRessourcePath}`)
+  }
+
+  async getPlaylists(): Promise<CollectionResponse<Playlist>> {
+    return this.apiClient.get<CollectionResponse<Playlist>>(`${ApiRessourcePath}/playlists`, { Accept: "application/ld+json" });
   }
 }

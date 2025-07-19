@@ -26,4 +26,5 @@ enum ApiReusableRoute: string
     case GET_FAVORITE_PLAYLISTS = 'api_get_favorite_playlists';
 
     case GET_COLLECTION_LAST_LISTENED = 'api_get_collection_last_listened';
+    case GET_COLLECTION_MY_PLAYLISTS = 'api_get_collection_my_playlists';
 }

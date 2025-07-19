@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -10,6 +12,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Api\Processor\PlaylistCreationProcessor;
 use App\Api\Processor\PlaylistFilesProcessor;
+use App\Api\Provider\MyPlaylistsCollectionProvider;
 use App\Entity\Interface\EmbeddableEntityInterface;
 use App\Entity\Interface\LikableEntityInterface;
 use App\Entity\Interface\ListenableEntityInterface;
@@ -61,11 +64,18 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             name: 'api_get_playlist_collection',
             normalizationContext: ['groups' => ['playlist:collection:read']],
         ),
+        new GetCollection(
+            uriTemplate: '/me/playlists',
+            name: ApiReusableRoute::GET_COLLECTION_MY_PLAYLISTS->value,
+            provider: MyPlaylistsCollectionProvider::class,
+            normalizationContext: ['groups' => ['playlist:collection:read']],
+        ),
         new Delete(
             name: 'api_delete_playlist',
         ),
     ]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['creator' => 'exact'])]
 class Playlist implements ListenableEntityInterface, EmbeddableEntityInterface, LikableEntityInterface
 {
     #[ORM\Id]
