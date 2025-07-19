@@ -151,10 +151,11 @@ class ArtistFixtures extends Fixture
 
     private function createMusicFile(): string
     {
+        $id = (string) $this->faker->numberBetween(1, 8);
         $name = \sprintf('track_%s.mp3', $this->faker->unique()->slug(3));
         $rootDir = \sprintf('%s/../..', __DIR__);
 
-        copy(\sprintf('%s/track.mp3', __DIR__), \sprintf('%s%s/musics/%s', $rootDir, $this->privateUploadsPath, $name));
+        copy(\sprintf('%s/track-%s.mp3', __DIR__, $id), \sprintf('%s%s/musics/%s', $rootDir, $this->privateUploadsPath, $name));
 
         return $name;
     }
