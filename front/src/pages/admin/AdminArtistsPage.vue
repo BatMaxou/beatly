@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useHead } from "@unhead/vue";
+
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
@@ -10,6 +12,10 @@ import eyeLight from "@/assets/icons/eye-light.svg";
 import removeLight from "@/assets/icons/remove-light.svg";
 import { useRouter } from "vue-router";
 import BackButton from "@/components/navigation/BackButton.vue";
+
+useHead({
+  title: 'Beatly | Gestion des albums',
+})
 
 const { apiClient } = useApiClient();
 const { showSuccess, showError } = useToast();

@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useHead } from "@unhead/vue";
+
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/auth";
 import { useUserStore } from "@/stores/user";
 import PublicLayout from "@/components/layout/PublicLayout.vue";
 import LandingButton from "@/components/buttons/LandingButton.vue";
+
+useHead({
+  title: 'Beatly | Se connecter',
+});
 
 const router = useRouter();
 const { apiClient } = useApiClient();

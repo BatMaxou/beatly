@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
+import { useHead } from "@unhead/vue";
+
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
 import type { User } from "@/utils/types";
@@ -8,6 +10,10 @@ import InAppLayout from "@/components/layout/InAppLayout.vue";
 import ArtistRequestModal from "@/components/modals/ArtistRequestModal.vue";
 import router from "@/router";
 import { ressourceUrl } from "@/utils/tools";
+
+useHead({
+  title: "Beatly | Mon Compte",
+});
 
 const loading = ref(false);
 const loadingButton = ref(false);

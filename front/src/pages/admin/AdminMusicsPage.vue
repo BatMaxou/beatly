@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useHead } from '@unhead/vue';
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
@@ -88,6 +89,9 @@ const goToPreviousPage = () => {
 };
 
 onMounted(() => fetchMusics(1));
+useHead({
+  title: 'Beatly | Gestion des albums',
+})
 </script>
 
 <template>

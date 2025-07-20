@@ -3,6 +3,7 @@ import "./assets/main-build.css";
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import { createHead } from '@unhead/vue/client'
 import { plugin as FormKitPlugin, defaultConfig } from "@formkit/vue";
 import { fr } from "@formkit/i18n";
 import Vue3Toastify, { type ToastContainerOptions } from "vue3-toastify";
@@ -14,10 +15,11 @@ import RangeDirective from "./directives/CurrentTimeRange";
 import VolumeRangeDirective from "./directives/VolumeRange";
 
 import App from "./App.vue";
-import { apiBaseUrl, matomoSiteId, matomoUrl, ressourceUrl } from "./utils/tools";
+import { matomoSiteId, matomoUrl } from "./utils/tools";
 
 createApp(App)
   .use(createPinia())
+  .use(createHead())
   .use(router)
   .use(Vue3Toastify, {
     expandCustomProps: true,

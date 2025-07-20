@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useHead } from "@unhead/vue";
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
@@ -109,6 +110,9 @@ const goToPreviousPage = () => {
 };
 
 onMounted(() => fetchUsers(1));
+useHead({
+  title: "Beatly | Gestion des utilisateurs",
+});
 </script>
 
 <template>

@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useHead } from "@unhead/vue";
+
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
 import PublicLayout from "@/components/layout/PublicLayout.vue";
 import loading from "@/assets/icons/loading-light.svg";
 import LandingButton from "@/components/buttons/LandingButton.vue";
+
+useHead({
+  title: "Beatly | Réinitialisation du mot de passe",
+});
 
 const router = useRouter();
 const { apiClient } = useApiClient();

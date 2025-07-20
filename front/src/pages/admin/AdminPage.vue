@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useHead } from "@unhead/vue";
+
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
+
+useHead({
+  title: "Beatly | Administration",
+});
 
 const router = useRouter();
 const { apiClient } = useApiClient();

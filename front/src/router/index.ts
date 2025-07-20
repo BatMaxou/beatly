@@ -34,6 +34,11 @@ const routes: RouteRecordRaw[] = [
     path: "/",
     component: RootPage,
     name: "Root",
+    meta: {
+      title: 'Accueil',
+      description: 'Page d\'accueil',
+      ogTitle: 'Mon site - Accueil'
+    }
   },
   {
     path: "/playlist/favoris",

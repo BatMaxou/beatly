@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
+
 import PublicLayout from "@/components/layout/PublicLayout.vue";
 import LandingButton from "@/components/buttons/LandingButton.vue";
 
@@ -16,7 +17,7 @@ function goToRegister() {
 
 <template>
   <PublicLayout title="Écoutez votre musique favorite en un seul clic">
-    <div class="flex flex-row gap-32 mb-28">
+    <div class="flex flex-row flex-wrap gap-x-32 gap-y-16 mb-28 justify-center items-center">
       <div class="flex flex-col gap-8 items-center justify-between max-w-[375px] text-xl">
         <p class="text-center">Profiter gratuitement <br />de toutes votre musique</p>
         <LandingButton label="S'inscrire" @click="goToRegister"/>

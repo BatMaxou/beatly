@@ -89,6 +89,7 @@ App\Entity\Music:
         - "favorite:read"
         - "dashboard:read"
         - "last_listened:collection:read"
+        - "recommendation:read"
     categories:
       groups:
         - "music:read"

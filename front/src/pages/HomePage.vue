@@ -1,23 +1,43 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
+import { storeToRefs } from "pinia";
+
+import { useHead } from "@unhead/vue";
+
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
+import { useRecommendationStore } from "@/stores/recommendation";
 import PlaylistPlayable from "@/components/cards/PlaylistPlayableCard.vue";
 import AlbumPlayableCard from "@/components/cards/AlbumPlayableCard.vue";
 import HorizontalScroller from "@/components/ui/HorizontalScroller.vue";
-import type { Album, Music, Playlist, LastListened, Recommendation } from "@/utils/types";
+import type { Album, Music, Playlist, LastListened } from "@/utils/types";
+import loadingIcon from "@/assets/icons/loading-light.svg";
+
+useHead({
+  title: "Beatly | Accueil",
+});
 
 const { apiClient } = useApiClient();
+const recommendationStore = useRecommendationStore();
+const { recommendations } = storeToRefs(recommendationStore);
+const { setRecommendations } = recommendationStore;
 
 const lastListened = ref<LastListened<Music | Album | Playlist>[]>([]);
-const recommendationList = ref<Recommendation[]>([]);
 const mostListenedMusics = ref<Music[]>([]);
 const mostLikedMusics = ref<Music[]>([]);
 const mostLikedPlaylists = ref<Playlist[]>([]);
 const loading = ref(false);
+const recommendationLoading = ref(false);
 
 onBeforeMount(async () => {
   loading.value = true;
+
+  if (recommendations.value.length > 0) {
+    recommendationLoading.value = false;
+  } else {
+    recommendationLoading.value = true;
+  }
+
   try {
     const dashboardResponse = await apiClient.dashboard.get();
     if (dashboardResponse) {
@@ -26,12 +46,19 @@ onBeforeMount(async () => {
       mostLikedMusics.value = dashboardResponse.mostLikedMusics;
       mostLikedPlaylists.value = dashboardResponse.mostLikedPlaylists;
     }
-    // const recommendationsResponse = await apiClient.dashboard.getRecommendations();
-    // if (recommendationsResponse) {
-    //   recommendationList.value = recommendationsResponse;
-    // }
+
+    if (recommendations.value.length === 0) {
+      apiClient.dashboard.getRecommendations()
+        .then((recommendationResponse) => {
+          setRecommendations(recommendationResponse.recommendations || []);
+          recommendationLoading.value = false;
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la récupération des recommandations:", error);
+        });
+    }
   } catch (error) {
-    console.error("Erreur lors de la récupération des playlists:", error);
+    console.error("Erreur lors de la récupération du dashboard:", error);
   } finally {
     loading.value = false;
   }
@@ -76,14 +103,17 @@ onBeforeMount(async () => {
         </HorizontalScroller>
       </div>
 
-      <div v-if="recommendationList.length > 0">
+      <div>
         <h2 class="ps-10 text-white text-3xl font-bold mb-4">D'après vos écoutes...</h2>
-        <HorizontalScroller :gap="32" :scroll-amount="3">
-          <div
-            v-for="(item, index) in recommendationList"
+        <img v-if="recommendationLoading" :src="loadingIcon" alt="Chargement" class="h-12 w-12 animate-spin mb-4 mx-auto" />
+        <HorizontalScroller v-if="recommendations.length > 0" :gap="32" :scroll-amount="3">
+          <AlbumPlayableCard
+            v-for="(item, index) in recommendations"
             :key="index"
-            class="flex-shrink-0 w-40 h-40 bg-gray-700 rounded-lg"
-          ></div>
+            :music="item"
+            :artistName="item.album.artist?.name"
+            type="single"
+          />
         </HorizontalScroller>
       </div>
 

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import logo from "@/assets/beatly-logo-white.png";
+import miniLogo from "@/assets/beatly-logo-white-mini.png";
 import NavItem from "../navigation/NavItem.vue";
 import { useRouter } from "vue-router";
 import heart from "@/assets/icons/add-to-fav-inactive-light.svg";
@@ -44,7 +45,13 @@ const closeSearch = () => {
       <img
         :src="logo"
         alt="Logo Beatly"
-        class="h-24 mb-4 mx-auto mt-4 object-contain cursor-pointer"
+        class="h-24 mb-4 mx-auto mt-4 object-contain cursor-pointer hidden sm:block"
+        @click="goToHome"
+      />
+      <img
+        :src="miniLogo"
+        alt="Logo Beatly"
+        class="h-auto mb-1 mx-auto mt-1 object-contain cursor-pointer block sm:hidden"
         @click="goToHome"
       />
     </div>

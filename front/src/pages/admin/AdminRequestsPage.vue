@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useHead } from "@unhead/vue";
+
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import ArtistRequestModal from "@/components/modals/ArtistRequestModal.vue";
 import { useApiClient } from "@/stores/api-client";
 import type { ArtistRequest } from "@/utils/types";
 import { useToast } from "@/composables/useToast";
 import BackButton from "@/components/navigation/BackButton.vue";
+
+useHead({
+  title: "Beatly | Gestion des demandes d'artiste",
+});
 
 const { apiClient } = useApiClient();
 const requests = ref<ArtistRequest[]>([]);
