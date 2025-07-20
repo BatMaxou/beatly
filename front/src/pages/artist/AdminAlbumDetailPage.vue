@@ -226,14 +226,16 @@ onMounted(fetchAlbum);
       <div v-if="album" class="bg-[#2E0B40] rounded-lg p-6">
         <!-- Wallpaper -->
         <div class="relative mb-8">
-          <div class="h-64 bg-gray-800 rounded-lg overflow-hidden">
+          <div
+            class="h-64 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg overflow-hidden"
+          >
             <img
               v-if="wallpaperPreview"
               :src="wallpaperPreview"
               alt="Wallpaper"
               class="w-full h-full object-cover"
             />
-            <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
+            <div v-else class="w-full h-full flex items-center justify-center text-white">
               Aucun wallpaper
             </div>
           </div>
@@ -250,14 +252,16 @@ onMounted(fetchAlbum);
         <div class="flex items-start space-x-6 mb-8">
           <div class="relative">
             <!-- Cover -->
-            <div class="w-32 h-32 bg-gray-800 rounded-lg overflow-hidden">
+            <div
+              class="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg overflow-hidden"
+            >
               <img
                 v-if="coverPreview"
                 :src="coverPreview"
                 alt="Cover"
                 class="w-full h-full object-cover"
               />
-              <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
+              <div v-else class="w-full h-full flex items-center justify-center text-white">
                 Cover
               </div>
             </div>

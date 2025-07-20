@@ -23,6 +23,7 @@ App\Entity\User:
         - "user:collection:read"
         - "user:update"
         - "artist:read"
+        - "album:collection:read"
         - "artist:collection:read"
         - "album:read"
         - "music:read"
@@ -50,6 +51,7 @@ App\Entity\User:
       groups:
         - "user:read"
         - "artist:collection:read"
+        - "user:collection:read"
     avatarName:
       groups:
         - "user:read"

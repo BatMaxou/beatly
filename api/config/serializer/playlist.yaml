@@ -25,6 +25,7 @@ App\Entity\Playlist:
         - "playlist:read"
         - "playlist:write"
         - "playlist:update"
+        - "playlist:collection:read"
     coverName:
       groups:
         - "playlist:read"

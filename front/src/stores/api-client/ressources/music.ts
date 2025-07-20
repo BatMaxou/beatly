@@ -1,4 +1,4 @@
-import type { ApiClient, DeleteResponse } from "../model";
+import type { ApiClient, CollectionResponse, DeleteResponse } from "../model";
 import type { Music as MusicType } from "@/utils/types";
 
 export interface UploadResponse {
@@ -21,6 +21,15 @@ export default class Music {
 
   constructor(apiClient: ApiClient) {
     this.apiClient = apiClient;
+  }
+
+  async getAll(page: number = 1): Promise<CollectionResponse<MusicType>> {
+    return await this.apiClient.get<CollectionResponse<MusicType>>(
+      `${ApiRessourcePath.MUSIC}?page=${page}`,
+      {
+        Accept: "application/ld+json",
+      },
+    );
   }
 
   async createMusic(data: Partial<MusicType>, file: File): Promise<ResourceResponse> {

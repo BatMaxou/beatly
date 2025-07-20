@@ -4,7 +4,7 @@ import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
 import { streamToAudioUrl } from "@/utils/stream";
 import { convertDurationInMinutes } from "@/sharedFunctions";
-import type { Music } from "@/utils/types";
+import type { Music, MusicFile } from "@/utils/types";
 
 interface AddMusicFormData {
   title: string;
@@ -64,8 +64,17 @@ watch(
       if (newMusic.file) {
         loadingExistingAudio.value = true;
         try {
-          const fileIdParts = newMusic.file.split("/");
-          const fileId = fileIdParts[fileIdParts.length - 1];
+          let fileId: string;
+
+          if (typeof newMusic.file === "string") {
+            const fileIdParts = newMusic.file.split("/");
+            fileId = fileIdParts[fileIdParts.length - 1];
+          } else if (typeof newMusic.file === "object" && (newMusic.file as MusicFile).id) {
+            fileId = (newMusic.file as MusicFile).id.toString();
+          } else {
+            throw new Error("Format de fichier non reconnu");
+          }
+
           const fileResponse = await apiClient.music.getFile(fileId);
           audioPreview.value = await streamToAudioUrl(fileResponse);
         } catch (error) {
@@ -464,7 +473,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 
       <!-- Readonly content -->
       <div v-else class="p-6 max-h-[70vh] overflow-y-auto scrollbar-custom">
-        <div class="space-y-6">
+        <div class="flex flex-col space-y-6">
           <!-- File Display -->
           <div>
             <label class="block text-sm font-medium text-white mb-2">Fichier audio</label>
@@ -506,33 +515,46 @@ const handleKeydown = (event: KeyboardEvent) => {
             </div>
           </div>
 
-          <!-- Title (readonly) -->
-          <div>
-            <label class="block text-sm font-medium text-white mb-2">Titre de la musique</label>
-            <p class="text-white text-lg">{{ props.editMusic?.title || "—" }}</p>
-          </div>
+          <!-- Information Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Title (readonly) -->
+            <div>
+              <label class="block text-sm font-medium text-white mb-2">Titre de la musique</label>
+              <p class="text-white text-lg">{{ props.editMusic?.title || "—" }}</p>
+            </div>
 
-          <!-- Position (readonly) -->
-          <div>
-            <label class="block text-sm font-medium text-white mb-2">Position dans l'album</label>
-            <p class="text-white text-lg">{{ props.editMusic?.albumPosition || "—" }}</p>
-          </div>
+            <!-- Position (readonly) -->
+            <div>
+              <label class="block text-sm font-medium text-white mb-2">Position dans l'album</label>
+              <p class="text-white text-lg">{{ props.editMusic?.albumPosition || "—" }}</p>
+            </div>
 
-          <!-- Duration (readonly) -->
-          <div v-if="props.editMusic?.duration">
-            <label class="block text-sm font-medium text-white mb-2">Durée</label>
-            <p class="text-white text-lg">
-              {{ convertDurationInMinutes(`${props.editMusic.duration}`) }}
-            </p>
+            <!-- Duration (readonly) -->
+            <div v-if="props.editMusic?.duration">
+              <label class="block text-sm font-medium text-white mb-2">Durée</label>
+              <p class="text-white text-lg">
+                {{ convertDurationInMinutes(`${props.editMusic.duration}`) }}
+              </p>
+            </div>
+
+            <!-- Nombre d'écoutes (readonly) -->
+            <div v-if="props.editMusic?.listeningsNumber">
+              <label class="block text-sm font-medium text-white mb-2">Nombre d'écoutes</label>
+              <p class="text-white text-lg">
+                {{ props.editMusic.listeningsNumber }}
+              </p>
+            </div>
           </div>
 
           <!-- Album Cover Preview -->
-          <div v-if="albumCover">
-            <label class="block text-sm font-medium text-white mb-2"
-              >Cover (héritée de l'album)</label
-            >
-            <div class="w-24 h-24 bg-gray-800 rounded-lg overflow-hidden">
-              <img :src="albumCover" alt="Album Cover" class="w-full h-full object-cover" />
+          <div v-if="albumCover" class="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div>
+              <label class="block text-sm font-medium text-white mb-2"
+                >Cover (héritée de l'album)</label
+              >
+              <div class="w-24 h-24 bg-gray-800 rounded-lg overflow-hidden">
+                <img :src="albumCover" alt="Album Cover" class="w-full h-full object-cover" />
+              </div>
             </div>
           </div>
         </div>

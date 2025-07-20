@@ -95,8 +95,8 @@ export default class User {
     });
   }
 
-  async getAll(): Promise<CollectionResponse<UserType>> {
-    return this.apiClient.get<CollectionResponse<UserType>>(ApiRessourcePath, {
+  async getAll(page: number = 1): Promise<CollectionResponse<UserType>> {
+    return await this.apiClient.get<CollectionResponse<UserType>>(`${ApiRessourcePath}?page=${page}`, {
       Accept: "application/ld+json",
     });
   }

@@ -17,12 +17,14 @@ const requestsCount = ref(0);
 const usersCount = ref(0);
 const artistsCount = ref(0);
 const albumsCount = ref(0);
+const musicsCount = ref(0);
 const playlistsCount = ref(0);
 
 const loadingRequests = ref(true);
 const loadingUsers = ref(true);
 const loadingArtists = ref(true);
 const loadingAlbums = ref(true);
+const loadingMusics = ref(true);
 const loadingPlaylists = ref(true);
 
 const fetchRequestsCount = async () => {
@@ -73,10 +75,22 @@ const fetchAlbumsCount = async () => {
   }
 };
 
+const fetchMusicsCount = async () => {
+  try {
+    const response = await apiClient.music.getAll();
+    musicsCount.value = response.totalItems || 0;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des musiques:", error);
+    musicsCount.value = 0;
+  } finally {
+    loadingMusics.value = false;
+  }
+};
+
 const fetchPlaylistsCount = async () => {
   try {
     const response = await apiClient.playlist.getAll();
-    playlistsCount.value = response.length || 0;
+    playlistsCount.value = response.totalItems || 0;
   } catch (error) {
     console.error("Erreur lors de la récupération des playlists:", error);
     playlistsCount.value = 0;
@@ -98,6 +112,9 @@ const goToUsers = () => {
 const goToAlbums = () => {
   router.push("/admin/albums");
 };
+const goToMusics = () => {
+  router.push("/admin/musiques");
+};
 const goToPlaylists = () => {
   router.push("/admin/playlists");
 };
@@ -107,6 +124,7 @@ onMounted(() => {
   fetchUsersCount();
   fetchArtistsCount();
   fetchAlbumsCount();
+  fetchMusicsCount();
   fetchPlaylistsCount();
 });
 </script>
@@ -201,6 +219,28 @@ onMounted(() => {
               : albumsCount === 1
                 ? "album publié"
                 : "albums publiés"
+          }}
+        </p>
+      </div>
+
+      <!-- Musiques -->
+      <div
+        class="bg-[#2E0B40] rounded-lg p-6 shadow cursor-pointer hover:bg-[#3a1452] transition-colors"
+        @click="goToMusics"
+      >
+        <h2 class="text-xl font-semibold mb-2">Musiques</h2>
+        <p class="text-gray-300 mb-4">Total des musiques publiées.</p>
+        <div class="text-3xl font-bold text-red-400">
+          <span v-if="loadingMusics">...</span>
+          <span v-else>{{ musicsCount }}</span>
+        </div>
+        <p class="text-sm text-gray-400 mt-2">
+          {{
+            musicsCount === 0
+              ? "Aucune musique"
+              : musicsCount === 1
+                ? "musique publiée"
+                : "musiques publiées"
           }}
         </p>
       </div>

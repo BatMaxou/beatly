@@ -20,10 +20,13 @@ export default class Album {
     });
   }
 
-  async getAll(): Promise<CollectionResponse<AlbumType>> {
-    return await this.apiClient.get<CollectionResponse<AlbumType>>(ApiRessourcePath, {
-      Accept: "application/ld+json",
-    });
+  async getAll(page: number = 1): Promise<CollectionResponse<AlbumType>> {
+    return await this.apiClient.get<CollectionResponse<AlbumType>>(
+      `${ApiRessourcePath}?page=${page}`,
+      {
+        Accept: "application/ld+json",
+      },
+    );
   }
 
   async create(data: Partial<AlbumType>): Promise<ResourceResponse> {
