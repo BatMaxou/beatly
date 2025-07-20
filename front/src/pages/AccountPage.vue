@@ -119,6 +119,7 @@ const confirmDeleteAccount = async () => {
     showSuccess("Compte supprimé avec succès");
     router.push("/logout");
   } catch (error) {
+    console.error("Erreur lors de la suppression du compte:", error);
     showError("Erreur lors de la suppression du compte");
   }
   deleting.value = false;
