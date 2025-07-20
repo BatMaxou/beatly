@@ -63,12 +63,12 @@ if (authStore.loginSuccess) {
     >
       <SideBarAdmin
         v-if="type === 'admin'"
-        class="fixed left-0 top-0 min-w-[250px] w-full max-w-[250px] z-20"
+        class="fixed left-0 top-0 min-w-[60px] sm:min-w-[250px] w-full max-w-[60px] sm:max-w-[250px] z-20"
       />
       <SideBar
         v-else
         ref="sideBarRef"
-        class="fixed left-0 top-0 min-w-[250px] w-full max-w-[250px] z-20"
+        class="fixed left-0 top-0 min-w-[60px] sm:min-w-[250px] w-full max-w-[60px] sm:max-w-[250px] z-20"
         @search="handleSearch"
         @close-search="closeSearch"
       />
@@ -77,7 +77,7 @@ if (authStore.loginSuccess) {
       <ContentLayout
         ref="contentLayoutRef"
         :class="
-          'ms-[250px] min-h-screen z-20 w-full overflow-x-hidden overflow-y-scroll scrollbar-hide relative ' +
+          'ms-[60px] sm:ms-[250px] min-h-screen z-20 w-full overflow-x-hidden overflow-y-scroll scrollbar-hide relative ' +
           padding +
           (playerStore.isPlayerActive ? 'pb-[80px]' : '')
         "
