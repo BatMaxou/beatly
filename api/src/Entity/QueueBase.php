@@ -11,6 +11,7 @@ use App\Domain\Command\ClearRandomQueueCommand;
 use App\Domain\Command\GenerateRandomQueueCommand;
 use App\Domain\Command\ResetQueueCommand;
 use App\Enum\ApiReusableRoute;
+use App\Enum\VoterRoleEnum;
 use App\Repository\QueueRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,30 +27,35 @@ use Doctrine\ORM\Mapping\InheritanceType;
             name: 'api_add_to_queue',
             messenger: 'input',
             input: AddToQueueCommand::class,
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Post(
             uriTemplate: '/queue/reset',
             name: 'api_reset_queue',
             messenger: 'input',
             input: ResetQueueCommand::class,
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Post(
             uriTemplate: '/queue/random/generate',
             name: 'api_generate_random_queue',
             messenger: 'input',
             input: GenerateRandomQueueCommand::class,
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Post(
             uriTemplate: '/queue/random/clear',
             name: 'api_clear_random_queue',
             messenger: 'input',
             input: ClearRandomQueueCommand::class,
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Get(
             uriTemplate: '/queue',
             provider: QueueProvider::class,
             name: ApiReusableRoute::GET_QUEUE->value,
-            normalizationContext: ['groups' => ['queue:read']]
+            normalizationContext: ['groups' => ['queue:read']],
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
     ]
 )]

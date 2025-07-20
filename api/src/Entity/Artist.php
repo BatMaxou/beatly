@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\GetCollection;
 use App\Entity\Interface\EmbeddableEntityInterface;
 use App\Enum\EmbeddingEnum;
 use App\Enum\RoleEnum;
+use App\Enum\VoterRoleEnum;
 use App\Repository\ArtistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,10 +21,12 @@ use Symfony\Component\Uid\Uuid;
         new Get(
             name: 'api_get_artist',
             normalizationContext: ['groups' => ['artist:read']],
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")'
         ),
         new GetCollection(
             name: 'api_get_artist_collection',
             normalizationContext: ['groups' => ['artist:collection:read']],
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")'
         ),
     ]
 )]

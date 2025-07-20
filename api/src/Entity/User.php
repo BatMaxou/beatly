@@ -16,6 +16,7 @@ use App\Domain\Command\ResetPasswordCommand;
 use App\Domain\Command\VerifyResetTokenCommand;
 use App\Enum\ApiReusableRoute;
 use App\Enum\RoleEnum;
+use App\Enum\VoterRoleEnum;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -62,28 +63,37 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             uriTemplate: '/users/{id}/files',
             processor: UserFilesProcessor::class,
             normalizationContext: ['groups' => ['user:read']],
+            security: 'is_granted("'.VoterRoleEnum::SELF->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Patch(
             name: 'api_update_user',
             normalizationContext: ['groups' => ['user:read']],
             denormalizationContext: ['groups' => ['user:update']],
+            security: 'is_granted("'.VoterRoleEnum::SELF->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Get(
             name: 'api_get_user',
             normalizationContext: ['groups' => ['user:read']],
+            security: 'is_granted("'.VoterRoleEnum::ADMIN->value.'")',
         ),
         new Get(
             uriTemplate: '/me',
             provider: MeProvider::class,
             name: ApiReusableRoute::ME->value,
-            normalizationContext: ['groups' => ['user:read']]
+            normalizationContext: ['groups' => ['user:read']],
+            security: 'is_granted("'.VoterRoleEnum::SELF->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new GetCollection(
             name: 'api_get_user_collection',
             normalizationContext: ['groups' => ['user:collection:read']],
+            security: 'is_granted("'.VoterRoleEnum::ADMIN->value.'")',
         ),
         new Delete(
             name: 'api_delete_user',
+            security: '
+                is_granted("'.VoterRoleEnum::ADMIN->value.'")
+                or (is_granted("'.VoterRoleEnum::SELF->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'"))
+            '
         ),
     ],
 )]
@@ -312,6 +322,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isBanned(): bool
     {
         return $this->hasRole(RoleEnum::BANNED);
+    }
+
+    public function isArtist(): bool
+    {
+        return $this->hasRole(RoleEnum::ARTIST);
     }
 
     public function isPlatform(): bool

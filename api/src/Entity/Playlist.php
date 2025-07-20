@@ -18,6 +18,7 @@ use App\Entity\Interface\LikableEntityInterface;
 use App\Entity\Interface\ListenableEntityInterface;
 use App\Enum\ApiReusableRoute;
 use App\Enum\EmbeddingEnum;
+use App\Enum\VoterRoleEnum;
 use App\Repository\PlaylistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -44,34 +45,42 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             processor: PlaylistCreationProcessor::class,
             normalizationContext: ['groups' => ['playlist:read']],
             denormalizationContext: ['groups' => ['playlist:write']],
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Post(
             name: ApiReusableRoute::UPDATE_PLAYLIST_FILES->value,
             uriTemplate: '/playlists/{id}/files',
             processor: PlaylistFilesProcessor::class,
             normalizationContext: ['groups' => ['playlist:read']],
+            security: 'is_granted("'.VoterRoleEnum::OWNER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Patch(
             name: 'api_update_playlist',
             normalizationContext: ['groups' => ['playlist:read']],
             denormalizationContext: ['groups' => ['playlist:update']],
+            security: 'is_granted("'.VoterRoleEnum::OWNER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Get(
             name: 'api_get_playlist',
             normalizationContext: ['groups' => ['playlist:read']],
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new GetCollection(
             name: 'api_get_playlist_collection',
             normalizationContext: ['groups' => ['playlist:collection:read']],
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new GetCollection(
             uriTemplate: '/me/playlists',
             name: ApiReusableRoute::GET_COLLECTION_MY_PLAYLISTS->value,
             provider: MyPlaylistsCollectionProvider::class,
             normalizationContext: ['groups' => ['playlist:collection:read']],
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Delete(
             name: 'api_delete_playlist',
+            security: 'is_granted("'.VoterRoleEnum::ADMIN->value.'")
+                or (is_granted("'.VoterRoleEnum::OWNER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'"))',
         ),
     ]
 )]

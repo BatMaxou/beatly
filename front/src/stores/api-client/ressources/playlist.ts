@@ -33,6 +33,12 @@ export default class Playlist {
     });
   }
 
+  async createPlatform(data: Partial<PlaylistType>): Promise<ResourceResponse> {
+    return this.apiClient.post<ResourceResponse>(ApiRessourcePath, data, {
+      Accept: "application/ld+json",
+    });
+  }
+
   async update(id: number | string, data: Partial<PlaylistMusicUpdate>): Promise<ResourceResponse> {
     return this.apiClient.patch<ResourceResponse>(`${ApiRessourcePath}/${id}`, data, {
       Accept: "application/ld+json",
