@@ -15,6 +15,8 @@ import AccountPage from "../pages/AccountPage.vue";
 import NotFound from "../pages/NotFoundPage.vue";
 import { getCookie } from "@/utils/cookies";
 import { useLogout } from "@/composables/useLogout";
+import { useUserStore } from "@/stores/user";
+import { Role } from "@/utils/types";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -100,7 +102,7 @@ const router = createRouter({
 });
 
 // Vérification en amont pour protéger les routes sécurisées
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // Vérifier si la page nécessite une authentification
   const publicPages = ["Root", "Login", "Register", "ForgotPassword", "ResetPassword", "NotFound"];
   const authRequired = !publicPages.includes(to.name as string);
@@ -109,6 +111,26 @@ router.beforeEach((to, from, next) => {
   // Si l'utilisateur n'est pas connecté et essaie d'accéder à une page protégée
   if (authRequired && !token) {
     return next({ name: "Login" });
+  }
+
+  if (authRequired || (from.path === "/" && token)) {
+    const userStore = useUserStore();
+    if (!userStore.user || !userStore.user.id) {
+      try {
+        await userStore.fetchMe();
+      } catch {
+        return next({ name: "Root" });
+      }
+    }
+  }
+
+  if (to.path.startsWith("/admin")) {
+    const userStore = useUserStore();
+    const userRoles = userStore.user?.roles || [];
+
+    if (!userRoles.includes(Role.PLATFORM)) {
+      return next({ name: "Root" });
+    }
   }
 
   next();
