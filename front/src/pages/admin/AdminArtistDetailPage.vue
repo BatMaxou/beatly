@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useHead } from "@unhead/vue";
+
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import BackButton from "@/components/navigation/BackButton.vue";
 import { useApiClient } from "@/stores/api-client";
@@ -8,12 +10,16 @@ import { useToast } from "@/composables/useToast";
 import type { Artist } from "@/utils/types";
 import { ressourceUrl } from "@/utils/tools";
 
+const artist = ref<Artist | null>(null);
+useHead({
+  title: computed(() => `Beatly | Détail de ${artist?.value?.name || "l'artiste"}`),
+});
+
 const route = useRoute();
 const router = useRouter();
 const { apiClient } = useApiClient();
 const { showSuccess, showError } = useToast();
 
-const artist = ref<Artist | null>(null);
 const loading = ref(true);
 const isEditing = ref(false);
 const saving = ref(false);

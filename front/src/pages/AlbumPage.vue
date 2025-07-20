@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useHead } from "@unhead/vue";
+
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
 import type { Album } from "@/utils/types";
@@ -12,10 +14,14 @@ import defaultCover from "@/assets/images/default-cover.png";
 import UnifiedMenu from "@/components/menus/UnifiedMenu.vue";
 import { ressourceUrl } from "@/utils/tools";
 
+const album = ref<Album | null>(null);
+useHead({
+  title: computed(() => `Beatly | Détail de ${album?.value?.title || "l'album"}`),
+});
+
 const router = useRouter();
 const route = useRoute();
 const { apiClient } = useApiClient();
-const album = ref<Album | null>(null);
 const loading = ref(false);
 const releaseYear = ref<number | null>(null);
 

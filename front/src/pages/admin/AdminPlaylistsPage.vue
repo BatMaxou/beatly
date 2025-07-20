@@ -1,6 +1,12 @@
 <script setup lang="ts">
+import { useHead } from '@unhead/vue';
+
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import BackButton from "@/components/navigation/BackButton.vue";
+
+useHead({
+  title: 'Beatly | Gestion des playlists',
+});
 </script>
 
 <template>
