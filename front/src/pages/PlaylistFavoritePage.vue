@@ -106,7 +106,7 @@ onMounted(async () => {
       </div>
       <div
         v-else
-        class="absolute inset-0 flex flex-col justify-center items-center gap-2 text-white text-center"
+        class="mt-40 flex flex-col justify-center items-center gap-2 text-white text-center"
       >
         <p class="text-3xl font-bold">Vous n'avez aimé aucun titre</p>
         <p class="text-lg">Il faut y remédier ! Vous aimez bien quelque chose non ?</p>

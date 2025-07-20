@@ -68,8 +68,9 @@ if (authStore.loginSuccess) {
       <ContentLayout
         ref="contentLayoutRef"
         :class="
-          'ms-[250px] z-20 w-full overflow-x-hidden overflow-y-scroll scrollbar-hide relative ' +
-          padding
+          'ms-[250px] min-h-screen z-20 w-full overflow-x-hidden overflow-y-scroll scrollbar-hide relative ' +
+          padding +
+          (playerStore.isPlayerActive ? 'pb-[80px]' : '')
         "
         :loading="loading"
       >

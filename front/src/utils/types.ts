@@ -81,9 +81,14 @@ export type Music = {
 };
 
 export type PlaylistMusic = {
+  "@id": string;
   id: number;
   music: Music;
   addedAt: string | null;
+};
+
+export type PlaylistMusicUpdate = {
+  musics: (string | PlaylistMusic)[];
 };
 
 export type Playlist = {
@@ -93,6 +98,7 @@ export type Playlist = {
   cover?: string;
   wallpaper?: string;
   isFavorite: boolean;
+  creator: User;
   "@type"?: PlaylistType;
   "@id": string;
 };
