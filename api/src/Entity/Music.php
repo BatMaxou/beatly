@@ -116,6 +116,12 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface, Lik
     #[ORM\Column]
     private ?\DateTimeImmutable $addedAt = null;
 
+    /**
+     * @var Collection<int, PlaylistMusic>
+     */
+    #[ORM\OneToMany(targetEntity: PlaylistMusic::class, mappedBy: 'music', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private Collection $playlists;
+
     public function __construct()
     {
         $this->listeningsNumber = 0;
