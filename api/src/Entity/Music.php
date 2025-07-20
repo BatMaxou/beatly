@@ -15,6 +15,7 @@ use App\Entity\Interface\LikableEntityInterface;
 use App\Entity\Interface\ListenableEntityInterface;
 use App\Enum\ApiReusableRoute;
 use App\Enum\EmbeddingEnum;
+use App\Enum\VoterRoleEnum;
 use App\Repository\MusicRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -32,26 +33,31 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             processor: MusicUpsertProcessor::class,
             normalizationContext: ['groups' => ['music:read']],
             denormalizationContext: ['groups' => ['music:write']],
+            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Post(
             name: ApiReusableRoute::UPDATE_MUSIC_FILES->value,
             uriTemplate: '/music/{id}/files',
             processor: MusicFilesProcessor::class,
             normalizationContext: ['groups' => ['music:read']],
+            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Patch(
             name: ApiReusableRoute::UPDATE_MUSIC->value,
             processor: MusicUpsertProcessor::class,
             normalizationContext: ['groups' => ['music:read']],
             denormalizationContext: ['groups' => ['music:update']],
+            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Get(
             name: 'api_get_music',
             normalizationContext: ['groups' => ['music:read']],
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new GetCollection(
             name: 'api_get_music_collection',
             normalizationContext: ['groups' => ['music:read']],
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Delete(
             name: 'api_delete_music_file',

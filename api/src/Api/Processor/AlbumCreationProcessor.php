@@ -36,7 +36,7 @@ class AlbumCreationProcessor implements ProcessorInterface
         }
 
         if (!$user instanceof Artist) {
-            throw new \LogicException('User must be an instance of Artist to create a music');
+            throw new \LogicException('User must be an instance of Artist to create an album');
         }
 
         $data->setArtist($user);
