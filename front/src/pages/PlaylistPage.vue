@@ -3,7 +3,7 @@ import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
-import type { Playlist } from "@/utils/types";
+import { PlaylistType, type Playlist } from "@/utils/types";
 import type { CollectionResponse } from "@/stores/api-client/model";
 import MusicList from "@/components/lists/MusicList.vue";
 import LandingButton from "@/components/buttons/LandingButton.vue";
@@ -77,7 +77,13 @@ onMounted(async () => {
             <span class="mb-8">Playlist</span>
             <p class="text-white text-4xl font-bold">{{ playlist?.title }}</p>
             <p class="text-md font-bold">
-              <span class="font-bold">{{ isUserPlaylist ? "Vous" : "Beatly" }}</span>
+              <span class="font-bold">{{
+                isUserPlaylist
+                  ? "Vous"
+                  : playlist["@type"] === PlaylistType.PLATFORM
+                    ? "Beatly"
+                    : playlist.creator.name
+              }}</span>
               <span class="text-lg front-bold"> • </span>
               <span class=""
                 >{{ playlist.musics.length }} titre{{ playlist.musics.length > 1 ? "s" : "" }}</span

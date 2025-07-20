@@ -98,6 +98,7 @@ export type Playlist = {
   cover?: string;
   wallpaper?: string;
   isFavorite: boolean;
+  creator: User;
   "@type"?: PlaylistType;
   "@id": string;
 };
