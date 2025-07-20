@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useHead } from "@unhead/vue";
+
 import { useApiClient } from "@/stores/api-client";
 import AlbumPlayableCard from "@/components/cards/AlbumPlayableCard.vue";
 import PlaylistPlayableCard from "@/components/cards/PlaylistPlayableCard.vue";
@@ -9,6 +11,10 @@ import HorizontalScroller from "@/components/ui/HorizontalScroller.vue";
 import favoriteCover from "@/assets/images/favorites-cover.png";
 import type { Album, Favorites, LastListened, Music, Playlist } from "@/utils/types";
 import type { CollectionResponse } from "@/stores/api-client/model";
+
+useHead({
+  title: "Beatly | Bibliothèque",
+});
 
 const { apiClient } = useApiClient();
 const router = useRouter();

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useHead } from "@unhead/vue";
+
 import arrowLeft from "@/assets/icons/arrow-left-light.svg";
 import { useRouter } from "vue-router";
 import { useApiClient } from "@/stores/api-client";
@@ -7,6 +9,10 @@ import PublicLayout from "@/components/layout/PublicLayout.vue";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/auth";
 import LandingButton from "@/components/buttons/LandingButton.vue";
+
+useHead({
+  title: "Beatly | Mot de passe oublié",
+});
 
 const router = useRouter();
 const { apiClient } = useApiClient();

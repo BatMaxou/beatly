@@ -2,6 +2,8 @@
 import { onBeforeMount, ref } from "vue";
 import { storeToRefs } from "pinia";
 
+import { useHead } from "@unhead/vue";
+
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
 import { useRecommendationStore } from "@/stores/recommendation";
@@ -10,6 +12,10 @@ import AlbumPlayableCard from "@/components/cards/AlbumPlayableCard.vue";
 import HorizontalScroller from "@/components/ui/HorizontalScroller.vue";
 import type { Album, Music, Playlist, LastListened } from "@/utils/types";
 import loadingIcon from "@/assets/icons/loading-light.svg";
+
+useHead({
+  title: "Beatly | Accueil",
+});
 
 const { apiClient } = useApiClient();
 const recommendationStore = useRecommendationStore();

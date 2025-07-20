@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
+import { useHead } from "@unhead/vue";
+
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
 import MusicList from "@/components/lists/MusicList.vue";
@@ -9,6 +11,10 @@ import arrowLeft from "@/assets/icons/arrow-left-light.svg";
 import defaultWallpaper from "@/assets/images/favorites-background.jpg";
 import defaultCover from "@/assets/images/favorites-cover.png";
 import { useFavoritesStore } from "@/stores/favorites";
+
+useHead({
+  title: "Beatly | Titres likés",
+});
 
 const router = useRouter();
 const { apiClient } = useApiClient();

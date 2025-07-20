@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useHead } from "@unhead/vue";
+
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
 import type { Artist, Music, Album } from "@/utils/types";
@@ -15,10 +17,14 @@ import FastPlayButton from "@/components/buttons/FastPlayButton.vue";
 import AlbumPlayableCard from "@/components/cards/AlbumPlayableCard.vue";
 import { ressourceUrl } from "@/utils/tools";
 
+const artist = ref<Artist | null>(null);
+useHead({
+  title: computed(() => `Beatly | Détail de ${artist?.value?.name || "l'artiste"}`),
+});
+
 const router = useRouter();
 const route = useRoute();
 const { apiClient } = useApiClient();
-const artist = ref<Artist | null>(null);
 const loading = ref<boolean>(false);
 const bestListenedSongList = ref<{ music: Music }[]>([]);
 const lastAlbum = ref<Album | null>(null);
