@@ -5,10 +5,8 @@ import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
 import type { Artist } from "@/utils/types";
 import eyeDark from "@/assets/icons/eye-dark.svg";
-import editDark from "@/assets/icons/edit-dark.svg";
 import removeDark from "@/assets/icons/remove-dark.svg";
 import eyeLight from "@/assets/icons/eye-light.svg";
-import editLight from "@/assets/icons/edit-light.svg";
 import removeLight from "@/assets/icons/remove-light.svg";
 import { useRouter } from "vue-router";
 import BackButton from "@/components/navigation/BackButton.vue";
@@ -54,13 +52,6 @@ const viewArtist = (artist: Artist) => {
   const artistId = artist.id || artist["@id"]?.split("/").pop();
   if (artistId) {
     router.push(`/admin/artistes/${artistId}`);
-  }
-};
-
-const editArtist = (artist: Artist) => {
-  const artistId = artist.id || artist["@id"]?.split("/").pop();
-  if (artistId) {
-    router.push(`/admin/artistes/${artistId}?edit=true`);
   }
 };
 
@@ -140,22 +131,6 @@ onMounted(() => fetchArtists(1));
                         :src="eyeLight"
                         :class="['w-5 h-5', 'hidden group-hover:block']"
                         alt="Voir"
-                      />
-                    </button>
-                    <button
-                      @click.stop="editArtist(artist)"
-                      class="p-2 rounded hover:bg-yellow-500 transition-colors"
-                      title="Éditer"
-                    >
-                      <img
-                        :src="editDark"
-                        :class="['w-5 h-5', 'group-hover:hidden']"
-                        alt="Éditer"
-                      />
-                      <img
-                        :src="editLight"
-                        :class="['w-5 h-5', 'hidden group-hover:block']"
-                        alt="Éditer"
                       />
                     </button>
                     <button

@@ -13,6 +13,10 @@ const props = withDefaults(defineProps<Props>(), {
 const router = useRouter();
 
 const goBack = () => {
+  if (document.referrer.includes("/admin")) {
+    router.back();
+    return;
+  }
   if (props.to) {
     router.push(props.to);
   } else {

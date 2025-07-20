@@ -51,6 +51,7 @@ App\Entity\User:
       groups:
         - "user:read"
         - "artist:collection:read"
+        - "user:collection:read"
     avatarName:
       groups:
         - "user:read"

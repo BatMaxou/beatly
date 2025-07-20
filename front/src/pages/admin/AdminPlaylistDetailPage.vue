@@ -5,7 +5,7 @@ import InAppLayout from "@/components/layout/InAppLayout.vue";
 import BackButton from "@/components/navigation/BackButton.vue";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
-import type { Album, Music } from "@/utils/types";
+import type { Playlist, Music } from "@/utils/types";
 import { ressourceUrl } from "@/utils/tools";
 import { convertDurationInMinutes } from "@/sharedFunctions";
 import eyeLight from "@/assets/icons/eye-light.svg";
@@ -16,59 +16,61 @@ const router = useRouter();
 const { apiClient } = useApiClient();
 const { showError } = useToast();
 
-const album = ref<Album | null>(null);
+const playlist = ref<Playlist | null>(null);
 const loading = ref(true);
-const showAddMusicModal = ref(false);
-const editingMusic = ref<Music | null>(null);
+const showMusicModal = ref(false);
+const selectedMusic = ref<Music | null>(null);
 
 const coverPreview = ref<string>("");
 const wallpaperPreview = ref<string>("");
 
-const albumId = computed(() => route.params.id as string);
+const playlistId = computed(() => route.params.id as string);
 
-const fetchAlbum = async () => {
+const fetchPlaylist = async () => {
   loading.value = true;
   try {
-    const response = await apiClient.album.get(albumId.value);
-    album.value = response;
+    const response = await apiClient.playlist.get(playlistId.value);
+    playlist.value = response;
 
-    coverPreview.value = album.value.cover ? ressourceUrl + album.value.cover : "";
-    wallpaperPreview.value = album.value.wallpaper ? ressourceUrl + album.value.wallpaper : "";
+    coverPreview.value = playlist.value.cover ? ressourceUrl + playlist.value.cover : "";
+    wallpaperPreview.value = playlist.value.wallpaper
+      ? ressourceUrl + playlist.value.wallpaper
+      : "";
   } catch (error) {
-    console.error("Erreur lors de la récupération de l'album:", error);
-    showError("Erreur lors de la récupération de l'album");
-    router.push("/admin/albums");
+    console.error("Erreur lors de la récupération de la playlist:", error);
+    showError("Erreur lors de la récupération de la playlist");
+    router.push("/admin/playlists");
   } finally {
     loading.value = false;
   }
 };
 
-const closeAddMusicModal = () => {
-  showAddMusicModal.value = false;
-  editingMusic.value = null;
+const closeMusicModal = () => {
+  showMusicModal.value = false;
+  selectedMusic.value = null;
 };
 
 const viewMusic = (musicId: number) => {
-  const music = album.value?.musics?.find((m) => m.id === musicId);
-  if (music) {
-    editingMusic.value = music;
-    showAddMusicModal.value = true;
+  const playlistMusic = playlist.value?.musics?.find((pm) => pm.music.id === musicId);
+  if (playlistMusic) {
+    selectedMusic.value = playlistMusic.music;
+    showMusicModal.value = true;
   }
 };
 
-onMounted(fetchAlbum);
+onMounted(fetchPlaylist);
 </script>
 
 <template>
   <InAppLayout type="admin" padding="p-10" :loading="loading">
     <div>
-      <BackButton to="/admin/albums" />
+      <BackButton to="/admin/playlists" />
 
       <div class="flex items-center justify-between mb-6">
-        <h1 class="text-3xl font-bold">Détail de l'album</h1>
+        <h1 class="text-3xl font-bold">Détail de la playlist</h1>
       </div>
 
-      <div v-if="album" class="bg-[#2E0B40] rounded-lg p-6">
+      <div v-if="playlist" class="bg-[#2E0B40] rounded-lg p-6">
         <!-- Wallpaper -->
         <div class="relative mb-8">
           <div
@@ -109,33 +111,38 @@ onMounted(fetchAlbum);
               <!-- Titre -->
               <div>
                 <label class="block text-sm font-medium text-white mb-2">Titre</label>
-                <p class="text-white text-lg">{{ album.title || "—" }}</p>
+                <p class="text-white text-lg">{{ playlist.title || "—" }}</p>
               </div>
 
-              <!-- Artiste -->
+              <!-- Créateur -->
               <div>
-                <label class="block text-sm font-medium text-white mb-2">Artiste</label>
-                <p class="text-white text-lg">{{ album.artist?.name || "—" }}</p>
+                <label class="block text-sm font-medium text-white mb-2">Créateur</label>
+                <p class="text-white text-lg">{{ playlist.creator?.name || "—" }}</p>
               </div>
 
-              <!-- Date de sortie -->
+              <!-- Type -->
               <div>
-                <label class="block text-sm font-medium text-white mb-2">Date de sortie</label>
-                <p class="text-white text-lg">
-                  {{
-                    album.releaseDate
-                      ? new Date(album.releaseDate).toLocaleDateString("fr-FR")
-                      : "—"
-                  }}
-                </p>
+                <label class="block text-sm font-medium text-white mb-2">Type</label>
+                <span
+                  v-if="playlist['@type']"
+                  :class="[
+                    'px-3 py-1 rounded text-sm font-medium',
+                    playlist['@type'] === 'Playlist'
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'bg-purple-100 text-purple-800',
+                  ]"
+                >
+                  {{ playlist["@type"] }}
+                </span>
+                <span v-else class="text-white text-lg">—</span>
               </div>
 
               <!-- Musiques -->
               <div>
                 <label class="block text-sm font-medium text-white mb-2">Musiques</label>
                 <p class="text-white text-lg">
-                  {{ album.musics?.length || 0 }} musique{{
-                    (album.musics?.length || 0) > 1 ? "s" : ""
+                  {{ playlist.musics?.length || 0 }} musique{{
+                    (playlist.musics?.length || 0) > 1 ? "s" : ""
                   }}
                 </p>
               </div>
@@ -144,14 +151,14 @@ onMounted(fetchAlbum);
         </div>
 
         <!-- Liste des musiques -->
-        <div v-if="album.musics && album.musics.length > 0">
+        <div v-if="playlist.musics && playlist.musics.length > 0">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-xl font-bold text-white">Musiques</h3>
           </div>
           <div class="space-y-3">
             <div
-              v-for="(music, index) in album.musics"
-              :key="music.id"
+              v-for="(music, index) in playlist.musics"
+              :key="music.music.id"
               class="bg-[#3a1452] rounded-lg p-4 flex items-center space-x-4 group hover:bg-[#4a1562] transition-colors"
             >
               <div
@@ -160,14 +167,18 @@ onMounted(fetchAlbum);
                 {{ index + 1 }}
               </div>
               <div class="flex-1">
-                <h4 class="text-white font-medium">{{ music.title }}</h4>
+                <h4 class="text-white font-medium">{{ music.music.title }}</h4>
                 <p class="text-gray-400 text-sm">
-                  {{ convertDurationInMinutes(`${music.duration}`) || "Durée inconnue" }}
+                  {{ music.music.album?.title || "Album inconnu" }} -
+                  {{ music.music.album?.artist?.name || "Artiste inconnu" }}
+                </p>
+                <p class="text-gray-400 text-sm">
+                  {{ convertDurationInMinutes(`${music.music.duration}`) || "Durée inconnue" }}
                 </p>
               </div>
               <div class="flex space-x-2">
                 <button
-                  @click="viewMusic(music.id)"
+                  @click="viewMusic(music.music.id)"
                   class="p-2 rounded hover:bg-blue-500 transition-colors"
                   title="Consulter"
                 >
@@ -179,24 +190,25 @@ onMounted(fetchAlbum);
         </div>
 
         <!-- Message si aucune musique -->
-        <div v-else-if="!album.musics || album.musics.length === 0">
+        <div v-else-if="!playlist.musics || playlist.musics.length === 0">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-xl font-bold text-white">Musiques</h3>
           </div>
           <div class="bg-[#3a1452] rounded-lg p-8 text-center">
-            <p class="text-gray-400">Aucune musique dans cet album</p>
+            <p class="text-gray-400">Aucune musique dans cette playlist</p>
           </div>
         </div>
 
+        <!-- View Music Modal -->
         <AddMusicModal
-          :is-visible="showAddMusicModal"
-          :album-id="albumId"
-          :max-position="album?.musics?.length || 0"
-          :album-cover="coverPreview"
-          :edit-music="editingMusic"
+          :is-visible="showMusicModal"
+          :album-id="selectedMusic?.album?.id?.toString() || ''"
+          :max-position="0"
+          :album-cover="selectedMusic?.cover ? ressourceUrl + selectedMusic.cover : ''"
+          :edit-music="selectedMusic"
           :readonly="true"
-          @close="closeAddMusicModal"
-          @success="closeAddMusicModal"
+          @close="closeMusicModal"
+          @success="closeMusicModal"
         />
       </div>
     </div>

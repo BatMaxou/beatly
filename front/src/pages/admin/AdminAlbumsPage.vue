@@ -111,7 +111,9 @@ onMounted(() => fetchAlbums(1));
                 @click="viewAlbum(album)"
               >
                 <td class="px-4 py-3 hidden sm:table-cell">
-                  <div class="w-12 h-12 bg-gray-800 rounded overflow-hidden">
+                  <div
+                    class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded overflow-hidden"
+                  >
                     <img
                       v-if="album.cover"
                       :src="ressourceUrl + album.cover"
@@ -120,7 +122,7 @@ onMounted(() => fetchAlbums(1));
                     />
                     <div
                       v-else
-                      class="w-full h-full flex items-center justify-center text-gray-400 text-xs"
+                      class="w-full h-full flex items-center justify-center text-white text-xs"
                     >
                       Cover
                     </div>

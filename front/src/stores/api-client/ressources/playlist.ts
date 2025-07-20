@@ -20,11 +20,13 @@ export default class Playlist {
     });
   }
 
-  async getAll(): Promise<PlaylistType[]> {
-    const response = await this.apiClient.get<CollectionResponse<PlaylistType>>(ApiRessourcePath, {
-      Accept: "application/ld+json",
-    });
-    return response.member;
+  async getAll(page: number = 1): Promise<CollectionResponse<PlaylistType>> {
+    return await this.apiClient.get<CollectionResponse<PlaylistType>>(
+      `${ApiRessourcePath}?page=${page}`,
+      {
+        Accept: "application/ld+json",
+      },
+    );
   }
 
   async create(data: Partial<PlaylistType>): Promise<ResourceResponse> {

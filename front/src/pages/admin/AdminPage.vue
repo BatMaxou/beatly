@@ -84,7 +84,7 @@ const fetchMusicsCount = async () => {
 const fetchPlaylistsCount = async () => {
   try {
     const response = await apiClient.playlist.getAll();
-    playlistsCount.value = response.length || 0;
+    playlistsCount.value = response.totalItems || 0;
   } catch (error) {
     console.error("Erreur lors de la récupération des playlists:", error);
     playlistsCount.value = 0;

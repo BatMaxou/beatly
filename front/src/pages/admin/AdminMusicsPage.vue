@@ -125,7 +125,9 @@ onMounted(() => fetchMusics(1));
                 @click="viewMusic(music)"
               >
                 <td class="px-4 py-3">
-                  <div class="w-12 h-12 bg-gray-800 rounded overflow-hidden">
+                  <div
+                    class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded overflow-hidden"
+                  >
                     <img
                       v-if="music.cover"
                       :src="ressourceUrl + music.cover"
@@ -134,7 +136,7 @@ onMounted(() => fetchMusics(1));
                     />
                     <div
                       v-else
-                      class="w-full h-full flex items-center justify-center text-gray-400 text-xs"
+                      class="w-full h-full flex items-center justify-center text-white text-xs"
                     >
                       Cover
                     </div>
@@ -142,7 +144,9 @@ onMounted(() => fetchMusics(1));
                 </td>
                 <td class="px-4 py-3 font-semibold">{{ music.title || "—" }}</td>
                 <td class="px-4 py-3">{{ music.album?.title || "—" }}</td>
-                <td class="px-4 py-3">{{ music.album?.artist?.name || "—" }}</td>
+                <td class="px-4 py-3">
+                  {{ music.mainArtist.name }}
+                </td>
                 <td class="px-4 py-3">
                   <span v-if="music.duration">
                     {{ convertDurationInMinutes(`${music.duration}`) }}
