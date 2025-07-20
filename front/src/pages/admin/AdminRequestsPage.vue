@@ -90,47 +90,45 @@ onMounted(fetchRequests);
 
 <template>
   <InAppLayout type="admin" padding="p-10" :loading="loading">
-    <div class="">
-      <h1 class="text-3xl font-bold mb-6">Demandes d'artiste</h1>
-      <div>
-        <div v-if="requests.length === 0" class="text-gray-300">Aucune demande trouvée.</div>
-        <div v-else class="overflow-x-auto">
-          <table class="min-w-full bg-white text-black rounded-lg overflow-hidden">
-            <thead>
-              <tr class="text-left bg-[#3a1452]">
-                <th class="px-4 py-3 text-white">Utilisateur</th>
-                <th class="px-4 py-3 text-white">Email</th>
-                <th class="px-4 py-3 text-white">Fichiers audio</th>
-                <th class="px-4 py-3 text-white">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="req in requests"
-                :key="req.id"
-                class="border-b border-[#440a50] hover:bg-[#39124a] hover:text-white cursor-pointer transition-colors"
-                @click="viewRequest(req)"
-              >
-                <td class="px-4 py-3 font-semibold">{{ req.user?.name || "—" }}</td>
-                <td class="px-4 py-3">{{ req.user?.email || "—" }}</td>
-                <td class="px-4 py-3">
-                  <span v-if="req.files && req.files.length" class="text-purple-600 font-medium">
-                    {{ req.files.length }} fichier{{ req.files.length > 1 ? "s" : "" }}
-                  </span>
-                  <span v-else class="text-gray-600 text-xs">Aucun</span>
-                </td>
-                <td class="px-4 py-3">
-                  <button
-                    @click.stop="viewRequest(req)"
-                    class="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors text-sm"
-                  >
-                    Consulter
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <h1 class="text-3xl font-bold mb-6">Demandes d'artiste</h1>
+    <div>
+      <div v-if="requests.length === 0" class="text-gray-300">Aucune demande trouvée.</div>
+      <div v-else class="overflow-x-auto">
+        <table class="min-w-full bg-white text-black rounded-lg overflow-hidden">
+          <thead>
+            <tr class="text-left bg-[#3a1452]">
+              <th class="px-4 py-3 text-white">Utilisateur</th>
+              <th class="px-4 py-3 text-white">Email</th>
+              <th class="px-4 py-3 text-white">Fichiers audio</th>
+              <th class="px-4 py-3 text-white">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="req in requests"
+              :key="req.id"
+              class="border-b border-[#440a50] hover:bg-[#39124a] hover:text-white cursor-pointer transition-colors"
+              @click="viewRequest(req)"
+            >
+              <td class="px-4 py-3 font-semibold">{{ req.user?.name || "—" }}</td>
+              <td class="px-4 py-3">{{ req.user?.email || "—" }}</td>
+              <td class="px-4 py-3">
+                <span v-if="req.files && req.files.length" class="text-purple-600 font-medium">
+                  {{ req.files.length }} fichier{{ req.files.length > 1 ? "s" : "" }}
+                </span>
+                <span v-else class="text-gray-600 text-xs">Aucun</span>
+              </td>
+              <td class="px-4 py-3">
+                <button
+                  @click.stop="viewRequest(req)"
+                  class="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors text-sm"
+                >
+                  Consulter
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
