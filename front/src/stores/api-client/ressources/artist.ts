@@ -16,9 +16,12 @@ export default class Artist {
     });
   }
 
-  async getAll(): Promise<CollectionResponse<ArtistType>> {
-    return this.apiClient.get<CollectionResponse<ArtistType>>(ApiRessourcePath, {
-      Accept: "application/ld+json",
-    });
+  async getAll(page: number = 1): Promise<CollectionResponse<ArtistType>> {
+    return await this.apiClient.get<CollectionResponse<ArtistType>>(
+      `${ApiRessourcePath}?page=${page}`,
+      {
+        Accept: "application/ld+json",
+      },
+    );
   }
 }

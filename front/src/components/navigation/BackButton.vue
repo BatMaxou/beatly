@@ -24,7 +24,7 @@ const goBack = () => {
 <template>
   <button
     @click="goBack"
-    class="flex items-center space-x-2 px-3 py-2 text-white hover:text-gray-300 transition-colors mb-6 bg-purple-600 rounded-lg"
+    class="flex items-center space-x-2 px-3 py-2 text-white hover:text-gray-300 transition-colors mb-6 bg-[#3a1452] rounded-lg"
   >
     <span>←</span>
     <span>{{ label }}</span>
