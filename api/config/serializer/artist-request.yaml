@@ -2,20 +2,20 @@ App\Entity\ArtistRequest:
   attributes:
     id:
       groups:
-        - 'request:read'
-        - 'request:collection:read'
+        - "request:read"
+        - "request:collection:read"
+        - "user:read"
     user:
       groups:
-        - 'request:read'
-        - 'request:collection:read'
+        - "request:read"
+        - "request:collection:read"
     message:
       groups:
-        - 'request:write'
-        - 'request:read'
-        - 'request:collection:read'
+        - "request:write"
+        - "request:read"
+        - "request:collection:read"
     files:
       groups:
-        - 'request:write'
-        - 'request:read'
-        - 'request:collection:read'
-
+        - "request:write"
+        - "request:read"
+        - "request:collection:read"

@@ -11,9 +11,9 @@ export enum PlaylistType {
 }
 
 export enum RequestStatus {
-  PENDING = 'pending',
-  ACCEPTED = 'accepted',
-  DECLINED = 'declined',
+  PENDING = "pending",
+  ACCEPTED = "accepted",
+  DECLINED = "declined",
 }
 
 export interface User {
@@ -23,6 +23,7 @@ export interface User {
   roles: Role[];
   avatar?: string;
   wallpaper?: string;
+  artistRequest?: ArtistRequest;
 }
 
 export interface Artist extends User {
@@ -54,6 +55,8 @@ export type Category = {
 };
 
 export type MusicFile = {
+  "@id": string;
+  "@type": string;
   id: number;
   contentUrl: string;
   position?: number;
@@ -162,7 +165,7 @@ export type Favorites = {
 
 export type ArtistRequest = {
   message: string;
-  files: MusicFile[];
+  files: string[];
   status: RequestStatus;
   user?: User;
 };
