@@ -29,7 +29,7 @@ final class PlaylistNormalizer implements NormalizerInterface, NormalizerAwareIn
             $context + [self::ALREADY_CALLED => true]
         );
 
-        if (isset($normalized['musics']) && is_array($normalized['musics'])) {
+        if (isset($normalized['musics']) && is_array($normalized['musics']) && isset($normalized['musics'][0]['addedAt'])) {
             usort($normalized['musics'], function ($a, $b) {
                 return $a['addedAt'] <=> $b['addedAt'];
             });
