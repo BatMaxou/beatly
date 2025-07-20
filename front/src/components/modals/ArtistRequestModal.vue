@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
 
