@@ -73,7 +73,7 @@ class Music implements EmbeddableEntityInterface, ListenableEntityInterface, Lik
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'music', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?MusicFile $file = null;
 

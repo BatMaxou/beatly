@@ -49,8 +49,7 @@ class MusicFile
     #[ORM\ManyToOne(inversedBy: 'files')]
     private ?ArtistRequest $artistRequest = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\OneToOne(mappedBy: 'file', cascade: ['persist', 'remove'])]
     private ?Music $music = null;
 
     public function getId(): ?int
