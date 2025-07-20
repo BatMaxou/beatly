@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { ref } from "vue";
 import logo from "@/assets/beatly-logo-white.png";
 import NavItem from "../navigation/NavItem.vue";
 import { useRouter } from "vue-router";
-import heart from "@/assets/icons/add-to-fav-inactive-light.svg";
+import music from "@/assets/icons/add-to-fav-inactive-light.svg";
 import library from "@/assets/icons/library-light.svg";
 import user from "@/assets/icons/user-light.svg";
 import shield from "@/assets/icons/shield-light.svg";
-import SearchBar from "../search/SearchBar.vue";
+import form from "@/assets/icons/form-light.svg";
+import playlistLight from "@/assets/icons/playlist-light.svg";
 import { usePlayerStore } from "@/stores/player";
 import { useUserStore } from "@/stores/user";
 import { Role } from "@/utils/types";
@@ -15,20 +15,9 @@ import { Role } from "@/utils/types";
 const playerStore = usePlayerStore();
 const userStore = useUserStore();
 const router = useRouter();
-const searchBarRef = ref<InstanceType<typeof SearchBar>>();
-
-const emit = defineEmits(["search", "close-search"]);
 
 const goToHome = () => {
   router.push("/");
-};
-
-const handleSearch = (query: string) => {
-  emit("search", query);
-};
-
-const closeSearch = () => {
-  emit("close-search");
 };
 </script>
 
@@ -48,15 +37,15 @@ const closeSearch = () => {
         @click="goToHome"
       />
     </div>
-    <!-- Barre de recherche -->
-    <div>
-      <SearchBar ref="searchBarRef" @search="handleSearch" @close-search="closeSearch" />
-    </div>
 
     <!-- Menu -->
     <div class="flex-1 overflow-y-auto">
-      <NavItem label="Coups de cœur" :icon="heart" @click="router.push('/playlist/favoris')" />
-      <NavItem label="Bibliothèque" :icon="library" @click="router.push('/bibliotheque')" />
+      <NavItem label="Artistes" :icon="user" @click="router.push('/admin/artistes')" />
+      <NavItem label="Albums" :icon="library" @click="router.push('/admin/albums')" />
+      <NavItem label="Musiques" :icon="music" @click="router.push('/admin/musiques')" />
+      <NavItem label="Playlists" :icon="playlistLight" @click="router.push('/admin/playlists')" />
+      <NavItem label="Utilisateurs" :icon="user" @click="router.push('/admin/utilisateurs')" />
+      <NavItem label="Demandes d'artistes" :icon="form" @click="router.push('/admin/demandes')" />
     </div>
     <div>
       <NavItem

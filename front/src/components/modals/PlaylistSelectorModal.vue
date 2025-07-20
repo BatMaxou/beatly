@@ -3,7 +3,7 @@ import { ref, onMounted, onUnmounted, watch, computed } from "vue";
 import { useApiClient } from "@/stores/api-client";
 import { useModalsStore } from "@/stores/modals";
 import { useToast } from "@/composables/useToast";
-import type { Album, Music, Playlist } from "@/utils/types";
+import type { Album, Music, Playlist, PlaylistMusicUpdate } from "@/utils/types";
 import type { CollectionResponse } from "@/stores/api-client/model";
 import defaultCover from "@/assets/images/default-cover.png";
 
@@ -101,8 +101,10 @@ const addToPlaylist = async (playlist: Playlist, musicsToAdd?: string[]) => {
       ],
     };
 
-    console.log("addToPlaylistPayload", addToPlaylistPayload);
-    const response = await apiClient.playlist.update(playlist.id, addToPlaylistPayload as any);
+    const response = await apiClient.playlist.update(
+      playlist.id,
+      addToPlaylistPayload as PlaylistMusicUpdate,
+    );
 
     if (response) {
       if (musicsToAddToPlaylist.length === 1) {

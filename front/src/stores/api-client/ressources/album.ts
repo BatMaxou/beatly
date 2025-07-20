@@ -1,5 +1,5 @@
 import type { Album as AlbumType } from "@/utils/types";
-import type { ApiClient, DeleteResponse } from "../model";
+import type { ApiClient, CollectionResponse, DeleteResponse } from "../model";
 
 interface ResourceResponse extends Partial<AlbumType> {
   "@id": string;
@@ -20,8 +20,10 @@ export default class Album {
     });
   }
 
-  async getAll(): Promise<AlbumType[]> {
-    return this.apiClient.get<AlbumType[]>(ApiRessourcePath, { Accept: "application/ld+json" });
+  async getAll(): Promise<CollectionResponse<AlbumType>> {
+    return await this.apiClient.get<CollectionResponse<AlbumType>>(ApiRessourcePath, {
+      Accept: "application/ld+json",
+    });
   }
 
   async create(data: Partial<AlbumType>): Promise<ResourceResponse> {

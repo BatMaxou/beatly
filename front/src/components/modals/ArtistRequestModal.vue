@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
+import type { ArtistRequest } from "@/utils/types";
+import { streamToAudioUrl } from "@/utils/stream";
 
 interface ArtistRequestFormData {
   message: string;
@@ -16,11 +18,15 @@ interface AudioFilePreview {
 
 const props = defineProps<{
   isVisible: boolean;
+  isAdminView?: boolean;
+  request?: ArtistRequest;
 }>();
 
 const emit = defineEmits<{
   close: [];
   success: [];
+  accept: [request: ArtistRequest];
+  decline: [request: ArtistRequest];
 }>();
 
 const { apiClient } = useApiClient();
@@ -32,6 +38,7 @@ const formData = ref<ArtistRequestFormData>({
 });
 
 const loading = ref(false);
+const adminActionLoading = ref(false);
 
 const audioFiles = ref<AudioFilePreview[]>([]);
 
@@ -147,6 +154,28 @@ const submitHandler = async (data: ArtistRequestFormData) => {
   }
 };
 
+const handleAccept = async () => {
+  if (!props.request) return;
+
+  try {
+    adminActionLoading.value = true;
+    emit("accept", props.request);
+  } finally {
+    adminActionLoading.value = false;
+  }
+};
+
+const handleDecline = async () => {
+  if (!props.request) return;
+
+  try {
+    adminActionLoading.value = true;
+    emit("decline", props.request);
+  } finally {
+    adminActionLoading.value = false;
+  }
+};
+
 const closeModal = () => {
   audioFiles.value.forEach((file) => {
     URL.revokeObjectURL(file.url);
@@ -166,6 +195,47 @@ const handleKeydown = (event: KeyboardEvent) => {
     closeModal();
   }
 };
+
+// Si on est en vue admin, on ajoute les valeurs par défauts de message et on ajoute les fichiers audio contenus dans la demande
+
+watch(
+  () => [props.isAdminView, props.request],
+  async ([isAdminView, request]) => {
+    if (isAdminView && request) {
+      formData.value.message = (request as ArtistRequest).message || "";
+
+      // Récupération des fichiers audio
+      if ((request as ArtistRequest).files && (request as ArtistRequest).files.length > 0) {
+        audioFiles.value = [];
+        for (const file of (request as ArtistRequest).files) {
+          const fileIdParts = file.split("/");
+          const fileId = fileIdParts[fileIdParts.length - 1];
+
+          try {
+            const fileResponse = await apiClient.music.getFile(fileId);
+
+            const audioUrl = await streamToAudioUrl(fileResponse);
+
+            // Création d'un fichier audio fictif
+            const dummyFile = new File([], `audio-${fileId}.mp3`, { type: "audio/mpeg" });
+
+            audioFiles.value.push({
+              file: dummyFile,
+              url: audioUrl,
+              name: `Fichier audio ${audioFiles.value.length + 1}`,
+            });
+          } catch (error) {
+            console.error(`Erreur lors du chargement du fichier ${fileId}:`, error);
+          }
+        }
+      }
+    } else {
+      audioFiles.value = [];
+      formData.value.message = "";
+    }
+  },
+  { immediate: true },
+);
 
 onMounted(() => {
   document.addEventListener("keydown", handleKeydown);
@@ -208,7 +278,7 @@ onUnmounted(() => {
       >
         <div class="p-6 max-h-[70vh] overflow-y-auto scrollbar-custom">
           <div class="space-y-6">
-            <div class="bg-[#2a0d35] border border-[#440a50] rounded-lg p-4">
+            <div v-if="!isAdminView" class="bg-[#2a0d35] border border-[#440a50] rounded-lg p-4">
               <h3 class="text-white font-medium mb-2">📝 Instructions</h3>
               <p class="text-white/70 text-sm leading-relaxed">
                 Décrivez votre motivation et votre expérience musicale. Vous pouvez également
@@ -222,29 +292,39 @@ onUnmounted(() => {
               name="message"
               label="Message de motivation"
               placeholder="Parlez-nous de votre parcours musical, vos créations, et pourquoi vous souhaitez rejoindre Beatly en tant qu'artiste..."
-              validation="required|length:20,1000"
+              :validation="isAdminView && request ? '' : 'required|length:20,1000'"
               :validation-messages="{
                 required: 'Le message est obligatoire',
                 length: 'Le message doit contenir entre 20 et 1000 caractères',
               }"
+              :readonly="isAdminView && request"
               rows="6"
               :classes="{
                 wrapper: 'space-y-2',
                 label: 'block text-sm font-medium text-white',
                 input:
-                  'w-full px-3 py-2 bg-[#2a0d35] border border-[#440a50] rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#5a0f60] transition-colors resize-none',
+                  'w-full px-3 py-2 bg-[#2a0d35] border border-[#440a50] rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#5a0f60] transition-colors resize-none' +
+                  (isAdminView && request ? ' cursor-not-allowed opacity-75' : ''),
                 message: 'text-red-400 text-sm',
                 help: 'text-white/50 text-xs',
               }"
-              help="Minimum 20 caractères, maximum 1000"
+              :help="
+                isAdminView && request
+                  ? 'Message de la demande'
+                  : 'Minimum 20 caractères, maximum 1000'
+              "
             />
 
             <div>
-              <label class="block text-sm font-medium text-white mb-2">
-                Fichiers audio (optionnel)
+              <label
+                v-if="!isAdminView || (isAdminView && request?.files.length)"
+                class="block text-sm font-medium text-white mb-2"
+              >
+                Fichiers audio {{ isAdminView && request ? "(lecture seule)" : "(optionnel)" }}
               </label>
               <div class="space-y-4">
                 <div
+                  v-if="!isAdminView || !request"
                   class="border-2 border-dashed rounded-lg p-6 text-center transition-colors"
                   :class="[
                     dragActive
@@ -278,7 +358,9 @@ onUnmounted(() => {
                 </div>
 
                 <div v-if="audioFiles.length > 0" class="space-y-3">
-                  <h4 class="text-white font-medium">Fichiers ajoutés :</h4>
+                  <h4 class="text-white font-medium">
+                    {{ isAdminView && request ? "" : "Fichiers ajoutés :" }}
+                  </h4>
                   <div
                     v-for="(audioFile, index) in audioFiles"
                     :key="index"
@@ -295,12 +377,14 @@ onUnmounted(() => {
                           <p class="text-white font-medium truncate max-w-xs">
                             {{ audioFile.name }}
                           </p>
-                          <p class="text-white/50 text-sm">
+                          <p v-if="!isAdminView || !request" class="text-white/50 text-sm">
                             {{ (audioFile.file.size / 1024 / 1024).toFixed(2) }} MB
                           </p>
+                          <p v-else class="text-white/50 text-sm">Fichier de la demande</p>
                         </div>
                       </div>
                       <button
+                        v-if="!isAdminView || !request"
                         @click="removeFile(index)"
                         class="p-2 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors"
                         title="Supprimer le fichier"
@@ -325,7 +409,39 @@ onUnmounted(() => {
         </div>
 
         <div class="p-6 border-t border-[#440a50] bg-[#2a0d35]/50">
-          <div class="flex justify-between items-center">
+          <div v-if="isAdminView && request" class="flex justify-between space-x-3">
+            <div>
+              <button
+                type="button"
+                @click="closeModal"
+                class="px-4 py-2 border border-[#440a50] text-white rounded-lg hover:bg-[#440a50] transition-colors"
+              >
+                Fermer
+              </button>
+            </div>
+            <div class="flex space-x-3">
+              <button
+                type="button"
+                @click="handleDecline"
+                :disabled="adminActionLoading"
+                class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span v-if="adminActionLoading">Traitement...</span>
+                <span v-else>Décliner</span>
+              </button>
+              <button
+                type="button"
+                @click="handleAccept"
+                :disabled="adminActionLoading"
+                class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span v-if="adminActionLoading">Traitement...</span>
+                <span v-else>Accepter</span>
+              </button>
+            </div>
+          </div>
+
+          <div v-else class="flex justify-between items-center">
             <div class="text-white/50 text-sm">{{ audioFiles.length }}/5 fichiers ajoutés</div>
             <div class="flex space-x-3">
               <button

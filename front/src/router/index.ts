@@ -12,6 +12,13 @@ import AlbumPage from "../pages/AlbumPage.vue";
 import ArtistPage from "../pages/ArtistPage.vue";
 import LibraryPage from "../pages/LibraryPage.vue";
 import AccountPage from "../pages/AccountPage.vue";
+import AdminPage from "../pages/admin/AdminPage.vue";
+import AdminRequestsPage from "../pages/admin/AdminRequestsPage.vue";
+import AdminArtistsPage from "../pages/admin/AdminArtistsPage.vue";
+import AdminAlbumsPage from "../pages/admin/AdminAlbumsPage.vue";
+import AdminMusicsPage from "../pages/admin/AdminMusicsPage.vue";
+import AdminPlaylistsPage from "../pages/admin/AdminPlaylistsPage.vue";
+import AdminUsersPage from "../pages/admin/AdminUsersPage.vue";
 import NotFound from "../pages/NotFoundPage.vue";
 import { getCookie } from "@/utils/cookies";
 import { useLogout } from "@/composables/useLogout";
@@ -59,6 +66,44 @@ const routes: RouteRecordRaw[] = [
     name: "Ui",
     component: Ui,
   },
+  // Pages d'administration
+  {
+    path: "/admin",
+    name: "Admin",
+    component: AdminPage,
+  },
+  {
+    path: "/admin/artistes",
+    name: "AdminArtists",
+    component: AdminArtistsPage,
+  },
+  {
+    path: "/admin/albums",
+    name: "AdminAlbums",
+    component: AdminAlbumsPage,
+  },
+  {
+    path: "/admin/musiques",
+    name: "AdminMusics",
+    component: AdminMusicsPage,
+  },
+  {
+    path: "/admin/playlists",
+    name: "AdminPlaylists",
+    component: AdminPlaylistsPage,
+  },
+  {
+    path: "/admin/utilisateurs",
+    name: "AdminUsers",
+    component: AdminUsersPage,
+  },
+  {
+    path: "/admin/demandes",
+    name: "AdminRequests",
+    component: AdminRequestsPage,
+  },
+
+  // Pages publiques
   {
     path: "/register",
     name: "Register",

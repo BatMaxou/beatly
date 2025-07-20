@@ -12,7 +12,6 @@ import micLight from "@/assets/icons/mic-light.svg";
 import discLight from "@/assets/icons/disc-light.svg";
 import addLight from "@/assets/icons/add-light.svg";
 import removeLight from "@/assets/icons/remove-light.svg";
-import editLight from "@/assets/icons/edit-light.svg";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "./useToast";
 import { usePlayerPreparation } from "./usePlayerPreparation";

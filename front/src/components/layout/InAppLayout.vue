@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import SideBar from "@/components/sidebar/SideBar.vue";
+import SideBarAdmin from "@/components/sidebar/SideBarAdmin.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "@/composables/useToast";
 import PlayerSection from "@/components/player/PlayerSection.vue";
@@ -18,6 +19,9 @@ const { loading, padding } = defineProps({
   padding: {
     type: String,
     default: "pt-10 ps-10",
+  },
+  type: {
+    type: String,
   },
 });
 
@@ -57,7 +61,12 @@ if (authStore.loginSuccess) {
           : 'min-h-screen z-20 flex scrollbar-hide'
       "
     >
+      <SideBarAdmin
+        v-if="type === 'admin'"
+        class="fixed left-0 top-0 min-w-[250px] w-full max-w-[250px] z-20"
+      />
       <SideBar
+        v-else
         ref="sideBarRef"
         class="fixed left-0 top-0 min-w-[250px] w-full max-w-[250px] z-20"
         @search="handleSearch"

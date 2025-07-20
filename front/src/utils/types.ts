@@ -170,6 +170,8 @@ export type Favorites = {
 };
 
 export type ArtistRequest = {
+  "@id": string;
+  id: number;
   message: string;
   files: string[];
   status: RequestStatus;
