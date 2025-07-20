@@ -53,9 +53,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             name: 'api_get_music_collection',
             normalizationContext: ['groups' => ['music:read']],
         ),
-        new Delete(
-            name: 'api_delete_music_file',
-        ),
     ]
 )]
 class Music implements EmbeddableEntityInterface, ListenableEntityInterface, LikableEntityInterface
