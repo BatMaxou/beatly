@@ -29,6 +29,10 @@ const isArtist = computed(() => {
   return user.value?.roles?.some((role) => role === Role.ARTIST) || false;
 });
 
+const showDeleteModal = ref(false);
+const deleteInput = ref("");
+const deleting = ref(false);
+
 const fetchUserData = async () => {
   try {
     loading.value = true;
@@ -107,8 +111,32 @@ const requestArtistConversion = () => {
   showArtistRequestModal.value = true;
 };
 
+const confirmDeleteAccount = async () => {
+  if (deleteInput.value !== "supprimer") return;
+  deleting.value = true;
+  try {
+    await apiClient.user.delete(user.value.id);
+    showSuccess("Compte supprimé avec succès");
+    router.push("/logout");
+  } catch (error) {
+    showError("Erreur lors de la suppression du compte");
+  }
+  deleting.value = false;
+  closeDeleteModal();
+};
+
 const handleModalClose = () => {
   showArtistRequestModal.value = false;
+};
+
+const openDeleteModal = () => {
+  showDeleteModal.value = true;
+  deleteInput.value = "";
+};
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false;
+  deleteInput.value = "";
 };
 
 const handleRequestSuccess = () => {
@@ -342,6 +370,23 @@ onMounted(() => {
             </button>
           </div>
         </div>
+
+        <div class="bg-[#1a0725] border border-[#440a50] rounded-xl p-6">
+          <h2 class="text-xl font-semibold text-white mb-6">Supprimer le compte</h2>
+
+          <div class="space-y-4 flex flex-row justify-between items-center">
+            <p class="text-white/70 leading-relaxed">
+              Attention, cette action est irréversible ! <br />
+              Votre compte sera supprimé définitivement, ainsi que toutes vos données associées.
+            </p>
+            <button
+              @click="openDeleteModal"
+              class="px-8 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg font-semibold shadow-lg hover:from-pink-600 hover:to-purple-600 transition-all text-lg"
+            >
+              Supprimer le compte
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <ArtistRequestModal
@@ -349,5 +394,37 @@ onMounted(() => {
       @close="handleModalClose"
       @success="handleRequestSuccess"
     />
+
+    <div
+      v-if="showDeleteModal"
+      class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60"
+    >
+      <div
+        class="bg-[#1a0725] border border-[#440a50] rounded-xl shadow-xl w-full max-w-md mx-4 p-8 relative"
+      >
+        <button @click="closeDeleteModal" class="absolute top-4 right-4 text-white text-2xl">
+          &times;
+        </button>
+        <h3 class="text-xl font-bold text-red-400 mb-4">Confirmer la suppression</h3>
+        <p class="text-white mb-4">
+          Pour supprimer votre compte, tapez
+          <span class="font-mono bg-[#440a50] px-2 py-1 rounded">supprimer</span> ci-dessous :
+        </p>
+        <input
+          v-model="deleteInput"
+          type="text"
+          placeholder="Tapez 'supprimer' pour confirmer"
+          class="w-full px-3 py-2 mb-4 bg-[#2a0d35] border border-[#440a50] rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-red-500 transition-colors"
+        />
+        <button
+          :disabled="deleteInput !== 'supprimer' || deleting"
+          @click="confirmDeleteAccount"
+          class="w-full px-6 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg font-semibold shadow-lg hover:from-red-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span v-if="deleting">Suppression...</span>
+          <span v-else>Supprimer définitivement</span>
+        </button>
+      </div>
+    </div>
   </InAppLayout>
 </template>
