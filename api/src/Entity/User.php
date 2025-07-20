@@ -83,7 +83,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             normalizationContext: ['groups' => ['user:collection:read']],
         ),
         new Delete(
-            name: 'api_delete_playlist',
+            name: 'api_delete_user',
         ),
     ],
 )]
