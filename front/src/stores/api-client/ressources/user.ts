@@ -1,5 +1,5 @@
 import type { User as UserType } from "@/utils/types";
-import type { ApiClient, DeleteResponse } from "../model";
+import type { ApiClient, CollectionResponse, DeleteResponse } from "../model";
 
 export type RegisterData = {
   name: string;
@@ -38,10 +38,10 @@ type VerifyTokenResponse = {
 };
 
 interface ResourceResponse extends Partial<UserType> {
-  '@id': string;
+  "@id": string;
 }
 
-const ApiRessourcePath = '/users';
+const ApiRessourcePath = "/users";
 
 export default class User {
   apiClient: ApiClient;
@@ -89,19 +89,25 @@ export default class User {
     }
   }
 
-  async get(id: number|string): Promise<UserType> {
-    return this.apiClient.get<UserType>(`${ApiRessourcePath}/${id}`, { Accept: 'application/ld+json' });
+  async get(id: number | string): Promise<UserType> {
+    return this.apiClient.get<UserType>(`${ApiRessourcePath}/${id}`, {
+      Accept: "application/ld+json",
+    });
   }
 
-  async getAll(): Promise<UserType[]> {
-    return this.apiClient.get<UserType[]>(ApiRessourcePath);
+  async getAll(): Promise<CollectionResponse<UserType>> {
+    return this.apiClient.get<CollectionResponse<UserType>>(ApiRessourcePath, {
+      Accept: "application/ld+json",
+    });
   }
 
-  async update(id: number|string, data: Partial<UserType>): Promise<ResourceResponse> {
-    return this.apiClient.patch<ResourceResponse>(`${ApiRessourcePath}/${id}`, data, { Accept: 'application/ld+json' });
+  async update(id: number | string, data: Partial<UserType>): Promise<ResourceResponse> {
+    return this.apiClient.patch<ResourceResponse>(`${ApiRessourcePath}/${id}`, data, {
+      Accept: "application/ld+json",
+    });
   }
 
-  async updateFiles(id: number|string, avatar?: File, wallpaper?: File): Promise<UserType> {
+  async updateFiles(id: number | string, avatar?: File, wallpaper?: File): Promise<UserType> {
     const formData = new FormData();
 
     if (avatar) {
@@ -112,10 +118,12 @@ export default class User {
       formData.append("wallpaper", wallpaper);
     }
 
-    return this.apiClient.post<UserType>(`${ApiRessourcePath}/${id}/files`, formData, { Accept: 'application/ld+json' });
+    return this.apiClient.post<UserType>(`${ApiRessourcePath}/${id}/files`, formData, {
+      Accept: "application/ld+json",
+    });
   }
 
-  async delete(id: number|string): Promise<DeleteResponse> {
-    return this.apiClient.delete(`${ApiRessourcePath}/${id}`)
+  async delete(id: number | string): Promise<DeleteResponse> {
+    return this.apiClient.delete(`${ApiRessourcePath}/${id}`);
   }
 }

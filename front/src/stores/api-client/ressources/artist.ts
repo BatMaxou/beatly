@@ -1,7 +1,7 @@
 import type { Artist as ArtistType } from "@/utils/types";
-import type { ApiClient } from "../model";
+import type { ApiClient, CollectionResponse } from "../model";
 
-const ApiRessourcePath = '/artists';
+const ApiRessourcePath = "/artists";
 
 export default class Artist {
   apiClient: ApiClient;
@@ -10,11 +10,15 @@ export default class Artist {
     this.apiClient = apiClient;
   }
 
-  async get(id: number|string): Promise<ArtistType> {
-    return this.apiClient.get<ArtistType>(`${ApiRessourcePath}/${id}`, { Accept: 'application/ld+json' });
+  async get(id: number | string): Promise<ArtistType> {
+    return this.apiClient.get<ArtistType>(`${ApiRessourcePath}/${id}`, {
+      Accept: "application/ld+json",
+    });
   }
 
-  async getAll(): Promise<ArtistType[]> {
-    return this.apiClient.get<ArtistType[]>(ApiRessourcePath);
+  async getAll(): Promise<CollectionResponse<ArtistType>> {
+    return this.apiClient.get<CollectionResponse<ArtistType>>(ApiRessourcePath, {
+      Accept: "application/ld+json",
+    });
   }
 }
