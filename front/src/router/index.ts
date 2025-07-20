@@ -26,6 +26,7 @@ import { getCookie } from "@/utils/cookies";
 import { useLogout } from "@/composables/useLogout";
 import { useUserStore } from "@/stores/user";
 import { Role } from "@/utils/types";
+import AdminAlbumDetailPage from "@/pages/admin/AdminAlbumDetailPage.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -88,6 +89,11 @@ const routes: RouteRecordRaw[] = [
     path: "/admin/albums",
     name: "AdminAlbums",
     component: AdminAlbumsPage,
+  },
+  {
+    path: "/admin/albums/:id",
+    name: "AdminAlbumsDetail",
+    component: AdminAlbumDetailPage,
   },
   // {
   //   path: "/artist/albums/:id",
