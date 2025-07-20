@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use App\Api\Provider\SearchProvider;
 use App\Enum\ApiReusableRoute;
+use App\Enum\VoterRoleEnum;
 
 #[ApiResource(
     operations: [
@@ -14,6 +15,7 @@ use App\Enum\ApiReusableRoute;
             provider: SearchProvider::class,
             name: ApiReusableRoute::SEARCH->value,
             normalizationContext: ['groups' => ['search:read']],
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
     ],
 )]

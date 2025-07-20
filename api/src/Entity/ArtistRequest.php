@@ -11,6 +11,7 @@ use App\Domain\Command\AcceptArtistRequestCommand;
 use App\Domain\Command\DeclineArtistRequestCommand;
 use App\Enum\ApiReusableRoute;
 use App\Enum\RequestStatusEnum;
+use App\Enum\VoterRoleEnum;
 use App\Repository\ArtistRequestRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -25,30 +26,36 @@ use Doctrine\ORM\Mapping as ORM;
             processor: ArtistRequestCreationProcessor::class,
             denormalizationContext: ['groups' => ['request:write']],
             normalizationContext: ['groups' => ['request:read']],
+            security: 'is_granted("'.VoterRoleEnum::RAW_USER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Post(
             uriTemplate: '/artist_requests/accept',
             name: 'api_accept_artist_request',
             messenger: 'input',
-            input: AcceptArtistRequestCommand::class
+            input: AcceptArtistRequestCommand::class,
+            security: 'is_granted("'.VoterRoleEnum::ADMIN->value.'")'
         ),
         new Post(
             uriTemplate: '/artist_requests/decline',
             name: 'api_decline_artist_request',
             messenger: 'input',
-            input: DeclineArtistRequestCommand::class
+            input: DeclineArtistRequestCommand::class,
+            security: 'is_granted("'.VoterRoleEnum::ADMIN->value.'")'
         ),
         new Get(
             name: ApiReusableRoute::GET_MY_ARTIST_REQUEST->value,
             normalizationContext: ['groups' => ['request:read']],
+            security: 'is_granted("'.VoterRoleEnum::OWNER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Get(
             name: 'api_get_artist_request',
             normalizationContext: ['groups' => ['request:read']],
+            security: 'is_granted("'.VoterRoleEnum::ADMIN->value.'")'
         ),
         new GetCollection(
             name: 'api_get_artist_request_collection',
             normalizationContext: ['groups' => ['request:collection:read']],
+            security: 'is_granted("'.VoterRoleEnum::ADMIN->value.'")'
         ),
     ]
 )]

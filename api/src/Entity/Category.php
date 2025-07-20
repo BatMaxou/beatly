@@ -3,11 +3,25 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use App\Enum\VoterRoleEnum;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(
+            name: 'api_get_category',
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
+        ),
+        new GetCollection(
+            name: 'api_get_category_collection',
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
+        ),
+    ]
+)]
 class Category
 {
     #[ORM\Id]

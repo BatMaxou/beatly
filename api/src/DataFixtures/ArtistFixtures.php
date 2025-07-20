@@ -78,7 +78,7 @@ class ArtistFixtures extends Fixture
     {
         $artist = new Artist()
             ->setName($name)
-            ->setEmail(strtolower(str_replace(' ', '.', $name)).'@music.com')
+            ->setEmail($this->cleanString($name))
             ->setPassword('azerty');
 
         if ($this->faker->boolean(10)) {
@@ -188,5 +188,31 @@ class ArtistFixtures extends Fixture
         copy(\sprintf('%s/1200x400.jpg', __DIR__), \sprintf('%s%s/%ss/wallpapers/%s', $rootDir, $this->ssrPublicUploadsPath, $type, $name));
 
         return $name;
+    }
+
+    private function cleanString($text): string
+    {
+        $utf8 = [
+            '/[áàâãªä]/u' => 'a',
+            '/[ÁÀÂÃÄ]/u' => 'A',
+            '/[ÍÌÎÏ]/u' => 'I',
+            '/[íìîï]/u' => 'i',
+            '/[éèêë]/u' => 'e',
+            '/[ÉÈÊË]/u' => 'E',
+            '/[óòôõºö]/u' => 'o',
+            '/[ÓÒÔÕÖ]/u' => 'O',
+            '/[úùûü]/u' => 'u',
+            '/[ÚÙÛÜ]/u' => 'U',
+            '/ç/' => 'c',
+            '/Ç/' => 'C',
+            '/ñ/' => 'n',
+            '/Ñ/' => 'N',
+            '/–/' => '-',
+            '/[’‘‹›‚]/u' => '.',
+            '/[“”«»„"\']/u' => '.',
+            '/ /' => '.',
+        ];
+
+        return strtolower(preg_replace(array_keys($utf8), array_values($utf8), $text).'@music.com');
     }
 }

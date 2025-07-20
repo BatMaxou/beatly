@@ -15,6 +15,7 @@ use App\Entity\Interface\LikableEntityInterface;
 use App\Entity\Interface\ListenableEntityInterface;
 use App\Enum\ApiReusableRoute;
 use App\Enum\EmbeddingEnum;
+use App\Enum\VoterRoleEnum;
 use App\Repository\AlbumRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -33,28 +34,36 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             processor: AlbumCreationProcessor::class,
             normalizationContext: ['groups' => ['album:read']],
             denormalizationContext: ['groups' => ['album:write']],
+            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'")',
         ),
         new Post(
             name: ApiReusableRoute::UPDATE_ALBUM_FILES->value,
             uriTemplate: '/albums/{id}/files',
             processor: AlbumFilesProcessor::class,
             normalizationContext: ['groups' => ['album:read']],
+            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'")',
         ),
         new Patch(
             name: 'api_update_album',
             normalizationContext: ['groups' => ['album:read']],
             denormalizationContext: ['groups' => ['album:update']],
+            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'")',
         ),
         new Get(
             name: 'api_get_album',
             normalizationContext: ['groups' => ['album:read']],
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")'
         ),
         new GetCollection(
             name: 'api_get_album_collection',
             normalizationContext: ['groups' => ['album:collection:read']],
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")'
         ),
         new Delete(
             name: 'api_delete_album',
+            security: '
+                is_granted("'.VoterRoleEnum::ADMIN->value.'")
+                or (is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'"))',
         ),
     ]
 )]
@@ -89,7 +98,7 @@ class Album implements ListenableEntityInterface, EmbeddableEntityInterface, Lik
     /**
      * @var Collection<int, Music>
      */
-    #[ORM\OneToMany(targetEntity: Music::class, mappedBy: 'album', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Music::class, mappedBy: 'album', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $musics;
 
     #[ORM\ManyToOne(inversedBy: 'albums')]

@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use App\Api\Provider\LastListenedCollectionProvider;
 use App\Entity\Interface\ListenableEntityInterface;
 use App\Enum\ApiReusableRoute;
+use App\Enum\VoterRoleEnum;
 use App\Repository\LastListenedRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
@@ -33,6 +34,7 @@ use Doctrine\ORM\Mapping\InheritanceType;
             name: ApiReusableRoute::GET_COLLECTION_LAST_LISTENED->value,
             normalizationContext: ['groups' => ['last_listened:collection:read']],
             provider: LastListenedCollectionProvider::class,
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
     ]
 )]
