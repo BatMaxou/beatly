@@ -81,7 +81,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             provider: MeProvider::class,
             name: ApiReusableRoute::ME->value,
             normalizationContext: ['groups' => ['user:read']],
-            security: 'is_granted("'.VoterRoleEnum::SELF->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
+            security: 'is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new GetCollection(
             name: 'api_get_user_collection',
