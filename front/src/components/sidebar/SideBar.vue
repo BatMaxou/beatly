@@ -55,7 +55,7 @@ const closeSearch = () => {
       <NavItem label="Bibliothèque" :icon="library" @click="router.push('/bibliotheque')" />
     </div>
     <div>
-      <NavItem label="Mon compte" :icon="user" />
+      <NavItem label="Mon compte" :icon="user" @click="router.push('/mon-compte')" />
     </div>
   </div>
 </template>

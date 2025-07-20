@@ -11,6 +11,7 @@ import PlaylistFavoritePage from "../pages/PlaylistFavoritePage.vue";
 import AlbumPage from "../pages/AlbumPage.vue";
 import ArtistPage from "../pages/ArtistPage.vue";
 import LibraryPage from "../pages/LibraryPage.vue";
+import AccountPage from "../pages/AccountPage.vue";
 import NotFound from "../pages/NotFoundPage.vue";
 import { getCookie } from "@/utils/cookies";
 import { useLogout } from "@/composables/useLogout";
@@ -45,6 +46,11 @@ const routes: RouteRecordRaw[] = [
     path: "/bibliotheque",
     name: "Library",
     component: LibraryPage,
+  },
+  {
+    path: "/mon-compte",
+    name: "Account",
+    component: AccountPage,
   },
   {
     path: "/ui",
