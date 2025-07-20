@@ -1,5 +1,4 @@
 export const convertDurationInMinutes = (duration: string | number) => {
-  console.warn("convertDurationInMinutes est dépréciée. Remplacé par useTimeFormat().");
   const durationNumber = typeof duration === "string" ? parseInt(duration, 10) : duration;
 
   if (isNaN(durationNumber)) {
