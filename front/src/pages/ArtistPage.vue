@@ -13,8 +13,8 @@ import defaultCover from "@/assets/images/default-cover.png";
 import AlbumPlayableCover from "@/components/albums/AlbumPlayableCover.vue";
 import FastPlayButton from "@/components/buttons/FastPlayButton.vue";
 import AlbumPlayableCard from "@/components/cards/AlbumPlayableCard.vue";
+import { ressourceUrl } from "@/utils/tools";
 
-const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const router = useRouter();
 const route = useRoute();
 const { apiClient } = useApiClient();

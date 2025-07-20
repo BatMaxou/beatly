@@ -5,6 +5,7 @@ import type { Music } from "@/utils/types";
 import defaultCover from "@/assets/images/default-cover.png";
 import { usePlayerStore } from "@/stores/player";
 import UnifiedMenu from "../menus/UnifiedMenu.vue";
+import { ressourceUrl } from "@/utils/tools";
 
 const props = defineProps<{
   music: Music;
@@ -16,7 +17,6 @@ const props = defineProps<{
 const isHovered = ref(false);
 const isClickedToPlay = ref(false);
 const isCurrentSongPlaying = ref(false);
-const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const playerStore = usePlayerStore();
 const menuRef = ref<InstanceType<typeof UnifiedMenu> | null>(null);
 

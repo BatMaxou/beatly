@@ -7,12 +7,12 @@ import { Role } from "@/utils/types";
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import ArtistRequestModal from "@/components/modals/ArtistRequestModal.vue";
 import router from "@/router";
+import { ressourceUrl } from "@/utils/tools";
 
 const loading = ref(false);
 const loadingButton = ref(false);
 const { apiClient } = useApiClient();
 const { showSuccess, showError } = useToast();
-const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 
 const user = ref<User>({} as User);
 const profileForm = ref({

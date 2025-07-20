@@ -4,6 +4,7 @@ import { useRouter } from "vue-router";
 import PlaylistPlayableCover from "@/components/playlist/PlaylistPlayableCover.vue";
 import defaultCover from "@/assets/images/default-cover.png";
 import type { Playlist } from "@/utils/types";
+import { ressourceUrl } from "@/utils/tools";
 
 const props = defineProps({
   playlist: {
@@ -14,7 +15,6 @@ const props = defineProps({
   },
 });
 const router = useRouter();
-const ressourceUrl = import.meta.env.VITE_API_RESSOURCES_URL;
 const handleCardClick = (event: Event) => {
   // Vérifier si le clic provient du bouton de lecture
   const target = event.target as HTMLElement;

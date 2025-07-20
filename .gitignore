@@ -32,9 +32,18 @@
 /front/cypress/screenshots/
 ###< vue ###
 
+###> matomo ###
+/matomo/config.ini.php
+###< matomo ###
+
 ###> docker ###
-compose.override.yaml
+/compose.override.yaml
+/compose.override.prod.yaml
 ###< docker ###
+
+###> prod-context ###
+/.env.local
+###< prod-context ###
 
 ###> Extra ###
 /.DS_Store/

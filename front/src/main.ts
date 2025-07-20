@@ -14,7 +14,7 @@ import RangeDirective from "./directives/CurrentTimeRange";
 import VolumeRangeDirective from "./directives/VolumeRange";
 
 import App from "./App.vue";
-import { matomoSiteId, matomoUrl } from "./utils/tools";
+import { apiBaseUrl, matomoSiteId, matomoUrl, ressourceUrl } from "./utils/tools";
 
 createApp(App)
   .use(createPinia())
