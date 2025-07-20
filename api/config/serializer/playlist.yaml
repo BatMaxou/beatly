@@ -41,7 +41,14 @@ App\Entity\Playlist:
     wallpaper:
       groups:
         - "playlist:write"
-
+    creator:
+      groups:
+        - "playlist:read"
+        - "playlist:collection:read"
+        - "dashboard:read"
+        - "search:read"
+        - "favorite:read"
+        - "last_listened:collection:read"
 App\Entity\PlaylistMusic:
   attributes:
     music:

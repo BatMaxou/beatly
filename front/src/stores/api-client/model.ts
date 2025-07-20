@@ -11,6 +11,7 @@ import Queue from "./ressources/queue";
 import Search from "./ressources/search";
 import Favorite from "./ressources/favorite";
 import LastListened from "./ressources/last-listened";
+import ArtistRequest from "./ressources/artist-request";
 import { eraseCookie, getCookie, setCookie } from "@/utils/cookies";
 import { apiBaseUrl } from "@/utils/tools";
 import type { User } from "@/utils/types";
@@ -52,6 +53,7 @@ export class ApiClient {
   favorite: Favorite;
   token: string | null;
   lastListened: LastListened;
+  artistRequest: ArtistRequest;
 
   constructor() {
     this.baseUrl = apiBaseUrl;
@@ -69,6 +71,7 @@ export class ApiClient {
     this.favorite = new Favorite(this);
     this.token = getCookie("token");
     this.lastListened = new LastListened(this);
+    this.artistRequest = new ArtistRequest(this);
   }
 
   async get<T>(url: string, additionnalHeaders: HeadersInit = {}): Promise<T> {
