@@ -83,6 +83,19 @@ const goToArtistRequests = () => {
   router.push("/admin/demandes");
 };
 
+const goToArtists = () => {
+  router.push("/admin/artistes");
+};
+const goToUsers = () => {
+  router.push("/admin/utilisateurs");
+};
+const goToAlbums = () => {
+  router.push("/admin/albums");
+};
+const goToPlaylists = () => {
+  router.push("/admin/playlists");
+};
+
 onMounted(() => {
   fetchRequestsCount();
   fetchUsersCount();
@@ -121,7 +134,10 @@ onMounted(() => {
       </div>
 
       <!-- Utilisateurs -->
-      <div class="bg-[#2E0B40] rounded-lg p-6 shadow">
+      <div
+        class="bg-[#2E0B40] rounded-lg p-6 shadow cursor-pointer hover:bg-[#3a1452] transition-colors"
+        @click="goToUsers"
+      >
         <h2 class="text-xl font-semibold mb-2">Utilisateurs</h2>
         <p class="text-gray-300 mb-4">Total des comptes utilisateurs.</p>
         <div class="text-3xl font-bold text-blue-400">
@@ -140,7 +156,10 @@ onMounted(() => {
       </div>
 
       <!-- Artistes -->
-      <div class="bg-[#2E0B40] rounded-lg p-6 shadow">
+      <div
+        class="bg-[#2E0B40] rounded-lg p-6 shadow cursor-pointer hover:bg-[#3a1452] transition-colors"
+        @click="goToArtists"
+      >
         <h2 class="text-xl font-semibold mb-2">Artistes</h2>
         <p class="text-gray-300 mb-4">Total des comptes artistes.</p>
         <div class="text-3xl font-bold text-green-400">
@@ -159,7 +178,10 @@ onMounted(() => {
       </div>
 
       <!-- Albums -->
-      <div class="bg-[#2E0B40] rounded-lg p-6 shadow">
+      <div
+        class="bg-[#2E0B40] rounded-lg p-6 shadow cursor-pointer hover:bg-[#3a1452] transition-colors"
+        @click="goToAlbums"
+      >
         <h2 class="text-xl font-semibold mb-2">Albums</h2>
         <p class="text-gray-300 mb-4">Total des albums publiés.</p>
         <div class="text-3xl font-bold text-yellow-400">
@@ -178,7 +200,10 @@ onMounted(() => {
       </div>
 
       <!-- Playlists -->
-      <div class="bg-[#2E0B40] rounded-lg p-6 shadow">
+      <div
+        class="bg-[#2E0B40] rounded-lg p-6 shadow cursor-pointer hover:bg-[#3a1452] transition-colors"
+        @click="goToPlaylists"
+      >
         <h2 class="text-xl font-semibold mb-2">Playlists</h2>
         <p class="text-gray-300 mb-4">Total des playlists créées.</p>
         <div class="text-3xl font-bold text-pink-400">

@@ -44,9 +44,12 @@ App\Entity\User:
         - "user:update"
         - "request:read"
         - "request:collection:read"
+        - "artist:collection:read"
+        - "artist:read"
     roles:
       groups:
         - "user:read"
+        - "artist:collection:read"
     avatarName:
       groups:
         - "user:read"

@@ -19,6 +19,8 @@ import AdminAlbumsPage from "../pages/admin/AdminAlbumsPage.vue";
 import AdminMusicsPage from "../pages/admin/AdminMusicsPage.vue";
 import AdminPlaylistsPage from "../pages/admin/AdminPlaylistsPage.vue";
 import AdminUsersPage from "../pages/admin/AdminUsersPage.vue";
+import AdminArtistDetailPage from "../pages/admin/AdminArtistDetailPage.vue";
+// import AlbumDetailPage from "../pages/artist/AlbumDetailPage.vue";
 import NotFound from "../pages/NotFoundPage.vue";
 import { getCookie } from "@/utils/cookies";
 import { useLogout } from "@/composables/useLogout";
@@ -78,10 +80,20 @@ const routes: RouteRecordRaw[] = [
     component: AdminArtistsPage,
   },
   {
+    path: "/admin/artistes/:id",
+    name: "AdminArtistDetail",
+    component: AdminArtistDetailPage,
+  },
+  {
     path: "/admin/albums",
     name: "AdminAlbums",
     component: AdminAlbumsPage,
   },
+  // {
+  //   path: "/artist/albums/:id",
+  //   name: "AlbumDetail",
+  //   component: AlbumDetailPage,
+  // },
   {
     path: "/admin/musiques",
     name: "AdminMusics",
@@ -174,6 +186,15 @@ router.beforeEach(async (to, from, next) => {
     const userRoles = userStore.user?.roles || [];
 
     if (!userRoles.includes(Role.PLATFORM)) {
+      return next({ name: "Root" });
+    }
+  }
+
+  if (to.path.startsWith("/artist")) {
+    const userStore = useUserStore();
+    const userRoles = userStore.user?.roles || [];
+
+    if (!userRoles.includes(Role.ARTIST)) {
       return next({ name: "Root" });
     }
   }

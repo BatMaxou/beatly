@@ -2,18 +2,18 @@ import type { ApiClient, DeleteResponse } from "../model";
 import type { Music as MusicType } from "@/utils/types";
 
 export interface UploadResponse {
-  '@id': string;
+  "@id": string;
   id: number;
   contentUrl: string;
 }
 
 interface ResourceResponse extends Partial<MusicType> {
-  '@id': string;
+  "@id": string;
 }
 
 enum ApiRessourcePath {
-  MUSIC = '/music',
-  FILE = '/music_files',
+  MUSIC = "/music",
+  FILE = "/music_files",
 }
 
 export default class Music {
@@ -24,18 +24,22 @@ export default class Music {
   }
 
   async createMusic(data: Partial<MusicType>, file: File): Promise<ResourceResponse> {
-    const response = await this.upload(file)
+    const response = await this.upload(file);
 
-    data.file = response['@id'];
+    data.file = response["@id"];
 
-    return this.apiClient.post<ResourceResponse>(`${ApiRessourcePath.MUSIC}`, data, { Accept: 'application/ld+json' });
+    return this.apiClient.post<ResourceResponse>(`${ApiRessourcePath.MUSIC}`, data, {
+      Accept: "application/ld+json",
+    });
   }
 
-  async updateMusic(id: number|string, data: Partial<MusicType>): Promise<ResourceResponse> {
-    return this.apiClient.patch<ResourceResponse>(`${ApiRessourcePath.MUSIC}/${id}`, data, { Accept: 'application/ld+json' });
+  async updateMusic(id: number | string, data: Partial<MusicType>): Promise<ResourceResponse> {
+    return this.apiClient.patch<ResourceResponse>(`${ApiRessourcePath.MUSIC}/${id}`, data, {
+      Accept: "application/ld+json",
+    });
   }
 
-  async getFile(id: number|string): Promise<ReadableStream> {
+  async getFile(id: number | string): Promise<ReadableStream> {
     return this.apiClient.getStream(`${ApiRessourcePath.FILE}/${id}`);
   }
 
@@ -43,39 +47,46 @@ export default class Music {
     const formData = new FormData();
     formData.append("file", file);
 
-    return this.apiClient.post<UploadResponse>(`${ApiRessourcePath.FILE}`, formData, { Accept: 'application/ld+json' })
-      .then(response => {
+    return this.apiClient
+      .post<UploadResponse>(`${ApiRessourcePath.FILE}`, formData, { Accept: "application/ld+json" })
+      .then((response) => {
         if (!response.id) {
-          throw new Error('Failed to upload music file');
+          throw new Error("Failed to upload music file");
         }
 
         return response;
-      })
+      });
   }
 
-  async updateFile(id: number|string, file: File, musicId: number|string|null = null): Promise<UploadResponse> {
+  async updateFile(
+    id: number | string,
+    file: File,
+    musicId: number | string | null = null,
+  ): Promise<UploadResponse> {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await this.upload(file)
+    const response = await this.upload(file);
 
     if (musicId) {
-      await this.updateMusic(musicId, { file: response['@id'] });
+      await this.updateMusic(musicId, { file: response["@id"] });
     }
 
-    await this.deleteFile(id)
+    await this.deleteFile(id);
 
     return response;
   }
 
-  async updateCover(id: number|string, file: File): Promise<MusicType> {
+  async updateCover(id: number | string, file: File): Promise<MusicType> {
     const formData = new FormData();
     formData.append("cover", file);
 
-    return this.apiClient.post<MusicType>(`${ApiRessourcePath.MUSIC}/${id}/files`, formData, { Accept: 'application/ld+json' });
+    return this.apiClient.post<MusicType>(`${ApiRessourcePath.MUSIC}/${id}/files`, formData, {
+      Accept: "application/ld+json",
+    });
   }
 
-  async deleteFile(id: number|string): Promise<DeleteResponse> {
-    return this.apiClient.delete(`${ApiRessourcePath.FILE}/${id}`)
+  async deleteFile(id: number | string): Promise<DeleteResponse> {
+    return this.apiClient.delete(`${ApiRessourcePath.FILE}/${id}`);
   }
 }

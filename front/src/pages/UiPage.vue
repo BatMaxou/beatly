@@ -33,7 +33,6 @@ import UiButtons from "../components/ui/buttons/UiButtons.vue";
 import UiForms from "../components/ui/forms/UiForms.vue";
 import UiMusic from "../components/ui/music/UiMusic.vue";
 import UiMenu from "../components/ui/menu/UiMenu.vue";
-import UiSearch from "../components/ui/search/UiSearch.vue";
 
 provide("isSearchProvided", true);
 
@@ -86,8 +85,6 @@ const currentComponent = computed(() => {
       return UiMenu;
     case "music":
       return UiMusic;
-    case "search":
-      return UiSearch;
     default:
       return null;
   }
