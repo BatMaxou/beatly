@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useHead } from '@unhead/vue';
+import { useHead } from "@unhead/vue";
 import InAppLayout from "@/components/layout/InAppLayout.vue";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
@@ -9,7 +9,6 @@ import eyeDark from "@/assets/icons/eye-dark.svg";
 import removeDark from "@/assets/icons/remove-dark.svg";
 import eyeLight from "@/assets/icons/eye-light.svg";
 import removeLight from "@/assets/icons/remove-light.svg";
-import { useRouter } from "vue-router";
 import BackButton from "@/components/navigation/BackButton.vue";
 import { ressourceUrl } from "@/utils/tools";
 import { convertDurationInMinutes } from "@/sharedFunctions";
@@ -17,8 +16,6 @@ import AddMusicModal from "@/components/modals/AddMusicModal.vue";
 
 const { apiClient } = useApiClient();
 const { showSuccess, showError } = useToast();
-const router = useRouter();
-
 const musics = ref<Music[]>([]);
 const loading = ref(true);
 const showMusicModal = ref(false);
@@ -90,8 +87,8 @@ const goToPreviousPage = () => {
 
 onMounted(() => fetchMusics(1));
 useHead({
-  title: 'Beatly | Gestion des albums',
-})
+  title: "Beatly | Gestion des albums",
+});
 </script>
 
 <template>

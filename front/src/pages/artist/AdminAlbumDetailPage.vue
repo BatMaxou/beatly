@@ -5,7 +5,7 @@ import InAppLayout from "@/components/layout/InAppLayout.vue";
 import BackButton from "@/components/navigation/BackButton.vue";
 import { useApiClient } from "@/stores/api-client";
 import { useToast } from "@/composables/useToast";
-import type { Album, Music, MusicFile } from "@/utils/types";
+import type { Album, Music } from "@/utils/types";
 import { ressourceUrl } from "@/utils/tools";
 import { convertDurationInMinutes } from "@/sharedFunctions";
 import eyeLight from "@/assets/icons/eye-light.svg";

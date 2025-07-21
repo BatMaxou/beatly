@@ -135,9 +135,10 @@ const backToList = () => {
 
 const submitCreatePlaylist = async (data: { name: string }) => {
   try {
-    const newPlaylist = await apiClient.playlist.create({
-      title: data.name.trim(),
-    });
+    const titleFormData = new FormData();
+    titleFormData.append("title", data.name.trim());
+
+    const newPlaylist = await apiClient.playlist.create(titleFormData);
 
     showSuccess(`Playlist "${data.name}" créée avec succès`);
 

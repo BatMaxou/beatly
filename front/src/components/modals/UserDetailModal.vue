@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import type { User } from "@/utils/types";
 import { ressourceUrl } from "@/utils/tools";
 import { useApiClient } from "@/stores/api-client";
