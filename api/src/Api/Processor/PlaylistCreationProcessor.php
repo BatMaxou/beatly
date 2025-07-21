@@ -25,7 +25,10 @@ class PlaylistCreationProcessor implements ProcessorInterface
             throw new \InvalidArgumentException(\sprintf('Data must be an instance of %s', Playlist::class));
         }
 
-        if (ApiReusableRoute::CREATE_PLAYLIST->value !== $operation->getName()) {
+        if (!in_array($operation->getName(), [
+            ApiReusableRoute::CREATE_PLAYLIST->value,
+            ApiReusableRoute::CREATE_PLATFORM_PLAYLIST->value,
+        ])) {
             throw new \LogicException(sprintf('Operation "%s" is not supported by %s', $operation->getName(), self::class));
         }
 

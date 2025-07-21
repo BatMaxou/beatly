@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource(
     operations: [
         new Post(
-            name: ApiReusableRoute::CREATE_PLAYLIST->value,
+            name: ApiReusableRoute::CREATE_PLATFORM_PLAYLIST->value,
             processor: PlaylistCreationProcessor::class,
             normalizationContext: ['groups' => ['playlist:read']],
             denormalizationContext: ['groups' => ['playlist:write']],
