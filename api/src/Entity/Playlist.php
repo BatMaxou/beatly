@@ -52,13 +52,13 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             uriTemplate: '/playlists/{id}/files',
             processor: PlaylistFilesProcessor::class,
             normalizationContext: ['groups' => ['playlist:read']],
-            security: 'is_granted("'.VoterRoleEnum::OWNER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
+            security: 'is_granted("'.VoterRoleEnum::OWNER->value.'", object) and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Patch(
             name: 'api_update_playlist',
             normalizationContext: ['groups' => ['playlist:read']],
             denormalizationContext: ['groups' => ['playlist:update']],
-            security: 'is_granted("'.VoterRoleEnum::OWNER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
+            security: 'is_granted("'.VoterRoleEnum::OWNER->value.'", object) and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Get(
             name: 'api_get_playlist',
@@ -80,7 +80,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         new Delete(
             name: 'api_delete_playlist',
             security: 'is_granted("'.VoterRoleEnum::ADMIN->value.'")
-                or (is_granted("'.VoterRoleEnum::OWNER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'"))',
+                or (is_granted("'.VoterRoleEnum::OWNER->value.'", object) and is_granted("'.VoterRoleEnum::UNBANED->value.'"))',
         ),
     ]
 )]

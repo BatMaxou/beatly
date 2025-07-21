@@ -41,13 +41,13 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             uriTemplate: '/albums/{id}/files',
             processor: AlbumFilesProcessor::class,
             normalizationContext: ['groups' => ['album:read']],
-            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'")',
+            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'", object)',
         ),
         new Patch(
             name: 'api_update_album',
             normalizationContext: ['groups' => ['album:read']],
             denormalizationContext: ['groups' => ['album:update']],
-            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'")',
+            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'", object)',
         ),
         new Get(
             name: 'api_get_album',
@@ -63,7 +63,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             name: 'api_delete_album',
             security: '
                 is_granted("'.VoterRoleEnum::ADMIN->value.'")
-                or (is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'"))',
+                or (is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'", object))',
         ),
     ]
 )]

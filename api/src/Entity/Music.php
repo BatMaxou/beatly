@@ -39,14 +39,14 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             uriTemplate: '/music/{id}/files',
             processor: MusicFilesProcessor::class,
             normalizationContext: ['groups' => ['music:read']],
-            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
+            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'", object) and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Patch(
             name: ApiReusableRoute::UPDATE_MUSIC->value,
             processor: MusicUpsertProcessor::class,
             normalizationContext: ['groups' => ['music:read']],
             denormalizationContext: ['groups' => ['music:update']],
-            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
+            security: 'is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'", object) and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Get(
             name: 'api_get_music',

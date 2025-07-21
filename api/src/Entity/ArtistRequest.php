@@ -45,7 +45,7 @@ use Doctrine\ORM\Mapping as ORM;
         new Get(
             name: ApiReusableRoute::GET_MY_ARTIST_REQUEST->value,
             normalizationContext: ['groups' => ['request:read']],
-            security: 'is_granted("'.VoterRoleEnum::OWNER->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
+            security: 'is_granted("'.VoterRoleEnum::OWNER->value.'", object) and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Get(
             name: 'api_get_artist_request',

@@ -32,7 +32,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             name: 'api_delete_music_file',
             security: '
                 is_granted("'.VoterRoleEnum::ADMIN->value.'")
-                or (is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'"))',
+                or (is_granted("'.VoterRoleEnum::ARTIST->value.'") and is_granted("'.VoterRoleEnum::OWNER->value.'", object))',
         ),
     ]
 )]

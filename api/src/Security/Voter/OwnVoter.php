@@ -6,6 +6,7 @@ use App\Entity\Album;
 use App\Entity\ArtistRequest;
 use App\Entity\Music;
 use App\Entity\MusicFile;
+use App\Entity\Playlist;
 use App\Entity\User;
 use App\Enum\VoterRoleEnum;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -42,6 +43,7 @@ final class OwnVoter extends Voter
     {
         return match (true) {
             $subject instanceof Album => $user->getId() === $subject->getArtist()?->getId(),
+            $subject instanceof Playlist => $user->getId() === $subject->getCreator()?->getId(),
             $subject instanceof ArtistRequest => $user->getId() === $subject->getUser()?->getId(),
             $subject instanceof Music => $user->getId() === $subject->getMainArtist()?->getId(),
             $subject instanceof MusicFile => $user->getId() === $subject->getMusic()?->getMainArtist()?->getId()

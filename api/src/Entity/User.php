@@ -63,13 +63,13 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             uriTemplate: '/users/{id}/files',
             processor: UserFilesProcessor::class,
             normalizationContext: ['groups' => ['user:read']],
-            security: 'is_granted("'.VoterRoleEnum::SELF->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
+            security: 'is_granted("'.VoterRoleEnum::SELF->value.'", object) and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Patch(
             name: 'api_update_user',
             normalizationContext: ['groups' => ['user:read']],
             denormalizationContext: ['groups' => ['user:update']],
-            security: 'is_granted("'.VoterRoleEnum::SELF->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
+            security: 'is_granted("'.VoterRoleEnum::SELF->value.'", object) and is_granted("'.VoterRoleEnum::UNBANED->value.'")',
         ),
         new Get(
             name: 'api_get_user',
@@ -92,7 +92,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             name: 'api_delete_user',
             security: '
                 is_granted("'.VoterRoleEnum::ADMIN->value.'")
-                or (is_granted("'.VoterRoleEnum::SELF->value.'") and is_granted("'.VoterRoleEnum::UNBANED->value.'"))
+                or (is_granted("'.VoterRoleEnum::SELF->value.'", object) and is_granted("'.VoterRoleEnum::UNBANED->value.'"))
             '
         ),
     ],
