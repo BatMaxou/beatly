@@ -69,10 +69,6 @@ const sendNewPassword = async () => {
   }
 };
 
-const goBack = () => {
-  router.push("/admin/artistes");
-};
-
 const goToAlbum = (albumId: number) => {
   router.push(`/admin/albums/${albumId}?view=true`);
 };

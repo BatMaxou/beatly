@@ -9,14 +9,12 @@ import eyeDark from "@/assets/icons/eye-dark.svg";
 import removeDark from "@/assets/icons/remove-dark.svg";
 import eyeLight from "@/assets/icons/eye-light.svg";
 import removeLight from "@/assets/icons/remove-light.svg";
-import { useRouter } from "vue-router";
 import BackButton from "@/components/navigation/BackButton.vue";
 import { ressourceUrl } from "@/utils/tools";
 import UserDetailModal from "@/components/modals/UserDetailModal.vue";
 
 const { apiClient } = useApiClient();
 const { showSuccess, showError } = useToast();
-const router = useRouter();
 
 const users = ref<User[]>([]);
 const loading = ref(true);

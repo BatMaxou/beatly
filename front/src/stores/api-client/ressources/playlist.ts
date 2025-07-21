@@ -8,7 +8,7 @@ interface ResourceResponse extends Partial<PlaylistType> {
 enum ApiRessourcePath {
   PLAYLIST = "/playlists",
   PLATFORM = "/platform_playlists",
-};
+}
 
 export default class Playlist {
   apiClient: ApiClient;
@@ -32,15 +32,16 @@ export default class Playlist {
     );
   }
 
-  async create(data: Partial<PlaylistType>):   Promise<ResourceResponse> {
+  async create(data: FormData): Promise<ResourceResponse> {
     return this.apiClient.post<ResourceResponse>(ApiRessourcePath.PLAYLIST, data, {
       Accept: "application/ld+json",
     });
   }
 
-  async createPlatform(data: Partial<PlaylistType>): Promise<ResourceResponse> {
+  async createPlatform(data: FormData): Promise<ResourceResponse> {
     return this.apiClient.post<ResourceResponse>(ApiRessourcePath.PLATFORM, data, {
       Accept: "application/ld+json",
+      // "Content-Type": "multipart/form-data",
     });
   }
 
