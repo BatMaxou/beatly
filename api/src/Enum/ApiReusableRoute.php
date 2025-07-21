@@ -10,6 +10,7 @@ enum ApiReusableRoute: string
     case CREATE_ALBUM = 'api_create_album';
     case CREATE_MUSIC = 'api_create_music';
     case CREATE_PLAYLIST = 'api_create_playlist';
+    case CREATE_PLATFORM_PLAYLIST = 'api_create_platform_playlist';
     case CREATE_ARTIST_REQUEST = 'api_create_artist_request';
 
     case UPDATE_MUSIC = 'api_update_music';
