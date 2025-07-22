@@ -9,9 +9,10 @@ import { useAuthStore } from "@/stores/auth";
 import { useUserStore } from "@/stores/user";
 import PublicLayout from "@/components/layout/PublicLayout.vue";
 import LandingButton from "@/components/buttons/LandingButton.vue";
+import type { User } from "@/utils/types";
 
 useHead({
-  title: 'Beatly | Se connecter',
+  title: "Beatly | Se connecter",
 });
 
 const router = useRouter();
@@ -43,10 +44,10 @@ if (authStore.forgotPasswordMessage) {
 
 function handleSubmitLoginForm(data: { email: string; password: string }) {
   loading.value = true;
-  apiClient.login(data.email, data.password).then((response: { user?: object | null, token?: string }) => {
+  apiClient.login(data.email, data.password).then((response: { user?: User | null }) => {
     if (response.user) {
       authStore.setLoginSuccess(true);
-      userStore.setUser({ ...response.user, token: response.token } );
+      userStore.setUser(response.user);
       router.push("/");
     } else {
       loading.value = false;
@@ -124,17 +125,13 @@ function goToForgotPassword() {
       </div>
 
       <div class="flex justify-center mt-8 mb-16">
-        <LandingButton
-          label="Se connecter"
-          type="submit"
-          :loading="loading"
-        />
+        <LandingButton label="Se connecter" type="submit" :loading="loading" />
       </div>
     </FormKit>
 
     <p class="text-center mb-4 text-white font-light">Vous n'avez pas de compte ?</p>
     <div class="flex justify-center mb-16">
-      <LandingButton label="S'inscrire" @click="goToRegister"/>
+      <LandingButton label="S'inscrire" @click="goToRegister" />
     </div>
   </PublicLayout>
 </template>

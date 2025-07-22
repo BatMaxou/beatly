@@ -5,6 +5,7 @@ import { useToast } from "@/composables/useToast";
 import { streamToAudioUrl } from "@/utils/stream";
 import { convertDurationInMinutes } from "@/sharedFunctions";
 import type { Music, MusicFile } from "@/utils/types";
+import { useUserStore } from "@/stores/user";
 
 interface AddMusicFormData {
   title: string;
@@ -36,7 +37,7 @@ const loading = ref(false);
 const audioFile = ref<File | null>(null);
 const audioPreview = ref<string>("");
 const loadingExistingAudio = ref(false);
-
+const userStore = useUserStore();
 const isEditMode = computed(() => !!props.editMusic && !props.readonly);
 const isReadonlyMode = computed(() => props.readonly);
 const modalTitle = computed(() => {
@@ -265,8 +266,11 @@ const handleKeydown = (event: KeyboardEvent) => {
       class="bg-[#1a0725] border border-[#440a50] rounded-xl shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-hidden"
       @click.stop
     >
-      <div class="p-6 border-b border-[#440a50] relative">
+      <div class="p-6 border-b border-[#440a50] flex items-baseline justify-center gap-4 relative">
         <h2 class="text-xl font-semibold text-white text-center">{{ modalTitle }}</h2>
+        <span v-if="userStore.isAdmin" class="text-xl font-bold"
+          >Id: {{ props.editMusic?.id }}</span
+        >
         <button
           @click="closeModal"
           class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#440a50] transition-colors"

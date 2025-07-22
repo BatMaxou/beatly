@@ -101,6 +101,7 @@ export type Playlist = {
   creator: User;
   "@type"?: PlaylistType;
   "@id": string;
+  origin?: string;
 };
 
 export type Listen = {

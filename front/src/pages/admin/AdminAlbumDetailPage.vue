@@ -64,8 +64,9 @@ onMounted(fetchAlbum);
     <div>
       <BackButton to="/admin/albums" />
 
-      <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center justify-start items-baseline gap-4 mb-6">
         <h1 class="text-3xl font-bold">Détail de l'album</h1>
+        <span class="text-xl font-bold">Id: {{ album.id }}</span>
       </div>
 
       <div v-if="album" class="bg-[#2E0B40] rounded-lg p-6">

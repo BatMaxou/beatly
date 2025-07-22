@@ -7,6 +7,7 @@ interface ResourceResponse extends Partial<PlaylistType> {
 
 enum ApiRessourcePath {
   PLAYLIST = "/playlists",
+  MY_PLAYLISTS = "/me/playlists",
   PLATFORM = "/platform_playlists",
 }
 
@@ -26,6 +27,15 @@ export default class Playlist {
   async getAll(page: number = 1): Promise<CollectionResponse<PlaylistType>> {
     return await this.apiClient.get<CollectionResponse<PlaylistType>>(
       `${ApiRessourcePath.PLAYLIST}?page=${page}`,
+      {
+        Accept: "application/ld+json",
+      },
+    );
+  }
+
+  async getMeAll(page: number = 1): Promise<CollectionResponse<PlaylistType>> {
+    return await this.apiClient.get<CollectionResponse<PlaylistType>>(
+      `${ApiRessourcePath.MY_PLAYLISTS}?page=${page}`,
       {
         Accept: "application/ld+json",
       },

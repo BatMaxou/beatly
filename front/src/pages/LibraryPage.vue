@@ -21,6 +21,7 @@ const router = useRouter();
 
 const lastListened = ref<CollectionResponse<LastListened<Music | Album | Playlist>> | null>(null);
 const favoriteCollection = ref<Favorites | null>(null);
+const myPlaylists = ref<Playlist[] | null>(null);
 const recommandations = ref<null>(null);
 const loading = ref(false);
 const isClickedToPlay = ref(false);
@@ -44,12 +45,6 @@ const handlePlayAlbum = (event: Event) => {
 // Ajout de la playlist titre likés par défaut
 const allFavoritePlaylists = computed(() => {
   const playlists = [];
-  playlists.push({
-    title: "Titres likés",
-    origin: "favorite",
-    "@id": "/api/favorite_playlists",
-    cover: favoriteCover,
-  });
   if (favoriteCollection.value?.playlists && favoriteCollection.value.playlists.length > 0) {
     playlists.push(...favoriteCollection.value.playlists.map((playlist) => playlist.target));
   }
@@ -62,8 +57,18 @@ onBeforeMount(async () => {
   try {
     const lastListenedResponse = await apiClient.lastListened.getAll();
     const favoriteResponse = await apiClient.favorite.getAll();
+    const myPlaylistsResponse = await apiClient.playlist.getMeAll();
     lastListened.value = lastListenedResponse;
     favoriteCollection.value = favoriteResponse;
+    myPlaylists.value = [
+      {
+        title: "Titres likés",
+        origin: "favorite",
+        "@id": "/api/favorite_playlists",
+        cover: favoriteCover,
+      } as Playlist,
+      ...myPlaylistsResponse.member,
+    ];
   } catch (error) {
     console.error("Erreur lors de la récupération des playlists:", error);
     favoriteCollection.value = null;
@@ -102,8 +107,20 @@ onBeforeMount(async () => {
         </HorizontalScroller>
       </div>
 
+      <!-- Mes playlists  -->
+      <div v-if="myPlaylists.length > 0">
+        <h2 class="ps-10 text-white text-3xl font-bold mb-4">Vos playlists</h2>
+        <HorizontalScroller :gap="32" :scroll-amount="3">
+          <PlaylistPlayableCard
+            v-for="(playlist, index) in myPlaylists"
+            :key="playlist['@id'] || index"
+            :playlist="playlist"
+          />
+        </HorizontalScroller>
+      </div>
+
       <!-- Les playlist favorites  -->
-      <div>
+      <div v-if="allFavoritePlaylists.length > 0">
         <h2 class="ps-10 text-white text-3xl font-bold mb-4">Vos playlists préférées</h2>
         <HorizontalScroller :gap="32" :scroll-amount="3">
           <PlaylistPlayableCard

@@ -35,10 +35,10 @@ const routes: RouteRecordRaw[] = [
     component: RootPage,
     name: "Root",
     meta: {
-      title: 'Accueil',
-      description: 'Page d\'accueil',
-      ogTitle: 'Mon site - Accueil'
-    }
+      title: "Accueil",
+      description: "Page d'accueil",
+      ogTitle: "Mon site - Accueil",
+    },
   },
   {
     path: "/playlist/favoris",
@@ -187,7 +187,7 @@ router.beforeEach(async (to, from, next) => {
     return next({ name: "Login" });
   }
 
-  if (authRequired || (from.path === "/" && token)) {
+  if (authRequired || token) {
     const userStore = useUserStore();
     if (!userStore.user || !userStore.user.id) {
       try {
@@ -207,7 +207,7 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  if (to.path.startsWith("/artist")) {
+  if (to.path.startsWith("/artist") && !to.path.startsWith("/artiste")) {
     const userStore = useUserStore();
     const userRoles = userStore.user?.roles || [];
 

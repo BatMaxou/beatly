@@ -48,7 +48,8 @@ onBeforeMount(async () => {
     }
 
     if (recommendations.value.length === 0) {
-      apiClient.dashboard.getRecommendations()
+      apiClient.dashboard
+        .getRecommendations()
         .then((recommendationResponse) => {
           setRecommendations(recommendationResponse.recommendations || []);
           recommendationLoading.value = false;
@@ -104,8 +105,18 @@ onBeforeMount(async () => {
       </div>
 
       <div>
-        <h2 class="ps-10 text-white text-3xl font-bold mb-4">D'après vos écoutes...</h2>
-        <img v-if="recommendationLoading" :src="loadingIcon" alt="Chargement" class="h-12 w-12 animate-spin mb-4 mx-auto" />
+        <h2
+          v-if="!recommendationLoading && recommendations.length > 0"
+          class="ps-10 text-white text-3xl font-bold mb-4"
+        >
+          D'après vos écoutes...
+        </h2>
+        <img
+          v-if="recommendationLoading"
+          :src="loadingIcon"
+          alt="Chargement"
+          class="h-12 w-12 animate-spin mb-4 mx-auto"
+        />
         <HorizontalScroller v-if="recommendations.length > 0" :gap="32" :scroll-amount="3">
           <AlbumPlayableCard
             v-for="(item, index) in recommendations"

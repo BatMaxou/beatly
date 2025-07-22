@@ -101,6 +101,7 @@ export const menuConfig: Record<MenuType, MenuAction[]> = {
       icon: (props: MenuProps) => (props.isFavorite ? removeLight : addLight),
       label: (props: MenuProps) =>
         props.isFavorite ? "Supprimer de la bibliothèque" : "Ajouter à la bibliothèque",
+      condition: (props: MenuProps) => !props.isUserPlaylist,
     },
     {
       action: "addToPlaylist",
