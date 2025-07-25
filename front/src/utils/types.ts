@@ -80,6 +80,15 @@ export type Music = {
   isFavorite: boolean;
 };
 
+export type DraftMusic = {
+  id: number;
+  title: string;
+  albumPosition?: number;
+  file: string;
+  duration: number;
+  isDraft: true;
+};
+
 export type PlaylistMusic = {
   "@id": string;
   id: number;

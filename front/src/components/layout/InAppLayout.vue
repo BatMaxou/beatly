@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import SideBar from "@/components/sidebar/SideBar.vue";
 import SideBarAdmin from "@/components/sidebar/SideBarAdmin.vue";
+import SideBarArtist from "@/components/sidebar/SideBarArtist.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "@/composables/useToast";
 import PlayerSection from "@/components/player/PlayerSection.vue";
@@ -9,6 +10,7 @@ import { usePlayerStore } from "@/stores/player";
 import PlaylistSelectorModal from "../modals/PlaylistSelectorModal.vue";
 import ContentLayout from "./ContentLayout.vue";
 import { useModalsStore } from "@/stores/modals";
+import type { Album, Music, Playlist } from "@/utils/types";
 
 // Props
 const { loading, padding } = defineProps({
@@ -65,6 +67,11 @@ if (authStore.loginSuccess) {
         v-if="type === 'admin'"
         class="fixed left-0 top-0 min-w-[60px] sm:min-w-[250px] w-full max-w-[60px] sm:max-w-[250px] z-20"
       />
+      <SideBarArtist
+        v-else-if="type === 'artist'"
+        class="fixed left-0 top-0 min-w-[60px] sm:min-w-[250px] w-full max-w-[60px] sm:max-w-[250px] z-20"
+      />
+
       <SideBar
         v-else
         ref="sideBarRef"
@@ -95,7 +102,7 @@ if (authStore.loginSuccess) {
     <!-- Modale de sélection de playlist -->
     <PlaylistSelectorModal
       :isVisible="modalsStore.isPlaylistSelectorVisible"
-      :element="modalsStore.playlistSelectorElement as any"
+      :element="(modalsStore.playlistSelectorElement as Album | Playlist | Music)"
       @close="modalsStore.closePlaylistSelector"
     />
   </div>

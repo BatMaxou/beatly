@@ -120,21 +120,18 @@ const removeFile = (index: number) => {
 };
 
 const submitHandler = async (data: ArtistRequestFormData) => {
-  if (audioFiles.value.length === 0) {
-    showError("Veuillez ajouter au moins un fichier audio pour présenter votre travail");
-    return;
-  }
-
   try {
     loading.value = true;
     // Upload chaque fichier et récupère les @id
     const fileIds: string[] = [];
-    for (const audio of audioFiles.value) {
-      const uploadResponse = await apiClient.music.upload(audio.file);
-      if (!uploadResponse["@id"]) {
-        throw new Error("Erreur lors de l'upload d'un fichier audio");
+    if (audioFiles.value.length > 0) {
+      for (const audio of audioFiles.value) {
+        const uploadResponse = await apiClient.music.upload(audio.file);
+        if (!uploadResponse["@id"]) {
+          throw new Error("Erreur lors de l'upload d'un fichier audio");
+        }
+        fileIds.push(uploadResponse["@id"]);
       }
-      fileIds.push(uploadResponse["@id"]);
     }
 
     // Envoi la demande artiste avec les @id

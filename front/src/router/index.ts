@@ -21,6 +21,9 @@ import AdminPlaylistsPage from "../pages/admin/AdminPlaylistsPage.vue";
 import AdminUsersPage from "../pages/admin/AdminUsersPage.vue";
 import AdminArtistDetailPage from "../pages/admin/AdminArtistDetailPage.vue";
 // import AlbumDetailPage from "../pages/artist/AlbumDetailPage.vue";
+import ArtistDashboardPage from "../pages/artist/ArtistDashboardPage.vue";
+import ArtistAlbumListPage from "../pages/artist/ArtistAlbumListPage.vue";
+import ArtistMusicListPage from "../pages/artist/ArtistMusicListPage.vue";
 import NotFound from "../pages/NotFoundPage.vue";
 import { getCookie } from "@/utils/cookies";
 import { useLogout } from "@/composables/useLogout";
@@ -28,6 +31,7 @@ import { useUserStore } from "@/stores/user";
 import { Role } from "@/utils/types";
 import AdminAlbumDetailPage from "@/pages/admin/AdminAlbumDetailPage.vue";
 import AdminPlaylistDetailPage from "@/pages/admin/AdminPlaylistDetailPage.vue";
+import ArtistAlbumDetailPage from "@/pages/artist/ArtistAlbumDetailPage.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -101,11 +105,6 @@ const routes: RouteRecordRaw[] = [
     name: "AdminAlbumsDetail",
     component: AdminAlbumDetailPage,
   },
-  // {
-  //   path: "/artist/albums/:id",
-  //   name: "AlbumDetail",
-  //   component: AlbumDetailPage,
-  // },
   {
     path: "/admin/musiques",
     name: "AdminMusics",
@@ -130,6 +129,28 @@ const routes: RouteRecordRaw[] = [
     path: "/admin/demandes",
     name: "AdminRequests",
     component: AdminRequestsPage,
+  },
+
+  // Pages d'artistes
+  {
+    path: "/artist/",
+    name: "ArtistDashboard",
+    component: ArtistDashboardPage,
+  },
+  {
+    path: "/artist/albums",
+    name: "ArtistAlbums",
+    component: ArtistAlbumListPage,
+  },
+  {
+    path: "/artist/musiques",
+    name: "ArtistMusics",
+    component: ArtistMusicListPage,
+  },
+  {
+    path: "/artist/album/:id",
+    name: "ArtistAlbumDetail",
+    component: ArtistAlbumDetailPage,
   },
 
   // Pages publiques
@@ -187,13 +208,21 @@ router.beforeEach(async (to, from, next) => {
     return next({ name: "Login" });
   }
 
-  if (authRequired || token) {
+  if (authRequired && token) {
     const userStore = useUserStore();
     if (!userStore.user || !userStore.user.id) {
       try {
-        await userStore.fetchMe();
-      } catch {
-        return next({ name: "Root" });
+        const user = await userStore.fetchMe();
+        if (!user || !user.id) {
+          const { logout } = useLogout();
+          await logout();
+          return next({ name: "Login" });
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération de l'utilisateur:", error);
+        const { logout } = useLogout();
+        await logout();
+        return next({ name: "Login" });
       }
     }
   }
