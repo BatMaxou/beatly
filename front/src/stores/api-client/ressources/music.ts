@@ -32,10 +32,10 @@ export default class Music {
     );
   }
 
-  async createMusic(data: Partial<MusicType>, file: File): Promise<ResourceResponse> {
+  async createMusic(data: FormData, file: File): Promise<ResourceResponse> {
     const response = await this.upload(file);
 
-    data.file = response["@id"];
+    data.append("file", response["@id"]);
 
     return this.apiClient.post<ResourceResponse>(`${ApiRessourcePath.MUSIC}`, data, {
       Accept: "application/ld+json",

@@ -9,7 +9,7 @@ import { useUserStore } from "@/stores/user";
 
 interface AddMusicFormData {
   title: string;
-  albumPosition: number;
+  albumPosition?: number;
   file: File | null;
 }
 
@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   close: [];
-  success: [];
+  success: [music?: any];
 }>();
 
 const { apiClient } = useApiClient();
@@ -40,6 +40,7 @@ const loadingExistingAudio = ref(false);
 const userStore = useUserStore();
 const isEditMode = computed(() => !!props.editMusic && !props.readonly);
 const isReadonlyMode = computed(() => props.readonly);
+const isAlbumCreationMode = computed(() => !props.albumId); // Mode création d'album si albumId est vide
 const modalTitle = computed(() => {
   if (isReadonlyMode.value) return "Détail de la musique";
   if (isEditMode.value) return "Modifier la musique";
@@ -48,7 +49,7 @@ const modalTitle = computed(() => {
 
 const formData = ref<AddMusicFormData>({
   title: "",
-  albumPosition: props.maxPosition + 1,
+  albumPosition: isAlbumCreationMode.value ? undefined : props.maxPosition + 1,
   file: null,
 });
 
@@ -85,11 +86,11 @@ watch(
         }
       }
     } else {
-      formData.value = {
-        title: "",
-        albumPosition: props.maxPosition + 1,
-        file: null,
-      };
+        formData.value = {
+          title: "",
+          albumPosition: isAlbumCreationMode.value ? undefined : props.maxPosition + 1,
+          file: null,
+        };
       resetAudioFile();
     }
   },
@@ -159,45 +160,54 @@ const submitHandler = async (data: AddMusicFormData) => {
 
       await apiClient.music.updateMusic(props.editMusic.id, {
         title: data.title,
-        albumPosition: data.albumPosition,
+        albumPosition: data.albumPosition ? data.albumPosition - 1 : 0,
         ...(fileId && { file: fileId }),
       });
       showSuccess("Musique modifiée avec succès !");
+      emit("success");
     } else {
-      // 1. Récupération de l'album actuel pour obtenir ses musiques
+      if (!props.albumId) {
+        const tempMusic = {
+          id: Date.now(),
+          title: data.title,
+          file: audioFile.value ? URL.createObjectURL(audioFile.value) : null,
+          duration: 0,
+          isDraft: true
+        };
+        
+        showSuccess("Musique ajoutée au brouillon !");
+        emit("success", tempMusic);
+        closeModal();
+        return;
+      }
+
       const currentAlbum = await apiClient.album.get(props.albumId);
       const currentMusics =
         currentAlbum.musics?.map(
           (music) => (music as Music)["@id"] || `/api/musics/${(music as Music).id}`,
         ) || [];
 
-      // 3. Création de la musique
-      const musicResponse = await apiClient.music.createMusic(
-        {
-          title: data.title,
-          albumPosition: data.albumPosition,
-          cover: currentAlbum.cover,
-        },
-        audioFile.value!,
-      );
+      const formData = new FormData();
+      formData.append('title', data.title);
+      formData.append('albumPosition', (data.albumPosition ? data.albumPosition - 1 : props.maxPosition).toString());
+
+      const musicResponse = await apiClient.music.createMusic(formData, audioFile.value!);
 
       if (!musicResponse["@id"]) {
         throw new Error("Erreur lors de la création de la musique");
       }
       const musicId = musicResponse["@id"];
 
-      // 4. Ajout de la nouvelle musique au tableau
       const updatedMusics = [...currentMusics, musicId];
 
-      // 5. Mise à jour de l'album avec le nouveau tableau de musiques (en tant que string[])
       await apiClient.album.update(props.albumId, {
-        musics: updatedMusics as string[],
+        musics: updatedMusics as any,
       });
 
       showSuccess("Musique ajoutée avec succès !");
+      emit("success", musicResponse);
     }
 
-    emit("success");
     closeModal();
   } catch (error) {
     console.error("Erreur lors de l'opération:", error);
@@ -216,7 +226,7 @@ const closeModal = () => {
 
   formData.value = {
     title: "",
-    albumPosition: props.maxPosition + 1,
+    albumPosition: isAlbumCreationMode.value ? undefined : props.maxPosition + 1,
     file: null,
   };
 
@@ -410,14 +420,14 @@ const handleKeydown = (event: KeyboardEvent) => {
               }"
             />
 
-            <!-- albumPosition -->
             <FormKit
+              v-if="!isAlbumCreationMode"
               type="number"
               name="albumPosition"
               label="Position dans l'album"
               :min="1"
-              :max="props.maxPosition + 10"
-              validation="required|number|min:1"
+              :max="props.maxPosition + 1"
+              :validation="isAlbumCreationMode ? '' : 'required|number|min:1'"
               :validation-messages="{
                 required: 'La position est obligatoire',
                 number: 'La position doit être un nombre',

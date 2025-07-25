@@ -188,9 +188,14 @@ onMounted(fetchAlbum);
 </script>
 
 <template>
-  <InAppLayout type="admin" padding="p-10" :loading="loading">
+  <InAppLayout type="artist" padding="p-10" :loading="loading">
     <div>
-      <BackButton to="/admin/albums" />
+      <div class="flex items-center gap-4 mb-8">
+        <BackButton
+          to="/artist/albums"
+          label="Retour aux albums"
+        />
+      </div>
 
       <div class="flex items-center justify-between mb-6">
         <h1 class="text-3xl font-bold">
@@ -416,7 +421,6 @@ onMounted(fetchAlbum);
           </div>
         </div>
 
-        <!-- Add/Edit Music Modal -->
         <AddMusicModal
           :is-visible="showAddMusicModal"
           :album-id="albumId"

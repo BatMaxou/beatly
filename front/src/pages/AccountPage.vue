@@ -165,6 +165,25 @@ onMounted(() => {
       </div>
 
       <div class="space-y-8">
+        <div
+          v-if="isArtist"
+          class="bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-xl p-6"
+        >
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center"
+            >
+              <span class="text-white font-bold">🎵</span>
+            </div>
+            <div>
+              <h3 class="text-white font-semibold">Compte Artiste Actif</h3>
+              <p class="text-white/70 text-sm">
+                Vous avez accès à toutes les fonctionnalités artiste
+              </p>
+            </div>
+          </div>
+        </div>
+        
         <div class="bg-[#1a0725] border border-[#440a50] rounded-xl p-6">
           <h2 class="text-xl font-semibold text-white mb-6">Informations du profil</h2>
 
@@ -338,25 +357,6 @@ onMounted(() => {
                 <span v-if="user.artistRequest">Demande déjà soumise</span>
                 <span v-else>Faire une demande</span>
               </button>
-            </div>
-          </div>
-        </div>
-
-        <div
-          v-else
-          class="bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-xl p-6"
-        >
-          <div class="flex items-center space-x-3">
-            <div
-              class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center"
-            >
-              <span class="text-white font-bold">🎵</span>
-            </div>
-            <div>
-              <h3 class="text-white font-semibold">Compte Artiste Actif</h3>
-              <p class="text-white/70 text-sm">
-                Vous avez accès à toutes les fonctionnalités artiste
-              </p>
             </div>
           </div>
         </div>

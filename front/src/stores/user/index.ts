@@ -20,14 +20,15 @@ export const useUserStore = defineStore("user", {
     async fetchMe() {
       const { apiClient } = useApiClient();
       try {
-        const user = await apiClient.me.get();
-        this.user = user;
-        if (this.user) {
-          this.isAdmin = this.user.roles.includes(Role.PLATFORM);
+        const userResponse = await apiClient.me.get();
+        if (!userResponse || !userResponse.id) {
+          this.setUser(null);
+        } else {
+          this.setUser(userResponse);
         }
-        return user;
+        return this.user;
       } catch (error) {
-        this.user = null;
+        this.setUser(null);
         throw error;
       }
     },
