@@ -1,0 +1,75 @@
+name: Main docker images
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'front/**'
+      - 'api/**'
+      - '.devops/php/**'
+      - '.devops/nginx/**'
+      - '.devops/node/**'
+
+env:
+  REGISTRY: ghcr.io
+  PROJECT_NAME: beatly
+
+jobs:
+  build-push-main-images:
+    name: Build and push main images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Registry
+        uses: ./.github/workflows/callables/registry
+        with:
+          token: ${{ secrets.IMAGE_TOKEN }}
+
+      - name: Build / Push php image
+        uses: ./.github/workflows/callables/build-push
+        with:
+          dockerfile: ./.devops/php/Dockerfile
+          image: php
+
+      - name: Build / Push web image
+        uses: ./.github/workflows/callables/build-push
+        with:
+          dockerfile: ./.devops/nginx/Dockerfile
+          image: web
+
+      - name: Build / Push front image
+        uses: ./.github/workflows/callables/build-push
+        with:
+          dockerfile: ./.devops/node/Dockerfile
+          image: front
+          target: prod
+          build_args: |
+            VITE_API_BASE_URL=${{ secrets.PROD_FRONT_API_BASE_URL }}
+            VITE_API_RESSOURCES_URL=${{ secrets.PROD_FRONT_API_RESSOURCES_URL }}
+            VITE_MATOMO_URL=${{ secrets.PROD_FRONT_MATOMO_URL }}
+            VITE_MATOMO_SITE_ID=${{ secrets.PROD_FRONT_MATOMO_SITE_ID }}
+
+
+  deploy-main-images:
+    name: Deploy main images
+    runs-on: ubuntu-latest
+    needs: build-push-main-images
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy images
+        uses: ./.github/workflows/callables/deployment
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.PROD_HOST }}
+          user: ${{ secrets.PROD_USER }}
+          path: ${{ secrets.PROD_PATH }}
+          images: 'php web front'
+

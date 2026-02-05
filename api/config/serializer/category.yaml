@@ -1,0 +1,15 @@
+App\Entity\Category:
+  attributes:
+    id:
+      groups:
+        - 'music:read'
+        - 'dashboard:read'
+        - 'artist:read'
+        - 'search:read'
+    name:
+      groups:
+        - 'music:read'
+        - 'dashboard:read'
+        - 'artist:read'
+        - 'search:read'
+

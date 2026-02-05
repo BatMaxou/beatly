@@ -24,6 +24,10 @@ Copy `compose.override.example.yaml` to `compose.override.yaml` and fill in / mo
 cp compose.override.example.yaml compose.override.yaml
 ```
 
+Create ```bash api/private/uploads/musics``` folders
+
+Create ```bash api/public/uploads/musics/covers``` folders
+
 ## Init (dev)
 
 ```bash

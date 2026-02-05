@@ -1,0 +1,10 @@
+App\Entity\MusicFile:
+  attributes:
+    id:
+      groups:
+        - 'music_file:read'
+        - 'playlist:read'
+    file:
+      groups:
+        - 'music_file:upload'
+

@@ -1,0 +1,37 @@
+vich_uploader:
+  db_driver: orm
+  metadata:
+    type: attribute
+  mappings:
+    music_file:
+      uri_prefix: /uploads/musics
+      upload_destination: '%kernel.project_dir%%env(string:PRIVATE_UPLOADS_PATH)%/musics'
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+    music_cover:
+      uri_prefix: /uploads/musics/covers
+      upload_destination: '%kernel.project_dir%%env(string:SSR_PUBLIC_UPLOADS_PATH)%/musics/covers'
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+    album_cover:
+      uri_prefix: /uploads/albums/covers
+      upload_destination: '%kernel.project_dir%%env(string:SSR_PUBLIC_UPLOADS_PATH)%/albums/covers'
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+    album_wallpaper:
+      uri_prefix: /uploads/albums/wallpapers
+      upload_destination: '%kernel.project_dir%%env(string:SSR_PUBLIC_UPLOADS_PATH)%/albums/wallpapers'
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+    playlist_cover:
+      uri_prefix: /uploads/playlists/covers
+      upload_destination: '%kernel.project_dir%%env(string:SSR_PUBLIC_UPLOADS_PATH)%/playlists/covers'
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+    playlist_wallpaper:
+      uri_prefix: /uploads/playlists/wallpapers
+      upload_destination: '%kernel.project_dir%%env(string:SSR_PUBLIC_UPLOADS_PATH)%/playlists/wallpapers'
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+    user_avatar:
+      uri_prefix: /uploads/users/avatars
+      upload_destination: '%kernel.project_dir%%env(string:SSR_PUBLIC_UPLOADS_PATH)%/users/avatars'
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+    user_wallpaper:
+      uri_prefix: /uploads/users/wallpapers
+      upload_destination: '%kernel.project_dir%%env(string:SSR_PUBLIC_UPLOADS_PATH)%/users/wallpapers'
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer

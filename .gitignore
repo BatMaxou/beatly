@@ -1,12 +1,15 @@
-###> symfony/framework-bundle ###
+###> symfony ###
 /api/.env.local
 /api/.env.local.php
 /api/.env.*.local
 /api/config/secrets/prod/prod.decrypt.private.php
 /api/public/bundles/
+/api/private/
+/api/public/uploads/
 /api/var/
 /api/vendor/
-###< symfony/framework-bundle ###
+/api/config/jwt/*.pem
+###< symfony ###
 
 ###> vue ###
 /front/logs
@@ -23,17 +26,28 @@
 /front/dist-ssr
 /front/coverage
 /front/*.local
+/front/src/assets/main-build.css
 
 /front/cypress/videos/
 /front/cypress/screenshots/
 ###< vue ###
 
+###> matomo ###
+/matomo/config.ini.php
+###< matomo ###
+
 ###> docker ###
-compose.override.yaml
+/compose.override.yaml
+/compose.override.prod.yaml
 ###< docker ###
+
+###> prod-context ###
+/.env.local
+###< prod-context ###
 
 ###> Extra ###
 /.DS_Store/
 /.vscode/
+/.php-cs-fixer.cache
 ###< Extra ###
 

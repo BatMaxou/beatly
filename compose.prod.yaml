@@ -1,0 +1,90 @@
+services:
+  php:
+    image: ${REGISTRY_REPOSITORY_PREFIX}-php:latest
+    build:
+      dockerfile: ./.devops/php/Dockerfile
+    volumes:
+      - ./api:/srv
+      - vendor:/srv/vendor
+      - var:/srv/var
+    networks:
+      - beatly
+
+  web:
+    depends_on:
+      - php
+    image: ${REGISTRY_REPOSITORY_PREFIX}-web:latest
+    build:
+      dockerfile: ./.devops/nginx/Dockerfile
+    volumes:
+      - ./api/public:/srv/public
+    networks:
+      - beatly
+
+  front:
+    image: ${REGISTRY_REPOSITORY_PREFIX}-front:latest
+    build:
+      dockerfile: ./.devops/node/Dockerfile
+      target: prod
+    volumes:
+      - ./front:/app
+      - node_modules:/app/node_modules
+    networks:
+      - beatly
+
+  db:
+    image: mariadb:10.3.0
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - beatly
+
+  embedder:
+    image: ${REGISTRY_REPOSITORY_PREFIX}-embedder:latest
+    build:
+      dockerfile: ./.devops/python/Dockerfile
+    volumes:
+      - ./embedder:/app
+    networks:
+      - beatly
+
+  qdrant:
+    image: qdrant/qdrant
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - beatly
+
+  ollama:
+    image: ${REGISTRY_REPOSITORY_PREFIX}-ollama:latest
+    build:
+      dockerfile: ./.devops/ollama/Dockerfile
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - beatly
+
+  mailbox:
+    image: mailhog/mailhog
+    networks:
+      - beatly
+  
+  analytics:
+    image: matomo
+    volumes:
+      - analytics_data:/var/www/html
+    networks:
+      - beatly
+
+volumes:
+  vendor:
+  var:
+  node_modules:
+  db_data:
+  qdrant_data:
+  ollama_data:
+  analytics_data:
+
+networks:
+  beatly:
+

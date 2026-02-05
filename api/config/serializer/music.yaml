@@ -1,0 +1,127 @@
+App\Entity\Music:
+  attributes:
+    id:
+      groups:
+        - "music:read"
+        - "playlist:read"
+        - "artist:read"
+        - "album:read"
+        - "recommendation:read"
+        - "queue:read"
+        - "search:read"
+        - "favorite:read"
+        - "dashboard:read"
+        - "last_listened:collection:read"
+    title:
+      groups:
+        - "music:read"
+        - "music:write"
+        - "music:update"
+        - "album:read"
+        - "playlist:read"
+        - "dashboard:read"
+        - "artist:read"
+        - "recommendation:read"
+        - "queue:read"
+        - "search:read"
+        - "favorite:read"
+        - "last_listened:collection:read"
+    coverName:
+      groups:
+        - "music:read"
+        - "album:read"
+        - "playlist:read"
+        - "artist:read"
+        - "recommendation:read"
+        - "queue:read"
+        - "search:read"
+        - "favorite:read"
+        - "dashboard:read"
+        - "last_listened:collection:read"
+    cover:
+      groups:
+        - "music:write"
+    listeningsNumber:
+      groups:
+        - "music:read"
+        - "album:read"
+        - "artist:read"
+        - "dashboard:read"
+        - "favorite:read"
+        - "last_listened:collection:read"
+    file:
+      groups:
+        - "music:read"
+        - "music:write"
+        - "music:update"
+        - "album:read"
+        - "playlist:read"
+        - "dashboard:read"
+        - "artist:read"
+        - "recommendation:read"
+        - "queue:read"
+        - "last_listened:collection:read"
+    mainArtist:
+      groups:
+        - "music:read"
+        - "album:read"
+        - "playlist:read"
+        - "recommendation:read"
+        - "queue:read"
+        - "search:read"
+        - "favorite:read"
+        - "last_listened:collection:read"
+    artists:
+      groups:
+        - "music:read"
+        - "album:read"
+        - "playlist:read"
+        - "recommendation:read"
+        - "queue:read"
+        - "favorite:read"
+    album:
+      groups:
+        - "music:read"
+        - "playlist:read"
+        - "queue:read"
+        - "artist:read"
+        - "search:read"
+        - "favorite:read"
+        - "dashboard:read"
+        - "last_listened:collection:read"
+        - "recommendation:read"
+    categories:
+      groups:
+        - "music:read"
+        - "music:write"
+        - "music:update"
+        - "album:read"
+        - "artist:read"
+        - "search:read"
+    duration:
+      groups:
+        - "music:read"
+        - "music:write"
+        - "music:update"
+        - "album:read"
+        - "playlist:read"
+        - "dashboard:read"
+        - "artist:read"
+        - "recommendation:read"
+        - "queue:read"
+        - "last_listened:collection:read"
+    albumPosition:
+      groups:
+        - "album:read"
+        - "music:write"
+        - "music:update"
+        - "music:read"
+        - "music:collection:read"
+        - "playlist:read"
+        - "queue:read"
+        - "search:read"
+        - "dashboard:read"
+        - "last_listened:collection:read"
+    addedAt:
+      groups:
+        - "album:read"

@@ -1,47 +1,68 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { onBeforeUnmount, onMounted } from "vue";
+import { useHead } from '@unhead/vue'
+
+import AudioPlayer from "./components/audio/AudioPlayer.vue";
+import { usePlayerStore } from "./stores/player";
+
+useHead({
+  title: 'Beatly',
+  meta: [
+    {
+      name: 'description',
+      content: 'Beatly - Plateforme gratuite d\'écoute et de partage de musique. Découvrez de nouveaux artistes, créez vos playlists et partagez vos morceaux préférés.',
+    },
+    {
+      name: 'keywords',
+      content: 'beatly, musique gratuite, streaming musical, plateforme musicale, écoute musique en ligne, partage musique, playlist gratuite, découverte musicale, artistes émergents, création musicale, communauté musicale, musique indie, musique pop, musique rock, musique électronique, musique hip-hop, musique jazz, musique classique, musique du monde, musique alternative, musique acoustique, musique instrumentale, musique pour se détendre, musique pour travailler, musique pour étudier, musique pour faire du sport',
+    },
+    {
+      property: 'og:title',
+      content: 'Beatly - Votre plateforme musicale gratuite pour découvrir et partager de la musique',
+    },
+    {
+      property: 'og:description',
+      content: 'Rejoignez Beatly, la communauté musicale gratuite où vous pouvez écouter des milliers de morceaux, découvrir des artistes émergents et partager vos créations musicales.',
+    },
+    {
+      property: 'og:image',
+      content: 'https://beatly.com/banner.png',
+    },
+    {
+      name: 'twitter:title',
+      content: 'Beatly 🎵 Musique gratuite, partage et découverte',
+    },
+    {
+      name: 'twitter:description',
+      content: '🎧 Plateforme musicale 100% gratuite | 🚀 Découvrez de nouveaux talents | 📱 Créez et partagez vos playlists',
+    },
+    {
+      name: 'twitter:image',
+      content: 'https://beatly.com/banner.png',
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
+  ]
+})
+
+const playerStore = usePlayerStore();
+const handleBeforeUnload = () => {
+  playerStore.clearQueue();
+};
+
+onMounted(() => {
+  window.addEventListener("beforeunload", handleBeforeUnload);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("beforeunload", handleBeforeUnload);
+});
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <AudioPlayer />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <router-view />
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>

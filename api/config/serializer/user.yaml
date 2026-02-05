@@ -1,0 +1,76 @@
+App\Entity\User:
+  attributes:
+    id:
+      groups:
+        - "user:read"
+        - "user:collection:read"
+        - "artist:read"
+        - "artist:collection:read"
+        - "album:read"
+        - "music:read"
+        - "playlist:read"
+        - "recommendation:read"
+        - "queue:read"
+        - "search:read"
+        - "favorite:read"
+        - "request:read"
+        - "request:collection:read"
+        - "playlist:collection:read"
+
+    name:
+      groups:
+        - "user:read"
+        - "user:collection:read"
+        - "user:update"
+        - "artist:read"
+        - "album:collection:read"
+        - "artist:collection:read"
+        - "album:read"
+        - "music:read"
+        - "playlist:read"
+        - "recommendation:read"
+        - "queue:read"
+        - "search:read"
+        - "favorite:read"
+        - "dashboard:read"
+        - "last_listened:collection:read"
+        - "request:read"
+        - "request:collection:read"
+        - "playlist:collection:read"
+
+    email:
+      groups:
+        - "user:read"
+        - "user:collection:read"
+        - "user:update"
+        - "request:read"
+        - "request:collection:read"
+        - "artist:collection:read"
+        - "artist:read"
+    roles:
+      groups:
+        - "user:read"
+        - "artist:collection:read"
+        - "user:collection:read"
+    avatarName:
+      groups:
+        - "user:read"
+        - "user:collection:read"
+        - "artist:read"
+        - "artist:collection:read"
+        - "album:read"
+        - "queue:read"
+        - "search:read"
+        - "request:read"
+        - "request:collection:read"
+    wallpaperName:
+      groups:
+        - "user:read"
+        - "artist:read"
+    password:
+      groups:
+        - "user:update"
+    artistRequest:
+      groups:
+        - "user:read"
+        - "user:collection:read"

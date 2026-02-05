@@ -6,19 +6,40 @@
 parameters:
 
 services:
-    # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            string $publicUploadsPath: '%env(string:PUBLIC_UPLOADS_PATH)%'
+            string $privateUploadsPath: '%env(string:PRIVATE_UPLOADS_PATH)%'
+            string $ssrPublicUploadsPath: '%env(string:SSR_PUBLIC_UPLOADS_PATH)%'
+            string $frontResetUrl: '%env(string:FRONT_RESET_URL)%'
+            string $frontLoginUrl: '%env(string:FRONT_LOGIN_URL)%'
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
+            - '../src/DataFixtures/Sample/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Service\Client\EmbedderClient:
+        arguments:
+            $baseUrl: '%env(string:EMBEDDER_URL)%'
+    
+    App\Service\Client\QdrantClient:
+        arguments:
+            $baseUrl: '%env(string:QDRANT_URL)%'
+
+    App\Service\Client\OllamaClient:
+        arguments:
+            $baseUrl: '%env(string:OLLAMA_URL)%'
+
+    App\Service\Prompt\PromptBuilder:
+        arguments:
+            $basePath: '%kernel.project_dir%/prompt'
+
+when@dev:
+    services:
+        App\DataFixtures\Sample\SampleLoader: ~

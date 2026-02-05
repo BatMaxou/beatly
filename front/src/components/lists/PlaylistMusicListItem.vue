@@ -1,0 +1,153 @@
+<script setup lang="ts">
+import { defineProps, ref, watch, onMounted } from "vue";
+import MusicPlayButton from "@/components/lists/MusicPlayButton.vue";
+import UnifiedMenu from "../menus/UnifiedMenu.vue";
+import defaultCover from "@/assets/images/default-cover.png";
+import { usePlayerStore } from "@/stores/player";
+import type { Music } from "@/utils/types";
+import { ressourceUrl } from "@/utils/tools";
+
+const props = defineProps<{
+  music: Music;
+  index: number;
+  position: number;
+  parentId?: string;
+  origin: string;
+  musics: { music: Music }[] | { target: Music }[] | null;
+}>();
+
+const isHovered = ref(false);
+const isClickedToPlay = ref(false);
+const isCurrentSongPlaying = ref(false);
+const playerStore = usePlayerStore();
+const menuRef = ref<InstanceType<typeof UnifiedMenu> | null>(null);
+
+const handleMouseEnter = () => {
+  isHovered.value = true;
+};
+
+const handleMouseLeave = () => {
+  isHovered.value = false;
+};
+
+const handlePlaySong = (event: Event) => {
+  const target = event.target as HTMLElement;
+
+  const isMenuClick =
+    target.closest(".album-title-menu") ||
+    target.closest("[data-menu]") ||
+    target.closest("button[aria-label='Menu options']");
+
+  if (isMenuClick) {
+    return;
+  }
+
+  isClickedToPlay.value = true;
+};
+
+const handleContextMenu = (event: MouseEvent) => {
+  event.preventDefault();
+  // Vérifie si le clic droit est fait dans le menu ou le bouton
+  const target = event.target as HTMLElement;
+  const isMenuClick =
+    target.closest(".z-50") ||
+    target.closest("button[aria-label='Menu options']") ||
+    target.closest("[data-menu]");
+
+  if (isMenuClick) {
+    return;
+  }
+
+  if (menuRef.value) {
+    const x = event.clientX;
+    const y = event.clientY;
+    menuRef.value.openMenu(x, y);
+  }
+};
+
+const handlePlayStateChange = (newState: boolean) => {
+  isClickedToPlay.value = newState;
+};
+
+const setIsCurrentSongPlaying = () => {
+  if (props.music.id === playerStore.currentMusic?.id) {
+    isCurrentSongPlaying.value = true;
+  } else {
+    isCurrentSongPlaying.value = false;
+  }
+};
+
+watch(
+  () => playerStore.currentMusic,
+  (newVal: Music | null, oldVal: Music | null) => {
+    if (newVal !== oldVal) {
+      setIsCurrentSongPlaying();
+    }
+  },
+);
+
+onMounted(() => {
+  setIsCurrentSongPlaying();
+});
+</script>
+
+<template>
+  <div
+    class="flex flex-row justify-between items-center h-14 px-4 transition-colors duration-200 ease-in-out cursor-pointer border-b border-gray-200/20 hover:bg-black/80 hover:text-white"
+    :class="isCurrentSongPlaying ? 'bg-black/80 text-white' : ''"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
+    @click="handlePlaySong"
+    @contextmenu="handleContextMenu"
+  >
+    <div class="flex flex-row items-center w-full gap-2">
+      <div class="relative flex items-center justify-center w-12 min-w-12">
+        <img
+          :src="music.cover ? ressourceUrl + music.cover : defaultCover"
+          class="w-12 h-12 rounded"
+        />
+        <div
+          v-if="isHovered"
+          class="absolute inset-0 flex items-center justify-center bg-black/50 rounded"
+        >
+          <MusicPlayButton
+            :music="music"
+            :isClickedToPlay="isClickedToPlay"
+            :position="position"
+            :parentId="parentId"
+            :musics="
+              origin === 'top-titles'
+                ? (musics as { music: Music }[])
+                : origin === 'favorites'
+                  ? (musics as { target: Music }[])
+                  : null
+            "
+            :origin="origin"
+            @update:isClickedToPlay="handlePlayStateChange"
+          />
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <span class="font-medium text-white">{{ music.title }}</span>
+        <p v-if="origin === 'playlist' || origin === 'favorites'" class="font-medium text-white">
+          <span v-if="music.mainArtist" class="text-white/70 text-sm">
+            {{ music.mainArtist.name }}
+          </span>
+          <span v-if="music.mainArtist.name && music.album" class="text-sm font-bold"> • </span>
+          <span class="text-white/70 text-sm">
+            {{ music.album.title }}
+          </span>
+        </p>
+      </div>
+    </div>
+    <div class="text-gray-500 font-normal">
+      <UnifiedMenu
+        ref="menuRef"
+        :type="origin === 'favorites' ? 'favorites' : 'playlistTitle'"
+        :element="music"
+        :isFavorite="origin === 'favorites' ? true : music.isFavorite"
+        :showMenuIcon="isHovered || isCurrentSongPlaying"
+      />
+    </div>
+  </div>
+</template>

@@ -1,0 +1,68 @@
+App\Entity\Playlist:
+  attributes:
+    id:
+      groups:
+        - "playlist:read"
+        - "playlist:collection:read"
+        - "music:read"
+        - "dashboard:read"
+        - "search:read"
+        - "favorite:read"
+        - "last_listened:collection:read"
+    title:
+      groups:
+        - "playlist:read"
+        - "playlist:collection:read"
+        - "playlist:write"
+        - "playlist:update"
+        - "music:read"
+        - "dashboard:read"
+        - "search:read"
+        - "favorite:read"
+        - "last_listened:collection:read"
+    musics:
+      groups:
+        - "playlist:read"
+        - "playlist:write"
+        - "playlist:update"
+        - "playlist:collection:read"
+    coverName:
+      groups:
+        - "playlist:read"
+        - "search:read"
+        - "favorite:read"
+        - "dashboard:read"
+        - "last_listened:collection:read"
+    cover:
+      groups:
+        - "playlist:write"
+    wallpaperName:
+      groups:
+        - "playlist:read"
+    wallpaper:
+      groups:
+        - "playlist:write"
+    creator:
+      groups:
+        - "playlist:read"
+        - "playlist:collection:read"
+        - "dashboard:read"
+        - "search:read"
+        - "favorite:read"
+        - "last_listened:collection:read"
+App\Entity\PlaylistMusic:
+  attributes:
+    music:
+      groups:
+        - "playlist:read"
+        - "playlist:write"
+        - "playlist:update"
+    position:
+      groups:
+        - "playlist:read"
+        - "playlist:write"
+        - "playlist:update"
+    addedAt:
+      groups:
+        - "playlist:read"
+        - "artist:read"

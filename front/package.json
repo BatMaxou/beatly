@@ -5,19 +5,29 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build-verif": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
-    "build-only": "vite build",
+    "build": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "vue": "^3.5.13"
+    "@formkit/i18n": "^1.6.9",
+    "@formkit/vue": "^1.6.9",
+    "@unhead/vue": "^2.0.12",
+    "lodash": "^4.17.21",
+    "pinia": "^3.0.3",
+    "tailwind-scrollbar-hide": "^4.0.0",
+    "vue": "^3.5.13",
+    "vue-matomo": "^4.2.0",
+    "vue-router": "^4.5.1",
+    "vue3-toastify": "^0.2.8"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.1",
-    "@types/node": "^22.14.0",
+    "@types/lodash": "^4.17.20",
+    "@types/node": "^22.15.33",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.5.0",
@@ -27,6 +37,7 @@
     "jiti": "^2.4.2",
     "npm-run-all2": "^7.0.2",
     "prettier": "3.5.3",
+    "tailwindcss": "^3.4.17",
     "typescript": "~5.8.0",
     "vite": "^6.2.4",
     "vite-plugin-vue-devtools": "^7.7.2",

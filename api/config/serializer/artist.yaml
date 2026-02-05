@@ -1,0 +1,12 @@
+App\Entity\Artist:
+  attributes:
+    musics:
+      groups:
+        - "artist:read"
+    albums:
+      groups:
+        - "artist:read"
+        - "artist:collection:read"
+    featuredMusics:
+      groups:
+        - "artist:read"
